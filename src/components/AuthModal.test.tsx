@@ -17,6 +17,8 @@ describe('AuthModal Component - Unit Tests', () => {
 
     expect(screen.getByRole('heading', { name: /iniciar sesión/i })).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/tu@correo.com/i)).toBeInTheDocument();
+    expect(screen.getByText(/continuar con google/i)).toBeInTheDocument();
+    expect(screen.getByText(/acceso inmediato/i)).toBeInTheDocument();
   });
 
   it('debe permitir continuar en modo invitado disparando onSuccess', () => {
@@ -32,5 +34,17 @@ describe('AuthModal Component - Unit Tests', () => {
 
     expect(onSuccess).toHaveBeenCalledWith('invitado@cadensa.local');
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('permite alternar entre modo contraseña y modo enlace mágico (Magic Link)', () => {
+    render(
+      <AuthModal isOpen={true} onClose={vi.fn()} onSuccess={vi.fn()} />
+    );
+
+    const magicToggle = screen.getByText(/acceso con magic link/i);
+    fireEvent.click(magicToggle);
+
+    expect(screen.getByRole('heading', { name: /acceso sin contraseña/i })).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText(/••••••••/i)).toBeNull();
   });
 });

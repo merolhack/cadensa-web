@@ -112,3 +112,26 @@
   - `features/step_definitions/session_steps.ts`, `features/step_definitions/voice_steps.ts`, `features/step_definitions/gamification_steps.ts`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-23] ingest | Diagnóstico de GitHub Actions, Arquitectura OAuth y Presupuesto de Base de Datos
+- **Detalle**:
+  1. **Diagnóstico y Reparación de CI/CD**:
+     - Identificación de causa de fallo en GitHub Actions: acción no existente `cloudflare/pages-action` y ausencia de secretos en el repositorio.
+     - Actualización a `cloudflare/wrangler-action@v3` con validación condicional de credenciales y ejecución obligatoria de pruebas continuas (`npm run test:all`).
+  2. **Estrategia de Registro y Validación (Soft Confirmation)**:
+     - Documentación de política de acceso diferido para evitar abandono en personas que tartamudean.
+  3. **Flujo de OAuth**:
+     - Soporte para Google OAuth y Magic Link en `AuthModal.tsx` con manejo estático en browser.
+  4. **Presupuesto de Datos PostgreSQL**:
+     - Cálculo exacto en disco: ~200 bytes por sesión, ~144 KB/año por usuario, proyección de 1.44 GB al año para 10,000 usuarios activos diarios.
+  5. **Cobertura de Pruebas**:
+     - Actualización de pruebas unitarias (`AuthModal.test.tsx`) y nuevo feature BDD (`features/user_registration_oauth.feature`).
+- **Archivos creados/modificados**:
+  - `.github/workflows/deploy.yml`
+  - `src/components/AuthModal.tsx`, `src/components/AuthModal.test.tsx`
+  - `features/user_registration_oauth.feature`, `features/step_definitions/auth_oauth_steps.ts`
+  - `wiki/architecture/auth_and_data_budget.md`, `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+

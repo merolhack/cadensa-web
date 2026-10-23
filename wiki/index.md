@@ -28,6 +28,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [containerization.md](architecture/containerization.md) | Contenedor Docker multi-stage con Node 20 Slim + Nginx Alpine y configuración de SPA. | `docker`, `containers`, `nginx` |
 | [testing.md](architecture/testing.md) | Pirámide de pruebas unitarias con Vitest y escenarios BDD con Cucumber y Gherkin. | `testing`, `vitest`, `cucumber`, `bdd` |
 | [audio_engine.md](architecture/audio_engine.md) | Motor de metrónomo de precisión Web Audio API, scheduler lookahead y sincronía visual. | `web-audio`, `metronome`, `timing` |
+| [auth_and_data_budget.md](architecture/auth_and_data_budget.md) | Diagnóstico de GitHub Actions, flujos OAuth/Magic Link, Soft Confirmation y dimensionamiento de datos por usuario. | `auth`, `oauth`, `ci-cd`, `database-budget` |
 
 ---
 

@@ -1,14 +1,16 @@
-name: Deploy to Cloudflare Pages
+name: CI & Deploy to Cloudflare Pages
 
 on:
   push:
     branches:
       - main
-  # Permite ejecutar el flujo de trabajo manualmente si es necesario
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build-test-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,18 +30,30 @@ jobs:
           npm run lint
           npx tsc --noEmit
 
+      - name: Run Unit and BDD Tests
+        run: npm run test:all
+
       - name: Build Next.js Static Export
         run: npm run build
         env:
-          # Puedes inyectar variables de entorno públicas aquí si las necesitas para el build
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+
+      - name: Check Cloudflare Credentials
+        id: cf_check
+        run: |
+          if [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] && [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "has_cf_secrets=true" >> $GITHUB_OUTPUT
+            echo "Cloudflare secrets detected. Proceeding with deployment."
+          else
+            echo "has_cf_secrets=false" >> $GITHUB_OUTPUT
+            echo "Cloudflare secrets not configured. Skipping deployment stage."
+          fi
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        if: steps.cf_check.outputs.has_cf_secrets == 'true'
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: 'cadensa-web'
-          directory: 'out'
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy out --project-name=cadensa-web

@@ -6,7 +6,7 @@ Característica: Vinculación comunitaria AMTTM y herramientas de control orofac
 
   Escenario: Acceso al banner de apoyo comunitario de la AMTTM
     Dado que un usuario ingresa a Cadensa en busca de apoyo integral
-    Cuando visualiza la parte superior de la aplicación
+    Cuando visualiza la sección inferior de la aplicación antes del pie de página
     Entonces se presenta un banner con enlace seguro hacia la "Asociación Mexicana de Tartamudez"
     Y el enlace apunta al grupo oficial de Facebook con rel noopener noreferrer
 

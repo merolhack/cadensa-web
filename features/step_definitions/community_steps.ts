@@ -31,7 +31,7 @@ Given('que un usuario ingresa a Cadensa en busca de apoyo integral', function ()
   context.bannerRel = '';
 });
 
-When('visualiza la parte superior de la aplicación', function () {
+When('visualiza la sección inferior de la aplicación antes del pie de página', function () {
   context.bannerVisible = true;
   context.bannerLink = 'https://www.facebook.com/AMTTM/';
   context.bannerRel = 'noopener noreferrer';

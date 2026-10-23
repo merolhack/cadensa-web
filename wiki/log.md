@@ -202,3 +202,25 @@
   - `features/community_and_breathing.feature`, `features/step_definitions/community_steps.ts`
   - `wiki/roadmap/evolution_v2_plan.md`, `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-23] ingest | Configuración en Producción de Google OAuth 2.0 y Reubicación Ergonómica de Banner AMTTM
+- **Detalle**:
+  1. **Aprovisionamiento de Credenciales OAuth 2.0 en Google Cloud Console**:
+     - Creación de cliente web OAuth "Cadensa Web Client" en el proyecto `cadensa-web-dev`.
+     - Orígenes de JavaScript autorizados: `https://kddeejyhnxrnmkmiwjxp.supabase.co`, `https://cadensa-web.pages.dev`, `http://localhost:3000`.
+     - URI de redireccionamiento autorizado: `https://kddeejyhnxrnmkmiwjxp.supabase.co/auth/v1/callback`.
+     - Client ID: `1014778372980-ff8dp5c48nss88745u0r70nsn7ovob2a.apps.googleusercontent.com`.
+  2. **Activación de Proveedor Google en Supabase Dashboard**:
+     - Habilitación del switch "Sign in with Google" e inyección de Client ID y Client Secret en `kddeejyhnxrnmkmiwjxp`.
+     - Configuración de URL del Sitio (`https://cadensa-web.pages.dev`) y URLs de redirección permitidas (`https://cadensa-web.pages.dev/**`, `http://localhost:3000/**`).
+     - Verificación activa mediante curl: El endpoint `/auth/v1/authorize?provider=google` responde con HTTP 302 hacia `accounts.google.com`.
+  3. **Reubicación Ergonómica de UI**:
+     - Desplazamiento del banner AMTTM hacia la sección inferior, ubicándolo inmediatamente antes del footer.
+     - Garantía de visibilidad limpia en la cabecera para el logo, versión y botón de inicio de sesión.
+  4. **Verificación Automatizada**:
+     - 76 pruebas unitarias Vitest y 44 escenarios BDD Cucumber pasando al 100%.
+- **Archivos creados/modificados**:
+  - `src/app/page.tsx`, `features/community_and_breathing.feature`, `features/step_definitions/community_steps.ts`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

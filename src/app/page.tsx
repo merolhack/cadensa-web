@@ -355,9 +355,6 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Banner Comunitario Oficial AMTTM */}
-      <CommunityBanner />
-
       {/* Header Compacto */}
       <header className="max-w-xl w-full text-center space-y-1 pt-1 sm:pt-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] text-zinc-400">
@@ -686,6 +683,9 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {/* Banner Comunitario Oficial AMTTM */}
+      <CommunityBanner />
 
       {/* Footer */}
       <footer className="w-full max-w-3xl text-center py-2 border-t border-zinc-900 text-xs text-zinc-500">

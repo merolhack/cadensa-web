@@ -61,6 +61,96 @@ export type Database = {
         }
         Relationships: []
       }
+      exercises: {
+        Row: {
+          id: string
+          category: string
+          difficulty: string
+          phrase: string
+          bpm_recommended: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          category?: string
+          difficulty?: string
+          phrase: string
+          bpm_recommended?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          category?: string
+          difficulty?: string
+          phrase?: string
+          bpm_recommended?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      training_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          exercise_id: string | null
+          bpm: number
+          duration_seconds: number
+          syllable_count: number
+          accuracy_score: number | null
+          completed_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          exercise_id?: string | null
+          bpm: number
+          duration_seconds?: number
+          syllable_count?: number
+          accuracy_score?: number | null
+          completed_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          exercise_id?: string | null
+          bpm?: number
+          duration_seconds?: number
+          syllable_count?: number
+          accuracy_score?: number | null
+          completed_at?: string
+        }
+        Relationships: []
+      }
+      user_streaks: {
+        Row: {
+          user_id: string
+          current_streak: number
+          longest_streak: number
+          last_activity_date: string | null
+          total_minutes: number
+          xp_points: number
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          current_streak?: number
+          longest_streak?: number
+          last_activity_date?: string | null
+          total_minutes?: number
+          xp_points?: number
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          current_streak?: number
+          longest_streak?: number
+          last_activity_date?: string | null
+          total_minutes?: number
+          xp_points?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

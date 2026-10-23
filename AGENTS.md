@@ -6,38 +6,56 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ---
 
-# Cadensa - LLM Wiki / Knowledge Base
+# Cadensa - Reglas de Operación para Agentes LLM & Desarrolladores
 
-**Welcome to the Cadensa codebase!** This document serves as the central context and knowledge base for any AI/LLM assisting with the project. Please read this entirely before making architectural decisions or writing new code.
+**Bienvenido a Cadensa.** Este documento establece las directrices obligatorias y protocolos de desarrollo asistido por IA para el repositorio.
 
-## 1. Project Concept
-- **Name:** Cadensa (Inspired by "cadence")
-- **Tagline:** Encuentra el ritmo de tu voz. (Find the rhythm of your voice).
-- **Description:** A daily platform that trains speech rhythm to overcome blocks and communicate with confidence, similar to Duolingo but for stuttering therapy.
-- **Clinical Basis:** Based on "rhythm" and "syllable-timed speech", a proven clinical technique to reduce stuttering by teaching users to speak with a constant rhythm.
+---
 
-## 2. Architecture & Tech Stack (Monorepo PoC)
-We use a single monorepo for both frontend and backend configurations.
+## 🛠️ Herramientas y Protocolos Obligatorios
 
-### Front-end
-- **Framework:** Next.js (App Router, strictly configured for Static Export via `output: 'export'`).
-- **Language:** TypeScript.
-- **Styling:** Tailwind CSS (v4) with dark mode as default/primary aesthetic.
-- **Rendering:** Strictly Client-Side Rendering (Client Components marked with `'use client'` when state or auth is needed). No Server-Side Rendering (SSR) since we compile to static HTML/JS/CSS.
-- **Deployment Target:** Cloudflare Pages.
+### 1. Codebase Memory MCP (`codebase-memory`)
+Este proyecto está indexado y gestionado a través de **codebase-memory**:
+- **Nombre del Proyecto:** `home-merolhack-fl-cadensa-web`
+- **Ruta Raíz:** `/home/merolhack/fl/cadensa-web`
+- **Regla de Prioridad:** SIEMPRE prefiere las herramientas de grafo (`search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, `get_architecture`) antes de recurrir a búsquedas ciegas de texto con `grep` o `glob`.
+- Si se modifican archivos clave o la estructura de la aplicación, reindexa el proyecto mediante `index_repository(name="home-merolhack-fl-cadensa-web", repo_path="/home/merolhack/fl/cadensa-web")`.
 
-### Back-end
-- **Database / Auth / Storage:** Supabase (Local CLI for development, Cloud for production).
-- **Security:** Strict Row Level Security (RLS) enabled in PostgreSQL. The `service_role` key must NEVER be exposed in the frontend. All data access security is delegated to database RLS policies.
-- **Database Sync:** We use `supabase gen types typescript` to generate strictly typed interfaces for the database schema.
+### 2. Delegación a Modelos Secundarios (`ollama-local`)
+Para optimizar el contexto y los recursos, delega cualquier tarea mecánica, repetitiva o de bajo riesgo (generación de fixtures, docstrings, boilerplate, formateos simples) a la herramienta `consultar_modelo_local`:
+- **Jerarquía Obligatoria:**
+  1. **`gemma4:cloud`:** Modelo prioritario cloud si hay cuota semanal disponible (< 90%).
+  2. **`qwen3:8b-8k`:** Fallback automático local si la nube falla o excede cuota.
+- **No delegar:** Decisiones de arquitectura, cambios multi-archivo o lógica crítica clínica y de seguridad.
 
-### CI/CD
-- **Workflow:** GitHub Actions.
-- **Triggers:** Push to `main` branch.
-- **Process:** Lints, type-checks, runs `next build`, and deploys the `out/` directory to Cloudflare Pages.
+### 3. LLM Wiki Persistente y Modular (`wiki/`)
+El repositorio utiliza una base de conocimiento persistente en `wiki/` basada en el patrón de Andrej Karpathy:
+- **Prohibido:** Crear monolitos o volcar toda la documentación en un solo archivo.
+- **Estructura en 3 capas:**
+  - **Fuentes Crudas (`wiki/raw/`):** Inmutables (papers médicos, specs originales).
+  - **Wiki Modular (`wiki/`):** Páginas interconectadas de arquitectura, conceptos, entidades y roadmap.
+  - **Esquema de Gobierno (`wiki/SCHEMA.md`):** Reglas operativas Ingest, Query y Lint.
+- **Navegación:** Consulta siempre [`wiki/index.md`](wiki/index.md) como primer paso antes de resolver dudas.
+- **Bitácora:** Todo cambio de arquitectura o adición de capacidades debe registrarse cronológicamente en [`wiki/log.md`](wiki/log.md).
 
-## 3. Best Practices & Rules
-- **Aesthetics:** The UI must be modern, premium, and dynamic. Use rich color palettes (e.g., emerald/cyan gradients on dark backgrounds), smooth transitions, and avoid generic default styles. The application must not look like a cold medical tool nor a standard language learning app.
-- **Security:** Always use `sb_publishable_xxx` or the `anon` key for frontend Supabase clients. 
-- **TypeScript:** Use strict typing. When touching Supabase queries, always rely on the generated types (`src/types/supabase.ts`).
-- **File Structure:** All Next.js source code lives inside `src/`.
+### 4. Cobertura Obligatoria de Pruebas: Unitarias y BDD
+**TODO desarrollo de código, algoritmo o componente debe incluir de manera estricta:**
+1. **Pruebas Unitarias (Vitest + React Testing Library):** Archivos `*.test.ts` o `*.test.tsx` en `src/`.
+2. **Pruebas BDD (Cucumber.js + Gherkin en español):** Archivos `features/*.feature` con sus respectivos `features/step_definitions/*.ts`.
+3. Verificación mandatoria ejecutando `npm run test:all` antes de considerar una tarea completada.
+
+---
+
+## 📌 Concepto Clínico y de Producto
+- **Nombre:** Cadensa (Inspirado en la cadencia del habla).
+- **Lema:** *"Encuentra el ritmo de tu voz."*
+- **Técnica:** Habla Rítmica Silábica (*Syllable-Timed Speech - STS*), método terapéutico que utiliza pulsos rítmicos regulares para eludir el déficit temporal de los ganglios basales en personas con tartamudez. Ver [`wiki/concepts/syllable_timed_speech.md`](wiki/concepts/syllable_timed_speech.md).
+- **Metáfora:** La experiencia de gamificación y hábito diario estilo Duolingo, aplicada a la fluidez y seguridad comunicativa.
+
+---
+
+## 🏗️ Arquitectura y Restricciones Técnicas
+- **Frontend:** Next.js 16 (App Router) en modo exportación estática obligatoria (`output: 'export'`). Todos los componentes interactivos deben llevar la directiva `'use client'`. Ver [`wiki/architecture/frontend.md`](wiki/architecture/frontend.md).
+- **Backend:** Supabase PostgreSQL con **Zero Trust RLS**. Jamás expongas `service_role` en el frontend; toda seguridad se valida con políticas RLS a través de `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Ver [`wiki/concepts/zero_trust_rls.md`](wiki/concepts/zero_trust_rls.md).
+- **Contenedores:** Dockerfile multi-stage (`node:20-slim` para build + `nginx:alpine` para runtime SPA estático). Ver [`wiki/architecture/containerization.md`](wiki/architecture/containerization.md).
+- **Estilos:** Tailwind CSS v4 con dark mode profundo (`bg-zinc-950`) y acentos en esmeralda/cian (`from-emerald-400 to-cyan-400`).

@@ -1,0 +1,10 @@
+{
+  "default": {
+    "paths": ["features/**/*.feature"],
+    "import": [
+      "tsx",
+      "features/step_definitions/**/*.ts"
+    ],
+    "format": ["summary"]
+  }
+}

@@ -134,4 +134,54 @@ describe('AudioMetronome Engine - Unit Tests', () => {
     expect(metronome.toggle()).toBe(false);
     expect(metronome.getState().isPlaying).toBe(false);
   });
+
+  it('debe configurar y devolver el compás (time signature)', () => {
+    const metronome = new AudioMetronome(80);
+    expect(metronome.getTimeSignature()).toBe(4);
+
+    metronome.setTimeSignature(3);
+    expect(metronome.getTimeSignature()).toBe(3);
+    expect(metronome.getState().timeSignature).toBe(3);
+
+    metronome.setTimeSignature(2);
+    expect(metronome.getTimeSignature()).toBe(2);
+    expect(metronome.getState().timeSignature).toBe(2);
+  });
+
+  it('debe configurar y devolver el timbre sintético (sound preset)', () => {
+    const metronome = new AudioMetronome(80);
+    expect(metronome.getSoundPreset()).toBe('clasico');
+
+    metronome.setSoundPreset('madera');
+    expect(metronome.getSoundPreset()).toBe('madera');
+    expect(metronome.getState().soundPreset).toBe('madera');
+
+    metronome.setSoundPreset('digital');
+    expect(metronome.getSoundPreset()).toBe('digital');
+    expect(metronome.getState().soundPreset).toBe('digital');
+  });
+
+  it('debe configurar y alternar el desafío de atenuación (fading)', () => {
+    const metronome = new AudioMetronome(80);
+    expect(metronome.isFadingEnabled()).toBe(false);
+
+    metronome.setFadingEnabled(true);
+    expect(metronome.isFadingEnabled()).toBe(true);
+    expect(metronome.getState().fadingEnabled).toBe(true);
+
+    metronome.setFadingEnabled(false);
+    expect(metronome.isFadingEnabled()).toBe(false);
+  });
+
+  it('debe aplicar los diferentes presets al programar pulsos de audio', () => {
+    const metronome = new AudioMetronome(120);
+    metronome.setSoundPreset('madera');
+    metronome.start();
+
+    vi.advanceTimersByTime(100);
+    expect(mockAudioContext.createOscillator).toHaveBeenCalled();
+    expect(mockOscillator.type).toBe('triangle');
+
+    metronome.stop();
+  });
 });

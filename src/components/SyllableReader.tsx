@@ -3,29 +3,39 @@
 import React from 'react';
 import { syllabifySentence } from '@/lib/syllables';
 
+export type SyllableFontScale = 'normal' | 'grande' | 'extragrande';
+
 interface SyllableReaderProps {
   sentence: string;
   activeSyllableIndex: number;
   isPlaying: boolean;
+  fontScale?: SyllableFontScale;
 }
 
 export const SyllableReader: React.FC<SyllableReaderProps> = ({
   sentence,
   activeSyllableIndex,
   isPlaying,
+  fontScale = 'normal',
 }) => {
   const parsedWords = syllabifySentence(sentence);
 
   // Contador global para calcular el índice absoluto de cada sílaba en la frase
   let globalSyllableCounter = 0;
 
+  const fontClass = {
+    normal: 'text-base sm:text-lg px-1.5 py-0.5',
+    grande: 'text-lg sm:text-xl px-2 py-1',
+    extragrande: 'text-xl sm:text-2xl px-2.5 py-1.5 font-bold',
+  }[fontScale];
+
   return (
-    <div className="flex flex-wrap items-center justify-center gap-3 p-4 bg-zinc-900/60 border border-zinc-800 rounded-2xl max-w-xl mx-auto shadow-inner">
+    <div className="flex flex-wrap items-center justify-center gap-2.5 p-3.5 bg-zinc-900/60 border border-zinc-800 rounded-2xl max-w-xl mx-auto shadow-inner">
       {parsedWords.map((wordItem, wordIdx) => {
         return (
           <div
             key={wordIdx}
-            className="flex items-center bg-zinc-950/80 px-3 py-2 rounded-xl border border-zinc-800/80 shadow-sm"
+            className="flex items-center bg-zinc-950/80 px-2.5 py-1.5 rounded-xl border border-zinc-800/80 shadow-sm"
           >
             {wordItem.syllables.map((syl, sylIdx) => {
               const currentGlobalIdx = globalSyllableCounter++;
@@ -34,7 +44,7 @@ export const SyllableReader: React.FC<SyllableReaderProps> = ({
               return (
                 <React.Fragment key={sylIdx}>
                   <span
-                    className={`px-1.5 py-0.5 rounded-md font-medium text-lg transition-all duration-150 ${
+                    className={`rounded-md transition-all duration-150 ${fontClass} ${
                       isActive
                         ? 'bg-gradient-to-r from-emerald-500 to-cyan-400 text-zinc-950 font-black scale-110 shadow-[0_0_15px_rgba(52,211,153,0.7)]'
                         : 'text-zinc-300 hover:text-zinc-100'

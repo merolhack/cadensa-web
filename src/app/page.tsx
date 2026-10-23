@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { AudioMetronome } from '@/lib/audioMetronome';
+import { AudioMetronome, TimeSignature, SoundPreset } from '@/lib/audioMetronome';
 import { flattenSentenceSyllables } from '@/lib/syllables';
 import { evaluateRhythmicAccuracy, AccuracyResult, triggerHapticFeedback } from '@/lib/voiceDetection';
 import { recordTrainingSession, evaluateDailyStreak } from '@/lib/trainingService';
 import { calculateSessionXP } from '@/lib/streaks';
+import { supabase } from '@/lib/supabaseClient';
 import { MetronomeVisual } from '@/components/MetronomeVisual';
-import { SyllableReader } from '@/components/SyllableReader';
+import { SyllableReader, SyllableFontScale } from '@/components/SyllableReader';
 import { Dashboard } from '@/components/Dashboard';
 import { AuthModal } from '@/components/AuthModal';
-import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, getExercisesByCategory } from '@/lib/clinicalExercises';
+import { CommunityBanner } from '@/components/CommunityBanner';
+import { BreathingPacer } from '@/components/BreathingPacer';
+import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExercisesByCategory } from '@/lib/clinicalExercises';
 
 const TRAINING_PHRASES = [
   'Ca mi no des pa cio ca da ma ña na',
@@ -28,6 +31,16 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<ClinicalCategory | 'todas'>('todas');
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [activeSyllableIndex, setActiveSyllableIndex] = useState(0);
+
+  // Estados v2: Compás, timbres sonoros, fading de apoyo y accesibilidad
+  const [timeSignature, setTimeSignature] = useState<TimeSignature>(4);
+  const [soundPreset, setSoundPreset] = useState<SoundPreset>('clasico');
+  const [fadingEnabled, setFadingEnabled] = useState(false);
+  const [fontScale, setFontScale] = useState<SyllableFontScale>('normal');
+  const [isBreathingOpen, setIsBreathingOpen] = useState(false);
+  const [isCustomPhraseOpen, setIsCustomPhraseOpen] = useState(false);
+  const [customPhraseInput, setCustomPhraseInput] = useState('');
+  const [customExercises, setCustomExercises] = useState<ClinicalExercise[]>([]);
 
   // Estados de Usuario, Sesión y Modales con inicialización perezosa segura
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(() => {
@@ -50,9 +63,12 @@ export default function Home() {
   const [voiceModeActive, setVoiceModeActive] = useState(false);
 
   const metronomeRef = useRef<AudioMetronome | null>(null);
-  const availableExercises = selectedCategory === 'todas'
+
+  const baseExercises = selectedCategory === 'todas'
     ? EXPANDED_CLINICAL_CATALOG
     : getExercisesByCategory(selectedCategory);
+
+  const availableExercises = [...customExercises, ...baseExercises];
 
   const activeExercise = availableExercises[phraseIndex % availableExercises.length] || {
     id: 'default',
@@ -73,6 +89,22 @@ export default function Home() {
   useEffect(() => {
     totalSyllablesRef.current = totalSyllables;
   }, [totalSyllables]);
+
+  // Sincronizar estado de sesión en tiempo real desde Supabase Auth
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user?.email) {
+        setCurrentUserEmail(session.user.email);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('cadensa_user_email', session.user.email);
+        }
+      }
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   // Contador de duración de la sesión activa
   useEffect(() => {
@@ -115,6 +147,28 @@ export default function Home() {
     }
   };
 
+  const handleTimeSignatureChange = (sig: TimeSignature) => {
+    setTimeSignature(sig);
+    if (metronomeRef.current) {
+      metronomeRef.current.setTimeSignature(sig);
+    }
+  };
+
+  const handleSoundPresetChange = (preset: SoundPreset) => {
+    setSoundPreset(preset);
+    if (metronomeRef.current) {
+      metronomeRef.current.setSoundPreset(preset);
+    }
+  };
+
+  const handleFadingToggle = () => {
+    const nextVal = !fadingEnabled;
+    setFadingEnabled(nextVal);
+    if (metronomeRef.current) {
+      metronomeRef.current.setFadingEnabled(nextVal);
+    }
+  };
+
   const handleCategorySelect = (category: ClinicalCategory | 'todas') => {
     setSelectedCategory(category);
     setPhraseIndex(0);
@@ -150,6 +204,31 @@ export default function Home() {
       return nextIdx;
     });
     setActiveSyllableIndex(0);
+  };
+
+  const handleAddCustomPhrase = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = customPhraseInput.trim();
+    if (!trimmed) return;
+
+    const newCustomEx: ClinicalExercise = {
+      id: `custom-${Date.now()}`,
+      category: 'fonetica_basica',
+      difficulty: 'personalizado',
+      phrase: trimmed,
+      bpm_recommended: bpm,
+      created_at: new Date().toISOString(),
+      clinicalObjective: 'Entrenamiento personalizado de palabras y frases desafiantes',
+      targetPhonemes: ['personalizado'],
+    };
+
+    setCustomExercises((prev) => [newCustomEx, ...prev]);
+    setPhraseIndex(0);
+    setActiveSyllableIndex(0);
+    setCustomPhraseInput('');
+    setIsCustomPhraseOpen(false);
+    setSaveSuccessMsg('¡Frase personalizada añadida a tu entrenamiento!');
+    setTimeout(() => setSaveSuccessMsg(null), 3000);
   };
 
   // Simular o capturar pulsación vocal en sincronía con el compás
@@ -215,6 +294,22 @@ export default function Home() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      // Ignorar error si no hay conexión
+    }
+    setCurrentUserEmail(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('cadensa_user_email');
+    }
+    setSaveSuccessMsg('Has cerrado sesión. Continuando en modo local.');
+    setTimeout(() => setSaveSuccessMsg(null), 3000);
+  };
+
+  const dailyProgressPercent = Math.min(100, Math.round((totalMinutes / 5) * 100));
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-50 selection:bg-emerald-500 selection:text-zinc-950">
       {/* Barra de Navegación Superior */}
@@ -224,7 +319,7 @@ export default function Home() {
             Cadensa
           </span>
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-mono">
-            v0.3.0
+            v0.4.0
           </span>
         </div>
 
@@ -238,16 +333,32 @@ export default function Home() {
             <span className="text-zinc-400 hidden sm:inline">días</span>
           </button>
 
-          <button
-            onClick={() => setIsAuthModalOpen(true)}
-            className="px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-xs text-zinc-300 transition-colors cursor-pointer"
-          >
-            {currentUserEmail ? currentUserEmail.split('@')[0] : '👤 Iniciar Sesión'}
-          </button>
+          {currentUserEmail ? (
+            <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-1 text-xs">
+              <span className="text-zinc-300 max-w-[120px] truncate">{currentUserEmail.split('@')[0]}</span>
+              <button
+                onClick={handleLogout}
+                className="text-zinc-400 hover:text-red-400 transition-colors ml-1 cursor-pointer font-semibold"
+                title="Cerrar Sesión"
+              >
+                ⎋ Salir
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsAuthModalOpen(true)}
+              className="px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-xs text-zinc-300 transition-colors cursor-pointer"
+            >
+              👤 Iniciar Sesión
+            </button>
+          )}
         </div>
       </nav>
 
-      {/* Header Compacto (Evita empujar los controles fuera de pantalla) */}
+      {/* Banner Comunitario Oficial AMTTM */}
+      <CommunityBanner />
+
+      {/* Header Compacto */}
       <header className="max-w-xl w-full text-center space-y-1 pt-1 sm:pt-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] text-zinc-400">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -262,8 +373,22 @@ export default function Home() {
           Encuentra el ritmo de tu voz — Habla rítmica silábica (STS)
         </p>
 
+        {/* Anillo de Meta Diaria de Entrenamiento (5 min objetivo) */}
+        <div className="max-w-xs mx-auto pt-1">
+          <div className="flex items-center justify-between text-[11px] text-zinc-400 px-1">
+            <span>Meta de hoy ({totalMinutes}/5 min)</span>
+            <span className="font-semibold text-emerald-400">{dailyProgressPercent}%</span>
+          </div>
+          <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden mt-0.5">
+            <div
+              className="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full transition-all duration-500"
+              style={{ width: `${dailyProgressPercent}%` }}
+            />
+          </div>
+        </div>
+
         {saveSuccessMsg && (
-          <div className="p-2.5 max-w-md mx-auto text-xs rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-semibold animate-fade-in shadow-[0_0_15px_rgba(52,211,153,0.2)]">
+          <div className="p-2 max-w-md mx-auto text-xs rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-semibold animate-fade-in shadow-[0_0_15px_rgba(52,211,153,0.2)]">
             {saveSuccessMsg}
           </div>
         )}
@@ -274,7 +399,7 @@ export default function Home() {
         {/* Selector de Categorías Clínicas con conteos */}
         <div className="flex items-center justify-center gap-1.5 flex-wrap">
           {[
-            { id: 'todas', label: 'Todas', count: EXPANDED_CLINICAL_CATALOG.length },
+            { id: 'todas', label: 'Todas', count: availableExercises.length },
             { id: 'fonetica_basica', label: 'Fonética', count: getExercisesByCategory('fonetica_basica').length },
             { id: 'diadococinesia', label: 'Diadococinesia', count: getExercisesByCategory('diadococinesia').length },
             { id: 'vocales', label: 'Vocales', count: getExercisesByCategory('vocales').length },
@@ -295,12 +420,13 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Metrónomo Visual Compacto */}
+        {/* Metrónomo Visual Compacto con Compás Dinámico */}
         <MetronomeVisual
           isPlaying={isPlaying}
           bpm={bpm}
           currentBeat={currentBeat}
           isPulsing={isPulsing}
+          timeSignature={timeSignature}
         />
 
         {/* Lector de Sílabas y Ejercicio Activo */}
@@ -309,27 +435,56 @@ export default function Home() {
             <span>
               Ejercicio {phraseIndex + 1}/{availableExercises.length} ({activeExercise.difficulty})
             </span>
-            <button
-              onClick={nextPhrase}
-              className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 cursor-pointer transition-colors"
-            >
-              Siguiente Ejercicio →
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsCustomPhraseOpen(!isCustomPhraseOpen)}
+                className="text-cyan-400 hover:text-cyan-300 underline cursor-pointer"
+              >
+                + Mi Frase
+              </button>
+              <button
+                onClick={nextPhrase}
+                className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 cursor-pointer transition-colors"
+              >
+                Siguiente →
+              </button>
+            </div>
           </div>
 
           <div className="text-[11px] text-zinc-400 italic">
             🎯 {activeExercise.clinicalObjective}
           </div>
 
+          {/* Formulario de Frase Propia */}
+          {isCustomPhraseOpen && (
+            <form onSubmit={handleAddCustomPhrase} className="flex gap-2 p-2 rounded-xl bg-zinc-950 border border-zinc-800">
+              <input
+                type="text"
+                required
+                value={customPhraseInput}
+                onChange={(e) => setCustomPhraseInput(e.target.value)}
+                placeholder="Escribe tu propia frase o palabra difícil..."
+                className="flex-1 px-3 py-1 text-xs rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none focus:border-emerald-400"
+              />
+              <button
+                type="submit"
+                className="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold rounded-lg text-xs cursor-pointer"
+              >
+                Silabear
+              </button>
+            </form>
+          )}
+
           <SyllableReader
             sentence={currentPhrase}
             activeSyllableIndex={activeSyllableIndex}
             isPlaying={isPlaying}
+            fontScale={fontScale}
           />
         </div>
 
-        {/* BOTONES DE ACCIÓN PRINCIPAL (Inmediatamente visibles en primer plano) */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2 border-t border-zinc-800/80">
+        {/* BOTONES DE ACCIÓN PRINCIPAL */}
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-zinc-800/80">
           <button
             onClick={handleTogglePlay}
             className={`px-7 py-3 rounded-2xl font-bold text-sm sm:text-base transition-all duration-200 flex items-center gap-2.5 cursor-pointer ${
@@ -353,22 +508,30 @@ export default function Home() {
 
           <button
             onClick={handleToggleMute}
-            className={`px-4 py-3 rounded-2xl border text-xs font-semibold transition-colors cursor-pointer ${
+            className={`px-3.5 py-3 rounded-2xl border text-xs font-semibold transition-colors cursor-pointer ${
               isMuted
                 ? 'bg-red-500/10 border-red-500/40 text-red-400'
                 : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
             }`}
             title={isMuted ? 'Activar Sonido' : 'Silenciar Sonido'}
           >
-            {isMuted ? '🔇 Silenciado' : '🔊 Audio'}
+            {isMuted ? '🔇 Mute' : '🔊 Audio'}
+          </button>
+
+          <button
+            onClick={() => setIsBreathingOpen(true)}
+            className="px-3.5 py-3 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 text-xs font-semibold transition-colors cursor-pointer"
+            title="Abrir ejercicio de respiración 4-4-4-4"
+          >
+            🌬️ Respirar
           </button>
 
           {sessionSeconds > 5 && (
             <button
               onClick={handleFinishSession}
-              className="px-4 py-3 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-semibold text-xs transition-colors cursor-pointer"
+              className="px-3.5 py-3 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-semibold text-xs transition-colors cursor-pointer"
             >
-              💾 Guardar Sesión ({sessionSeconds}s)
+              💾 Guardar ({sessionSeconds}s)
             </button>
           )}
         </div>
@@ -392,7 +555,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* Controles de Tempo Compactos */}
+        {/* Controles de Configuración de Audio & Compás (Pestañas Rápidas) */}
         <div className="space-y-2 pt-1 border-t border-zinc-800/60">
           <div className="flex items-center justify-between text-xs text-zinc-300">
             <span className="font-medium">Velocidad de Cadencia</span>
@@ -428,26 +591,74 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Preajustes Clínicos */}
-          <div className="grid grid-cols-3 gap-1.5 pt-0.5">
-            {[
-              { label: 'Calibración', val: 70, desc: 'Lento' },
-              { label: 'Entrenamiento', val: 80, desc: 'Medio' },
-              { label: 'Conversación', val: 95, desc: 'Fluido' },
-            ].map((preset) => (
-              <button
-                key={preset.val}
-                onClick={() => handleBpmChange(preset.val)}
-                className={`py-1.5 px-2 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                  bpm === preset.val
-                    ? 'bg-emerald-500/10 border-emerald-400 text-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.3)]'
-                    : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
-                }`}
-              >
-                <div>{preset.label}</div>
-                <div className="text-[9px] opacity-70">{preset.val} BPM</div>
-              </button>
-            ))}
+          {/* Opciones Avanzadas: Compás, Timbre y Tamaño */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-zinc-400">
+            {/* Selector de Compás */}
+            <div className="flex items-center gap-1">
+              <span className="text-zinc-500">Compás:</span>
+              {([2, 3, 4] as TimeSignature[]).map((sig) => (
+                <button
+                  key={sig}
+                  onClick={() => handleTimeSignatureChange(sig)}
+                  className={`px-2 py-0.5 rounded-lg border cursor-pointer ${
+                    timeSignature === sig
+                      ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
+                      : 'bg-zinc-900 border-zinc-800 hover:text-zinc-200'
+                  }`}
+                >
+                  {sig}/4
+                </button>
+              ))}
+            </div>
+
+            {/* Selector de Timbre */}
+            <div className="flex items-center gap-1">
+              <span className="text-zinc-500">Timbre:</span>
+              {(['clasico', 'madera', 'digital'] as SoundPreset[]).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => handleSoundPresetChange(t)}
+                  className={`px-2 py-0.5 rounded-lg border capitalize cursor-pointer ${
+                    soundPreset === t
+                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold'
+                      : 'bg-zinc-900 border-zinc-800 hover:text-zinc-200'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            {/* Reto Silencio Rítmico Fading */}
+            <button
+              onClick={handleFadingToggle}
+              className={`px-2 py-0.5 rounded-lg border cursor-pointer ${
+                fadingEnabled
+                  ? 'bg-purple-500/20 border-purple-400 text-purple-300 font-bold'
+                  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+              }`}
+              title="Silencia 2 compases cada 4 compases para reto interno"
+            >
+              {fadingEnabled ? '🎯 Reto Activo' : '🎯 Fading'}
+            </button>
+
+            {/* Escala de Fuente */}
+            <div className="flex items-center gap-1">
+              <span className="text-zinc-500">Texto:</span>
+              {(['normal', 'grande', 'extragrande'] as SyllableFontScale[]).map((scale) => (
+                <button
+                  key={scale}
+                  onClick={() => setFontScale(scale)}
+                  className={`px-1.5 py-0.5 rounded-lg border cursor-pointer ${
+                    fontScale === scale
+                      ? 'bg-zinc-700 border-zinc-500 text-zinc-100 font-bold'
+                      : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                  {scale === 'normal' ? 'A' : scale === 'grande' ? 'A+' : 'A++'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -469,9 +680,9 @@ export default function Home() {
         </div>
 
         <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-1">
-          <div className="text-emerald-400 text-sm font-bold">03. Cero Frustración</div>
+          <div className="text-emerald-400 text-sm font-bold">03. Respaldo AMTTM</div>
           <p className="text-xs text-zinc-400 leading-relaxed">
-            Entrenamiento local-first con gamificación clínica y seguimiento accesible para tu terapeuta.
+            Acompañamiento integral y comunidad respaldada por la Asociación Mexicana de la Tartamudez.
           </p>
         </div>
       </section>
@@ -480,6 +691,12 @@ export default function Home() {
       <footer className="w-full max-w-3xl text-center py-2 border-t border-zinc-900 text-xs text-zinc-500">
         Cadensa Web — Terapia Rítmica Silábica • Next.js 16 • Supabase • Cloudflare Pages
       </footer>
+
+      {/* Modal de Respiración Diafragmática */}
+      <BreathingPacer
+        isOpen={isBreathingOpen}
+        onClose={() => setIsBreathingOpen(false)}
+      />
 
       {/* Modal de Dashboard / Métricas */}
       <Dashboard

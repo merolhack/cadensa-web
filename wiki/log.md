@@ -169,10 +169,36 @@
   4. **Validación Visual y Automatizada**:
      - 68 pruebas unitarias Vitest y 40 escenarios BDD Cucumber pasando.
      - Capturas verificadas en navegador para Desktop y Mobile.
+---
+
+## [2026-10-23] ingest | Suite Evolutiva V2: Vinculación AMTTM, Control Respiratorio, Compases y Timbres Sintéticos
+- **Detalle**:
+  1. **Análisis Integral de Autenticación Supabase**:
+     - Verificación activa contra GoTrue endpoint con API Key anon.
+     - Confirmación de creación de usuario (`User ID: ca5ca2b3-31a7-46fc-8297-c856b8ef6f57`) con dominios válidos.
+     - Identificación de validación de dominios RFC y configuración de "Confirm Email". Justificación de estrategia Cadensa: Soft Confirmation, Guest Mode y Google OAuth.
+  2. **Banner Oficial AMTTM**:
+     - Componente accesible `CommunityBanner.tsx` con persistencia en localStorage vía `useSyncExternalStore` y enlace seguro hacia `https://www.facebook.com/AMTTM/`.
+  3. **Marcapasos de Respiración Diafragmática (Box Breathing 4-4-4-4)**:
+     - Componente interactivo `BreathingPacer.tsx` con ciclos de Inhalar, Sostener, Exhalar y Pausa para reducción de ansiedad previa al habla.
+  4. **Compases Musicales y Timbres Sintéticos**:
+     - Selector de compás (4/4, 3/4, 2/4) en `AudioMetronome.ts` y visualizador dinámico en `MetronomeVisual.tsx`.
+     - Presets acústicos sintéticos de latencia cero: Clásico (880/587Hz), Madera/Woodblock (720/480Hz) y Digital Suave (520/360Hz).
+  5. **Herramientas de Accesibilidad y Práctica Autónoma**:
+     - Desafío de atenuación rítmica (fading: 4 compases con sonido, 2 en silencio mental).
+     - Escala de tipografía para lectura silábica (`normal`, `grande`, `extragrande`).
+     - Anillo de progreso para meta diaria (objetivo 5 minutos).
+     - Creador de frases personalizadas con silabificación automática inmediata.
+     - Botón de cierre de sesión y sincronización en tiempo real vía `onAuthStateChange`.
+  6. **Validación Automatizada Rigurosa**:
+     - 76 pruebas unitarias Vitest y 44 escenarios BDD Cucumber pasando al 100%.
+     - 0 errores y 0 advertencias en ESLint; compilación de producción Next.js limpia.
 - **Archivos creados/modificados**:
-  - `AGENTS.md`, `src/lib/clinicalExercises.ts`, `src/components/MetronomeVisual.tsx`, `src/app/page.tsx`, `src/app/page.test.tsx`, `wiki/log.md`
+  - `src/components/CommunityBanner.tsx`, `src/components/CommunityBanner.test.tsx`
+  - `src/components/BreathingPacer.tsx`, `src/components/BreathingPacer.test.tsx`
+  - `src/lib/audioMetronome.ts`, `src/lib/audioMetronome.test.ts`
+  - `src/components/MetronomeVisual.tsx`, `src/components/SyllableReader.tsx`
+  - `src/app/page.tsx`
+  - `features/community_and_breathing.feature`, `features/step_definitions/community_steps.ts`
+  - `wiki/roadmap/evolution_v2_plan.md`, `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
-
-
-
-

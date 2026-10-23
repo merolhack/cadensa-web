@@ -7,6 +7,7 @@ interface MetronomeVisualProps {
   bpm: number;
   currentBeat: number;
   isPulsing: boolean;
+  timeSignature?: 2 | 3 | 4;
 }
 
 export const MetronomeVisual: React.FC<MetronomeVisualProps> = ({
@@ -14,8 +15,10 @@ export const MetronomeVisual: React.FC<MetronomeVisualProps> = ({
   bpm,
   currentBeat,
   isPulsing,
+  timeSignature = 4,
 }) => {
-  const beatInBar = (currentBeat % 4) + 1;
+  const beatInBar = (currentBeat % timeSignature) + 1;
+  const beatsArray = Array.from({ length: timeSignature }, (_, i) => i + 1);
 
   return (
     <div className="flex flex-col items-center justify-center p-2 sm:p-3 space-y-2.5">
@@ -58,9 +61,9 @@ export const MetronomeVisual: React.FC<MetronomeVisualProps> = ({
         </div>
       </div>
 
-      {/* Indicadores de compás (4 tiempos) */}
+      {/* Indicadores de compás dinámico */}
       <div className="flex items-center space-x-2">
-        {[1, 2, 3, 4].map((beat) => (
+        {beatsArray.map((beat) => (
           <div
             key={beat}
             className={`w-2.5 h-2.5 rounded-full transition-all duration-150 ${

@@ -57,6 +57,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | Documento | Descripción Breve | Etiquetas |
 |---|---|---|
 | [activity_plan.md](roadmap/activity_plan.md) | Plan maestro detallado en 6 fases con desglose de actividades, criterios de calidad y entregables. | `roadmap`, `planning`, `backlog`, `activities` |
+| [evolution_v2_plan.md](roadmap/evolution_v2_plan.md) | Plan de evolución v2: 10 mejoras clínicas, banner comunitario AMTTM y optimizaciones de audio y accesibilidad. | `roadmap`, `evolution`, `community`, `features` |
 | [next_steps_plan.md](roadmap/next_steps_plan.md) | Plan de siguientes pasos para evolución clínica: ejercicios fonéticos, reportes para fonoaudiólogos y análisis vocal. | `roadmap`, `clinical`, `reporting`, `next-steps` |
 | [product_evolution.md](roadmap/product_evolution.md) | Ruta de evolución técnica del PoC actual hacia el MVP interactivo (Web Audio, silabador, rachas). | `roadmap`, `product`, `mvp`, `audio` |
 

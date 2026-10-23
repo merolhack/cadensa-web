@@ -51,6 +51,13 @@ Siempre que se realice un `git push` de commits al repositorio remoto:
 2. Todos los jobs del workflow (instalación de dependencias, linting, tests unitarios con Vitest, escenarios BDD con Cucumber, compilación Next.js Turbopack y despliegue a Cloudflare Pages) **DEBEN completarse en estado exitoso (100% verde / `success`)**.
 3. **Queda ESTRICTAMENTE PROHIBIDO** indicar que se ha terminado una actividad o declarar completada una tarea si los GitHub Actions están fallando o no han concluido exitosamente.
 
+### 6. Respaldo Mandatorio de Credenciales y API Keys en el Archivo .env
+**REGLA GENERAL DE GESTIÓN DE SECRETOS Y CREDENCIALES:**
+Todas las credenciales, Client IDs, Client Secrets, tokens de acceso y API Keys que se generen, configuren o requieran en el proyecto (Cloudflare, Supabase, Google Cloud OAuth 2.0, servicios externos, etc.) **DEBEN respaldarse de manera inmediata y obligatoria en el archivo `.env` local**:
+1. **Disponibilidad y Respaldo:** El archivo `.env` sirve como fuente de verdad local para desarrollo y respaldo operativo ante incidentes.
+2. **Protección Estricta en Git:** El archivo `.env` **NUNCA** debe versionarse ni exponerse en el repositorio de Git (garantizado mediante `.gitignore`).
+3. **Sincronización de Plantilla:** Cada nueva variable incorporada a `.env` debe reflejarse como plantilla de referencia (placeholder) en `.env.example` para guiar la configuración de entornos y GitHub Actions Secrets.
+
 ---
 
 ## 📌 Concepto Clínico y de Producto

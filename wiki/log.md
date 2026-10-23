@@ -134,4 +134,25 @@
   - `wiki/architecture/auth_and_data_budget.md`, `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-23] ingest | Aprovisionamiento de Credenciales Cloudflare, Supabase y Configuración de GitHub Secrets
+- **Detalle**:
+  1. **Generación de Credenciales de Cloudflare**:
+     - Obtención de `CLOUDFLARE_ACCOUNT_ID` (`7ed54d7f608c3bd306ccb4c447546d8f`) y generación de `CLOUDFLARE_API_TOKEN` con permisos de edición para Cloudflare Pages y Workers.
+  2. **Obtención de Credenciales de Supabase**:
+     - Conexión con la organización `ymqoilvikpjihsrtcbdf` y proyecto `kddeejyhnxrnmkmiwjxp`.
+     - Obtención de `NEXT_PUBLIC_SUPABASE_URL` y API key anon/publishable (`sb_publishable_mMAujK8tzTnjF6FSrL-lAA_1U5nXZ1_`), verificada exitosamente con el endpoint de GoTrue Auth.
+  3. **Seguridad y Control de Versiones**:
+     - Configuración estricta en `.gitignore` para bloquear `.env`, permitiendo únicamente plantillas `.env.example`.
+     - Creación de `.env` local con credenciales reales y `.env.example` de referencia.
+  4. **Aprovisionamiento Automatizado en GitHub**:
+     - Inyección de los 4 secretos en `https://github.com/merolhack/cadensa-web/settings/secrets/actions` (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+  5. **Verificación Local Completa**:
+     - Ejecución exitosa de 68 pruebas unitarias (Vitest), 40 escenarios BDD (Cucumber) y compilación estática Next.js Turbopack (`out/`).
+- **Archivos creados/modificados**:
+  - `.gitignore`, `.env.example`, `.env` (ignorado en git), `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+
 

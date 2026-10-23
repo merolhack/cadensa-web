@@ -154,5 +154,25 @@
   - `.gitignore`, `.env.example`, `.env` (ignorado en git), `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-23] ingest | Optimización Ergonómica de UI: Visibilidad de Botones sobre el Pliegue y Diferenciación de Categorías
+- **Detalle**:
+  1. **Regla de Gobernanza en AGENTS.md**:
+     - Establecimiento de regla mandatoria: auditar activamente los GitHub Actions tras cada push remoto y verificar su estado 100% verde antes de concluir cualquier actividad.
+  2. **Resolución de Visibilidad de Botones (Above the Fold)**:
+     - Reestructuración del layout: compactación del header, reducción de escala del orbe en `MetronomeVisual.tsx` y reposicionamiento de los botones de acción principal ("Comenzar Práctica Rítmica" y "Audio") directamente bajo el lector silábico.
+     - Garantía de visibilidad inmediata sin requerir scroll tanto en vista de escritorio (1280x800) como en móvil (375x667).
+  3. **Diferenciación entre 'Todas' y 'Diadococinesia'**:
+     - Reordenamiento del catálogo clínico (`clinicalExercises.ts`) para que 'Todas' inicie con Fonética Básica e isocronía ("Ca mi no des pa cio ca da ma ña na", 80 BPM).
+     - Al alternar a 'Diadococinesia', la frase cambia inmediatamente a "Pa ta ka pa ta ka pa ta ka" (75 BPM), con su respectivo objetivo clínico y sincronización de BPM.
+  4. **Validación Visual y Automatizada**:
+     - 68 pruebas unitarias Vitest y 40 escenarios BDD Cucumber pasando.
+     - Capturas verificadas en navegador para Desktop y Mobile.
+- **Archivos creados/modificados**:
+  - `AGENTS.md`, `src/lib/clinicalExercises.ts`, `src/components/MetronomeVisual.tsx`, `src/app/page.tsx`, `src/app/page.test.tsx`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+
 
 

@@ -44,6 +44,13 @@ El repositorio utiliza una base de conocimiento persistente en `wiki/` basada en
 2. **Pruebas BDD (Cucumber.js + Gherkin en español):** Archivos `features/*.feature` con sus respectivos `features/step_definitions/*.ts`.
 3. Verificación mandatoria ejecutando `npm run test:all` antes de considerar una tarea completada.
 
+### 5. Verificación Estricta de GitHub Actions en Despliegues Remotos
+**REGLA MANDATORIA DE DESPLIEGUE:**
+Siempre que se realice un `git push` de commits al repositorio remoto:
+1. El agente o desarrollador **DEBE** monitorear y auditar activamente la ejecución de los GitHub Actions resultantes mediante la CLI (`gh run list`, `gh run view`).
+2. Todos los jobs del workflow (instalación de dependencias, linting, tests unitarios con Vitest, escenarios BDD con Cucumber, compilación Next.js Turbopack y despliegue a Cloudflare Pages) **DEBEN completarse en estado exitoso (100% verde / `success`)**.
+3. **Queda ESTRICTAMENTE PROHIBIDO** indicar que se ha terminado una actividad o declarar completada una tarea si los GitHub Actions están fallando o no han concluido exitosamente.
+
 ---
 
 ## 📌 Concepto Clínico y de Producto

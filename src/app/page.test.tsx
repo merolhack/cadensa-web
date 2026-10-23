@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Home from './page';
 
 describe('Home Page - Unit Tests', () => {
@@ -14,17 +14,25 @@ describe('Home Page - Unit Tests', () => {
     expect(screen.getByText(/encuentra el ritmo de tu voz/i)).toBeInTheDocument();
   });
 
-  it('debe incluir la mención al habla rítmica silábica', () => {
+  it('debe renderizar los botones de acción principal inmediatamente visibles', () => {
     render(<Home />);
-    expect(
-      screen.getByText(/basada en el habla rítmica silábica/i)
-    ).toBeInTheDocument();
+    const playButton = screen.getByRole('button', { name: /comenzar práctica rítmica/i });
+    expect(playButton).toBeInTheDocument();
+
+    const audioButton = screen.getByRole('button', { name: /audio/i });
+    expect(audioButton).toBeInTheDocument();
   });
 
-  it('debe mostrar la insignia de Prueba de Concepto', () => {
+  it('debe cambiar de frase y tempo al alternar entre Todas y Diadococinesia', () => {
     render(<Home />);
-    expect(
-      screen.getByText(/prueba de concepto - infraestructura base/i)
-    ).toBeInTheDocument();
+    
+    // Inicialmente en "Todas", el primer ejercicio es Fonética Básica
+    expect(screen.getByText(/estabilización métrica silábica/i)).toBeInTheDocument();
+
+    // Al pulsar "Diadococinesia", cambia visiblemente el objetivo clínico y los fonemas
+    const ddkButton = screen.getByRole('button', { name: /diadococinesia/i });
+    fireEvent.click(ddkButton);
+
+    expect(screen.getByText(/coordinación motriz velo-lingual/i)).toBeInTheDocument();
   });
 });

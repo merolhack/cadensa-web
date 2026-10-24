@@ -300,3 +300,34 @@
   - `wiki/concepts/cancellation_technique.md`
   - `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-24] ingest | Implementación de Página de Inicio con Catálogo de Técnicas, Navegación Bidireccional y Modal de Video
+- **Detalle**:
+  1. **Página de Inicio y Catálogo de Técnicas (`TechniquesCatalogHome.tsx`)**:
+     - Vista Landing completa con presentación de Cadensa como Gimnasio Digital de Fluidez del Habla.
+     - Métricas diarias de racha, minutos y puntos XP integradas en el header.
+     - Filtros por familia terapéutica: *Todas (7)*, *Fluency Shaping (4)*, *Control Fisiológico (1)*, *Modificación Van Riper (2)*.
+     - Tarjetas fonoaudiológicas individuales con ícono, nivel de dificultad, objetivo clínico, insignia terapéutica y botones de acción rápida ("Ver Video" y "Entrenar →").
+     - Sección metodológica y banner de la AMTTM integrados armoniosamente.
+  2. **Modal Interactivo de Video Explicativo (`TechniqueVideoModal.tsx`)**:
+     - Componente accesible (tecla Escape, foco, roles de diálogo) para reproducir guías en video (`videoUrl`) o renderizar una tarjeta interactiva con tips y protocolo fisiológico en 3 pasos cuando el video está en producción.
+     - Botón de acción directa "Comenzar Práctica de [Técnica]" desde el modal hacia la estación de entrenamiento.
+  3. **Navegación Bidireccional en la Estación de Práctica (`page.tsx`)**:
+     - Botón "← Inicio" en la barra superior para volver al catálogo en cualquier momento sin perder estado.
+     - Botón "🎥 Video" en la barra de navegación para consultar la guía técnica audiovisual directamente desde la estación de entrenamiento.
+     - Soporte para vista inicial parametrizada (`initialView="home" | "practice"`) y query param `?view=practice`.
+  4. **Cobertura de Pruebas Unitarias y BDD**:
+     - Nuevas suites de pruebas unitarias (`TechniquesCatalogHome.test.tsx`, `TechniqueVideoModal.test.tsx`, `page.test.tsx` actualizado) con 113/113 pruebas pasando.
+     - Nueva característica BDD (`features/catalog_home_navigation.feature`, `features/step_definitions/catalog_home_steps.ts`) con 59/59 escenarios pasando al 100%.
+     - Verificación limpia de linter (`npm run lint`) y compilación estática Next.js (`npm run build`).
+- **Archivos creados/modificados**:
+  - `src/lib/clinicalTechniques.ts`
+  - `src/components/TechniquesCatalogHome.tsx`, `src/components/TechniquesCatalogHome.test.tsx`
+  - `src/components/TechniqueVideoModal.tsx`, `src/components/TechniqueVideoModal.test.tsx`
+  - `src/app/page.tsx`, `src/app/page.test.tsx`
+  - `features/catalog_home_navigation.feature`, `features/step_definitions/catalog_home_steps.ts`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+

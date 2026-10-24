@@ -3,19 +3,51 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import Home from './page';
 
 describe('Home Page - Unit Tests', () => {
-  it('debe renderizar el título de la marca Cadensa', () => {
+  it('debe renderizar la página de inicio con la marca Cadensa y el lema principal por defecto', () => {
     render(<Home />);
-    const heading = screen.getByRole('heading', { level: 1, name: /cadensa/i });
-    expect(heading).toBeInTheDocument();
+    expect(screen.getAllByText(/cadensa/i).length).toBeGreaterThan(0);
+    expect(screen.getByRole('heading', { level: 1, name: /encuentra el ritmo de tu voz/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /comenzar práctica guiada directa/i })).toBeInTheDocument();
   });
 
-  it('debe mostrar el lema principal de la plataforma', () => {
+  it('debe navegar del catálogo de inicio a la estación de práctica y permitir volver con el botón ← Inicio', () => {
     render(<Home />);
-    expect(screen.getByText(/encuentra el ritmo de tu voz/i)).toBeInTheDocument();
+
+    // Entrar a la práctica desde el botón principal
+    const startPracticeBtn = screen.getByRole('button', { name: /comenzar práctica guiada directa/i });
+    fireEvent.click(startPracticeBtn);
+
+    // Ahora estamos en la estación de práctica
+    expect(screen.getByRole('button', { name: /comenzar práctica rítmica/i })).toBeInTheDocument();
+
+    // Pulsar el botón ← Inicio para volver al catálogo
+    const backBtn = screen.getByRole('button', { name: /←\s*inicio/i });
+    fireEvent.click(backBtn);
+
+    // Volvemos a ver el catálogo de inicio
+    expect(screen.getByRole('heading', { level: 1, name: /encuentra el ritmo de tu voz/i })).toBeInTheDocument();
   });
 
-  it('debe renderizar los botones de acción principal inmediatamente visibles', () => {
-    render(<Home />);
+  it('debe abrir y cerrar el modal de video explicativo desde la barra de práctica', () => {
+    render(<Home initialView="practice" />);
+
+    // Botón Video en la barra de navegación de práctica
+    const videoBtn = screen.getByTitle(/ver video explicativo/i);
+    fireEvent.click(videoBtn);
+
+    // El modal de video debe estar abierto como diálogo
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText(/video demostrativo de ritmo sts/i)).toBeInTheDocument();
+
+    // Cerrar el modal
+    const closeBtn = screen.getByRole('button', { name: /cerrar modal de video/i });
+    fireEvent.click(closeBtn);
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('debe renderizar los botones de acción principal en la estación de práctica', () => {
+    render(<Home initialView="practice" />);
     const playButton = screen.getByRole('button', { name: /comenzar práctica rítmica/i });
     expect(playButton).toBeInTheDocument();
 
@@ -23,9 +55,9 @@ describe('Home Page - Unit Tests', () => {
     expect(audioButton).toBeInTheDocument();
   });
 
-  it('debe cambiar de frase y tempo al alternar entre Todas y Diadococinesia', () => {
-    render(<Home />);
-    
+  it('debe cambiar de frase y tempo al alternar entre Todas y Diadococinesia en la práctica', () => {
+    render(<Home initialView="practice" />);
+
     // Inicialmente en "Todas", el primer ejercicio es Fonética Básica
     expect(screen.getByText(/estabilización métrica silábica/i)).toBeInTheDocument();
 
@@ -36,8 +68,8 @@ describe('Home Page - Unit Tests', () => {
     expect(screen.getByText(/coordinación motriz velo-lingual/i)).toBeInTheDocument();
   });
 
-  it('debe actualizar dinámicamente el subtítulo y la tarjeta 01 al cambiar de técnica', () => {
-    render(<Home />);
+  it('debe actualizar dinámicamente el subtítulo y la tarjeta 01 al cambiar de técnica en práctica', () => {
+    render(<Home initialView="practice" />);
 
     // Inicialmente en STS
     expect(screen.getByText(/01\. Isocronía/i)).toBeInTheDocument();
@@ -58,7 +90,7 @@ describe('Home Page - Unit Tests', () => {
   });
 
   it('debe detener la ejecución de la técnica previa al cambiar de técnica fonoaudiológica', () => {
-    render(<Home />);
+    render(<Home initialView="practice" />);
 
     // Iniciar la práctica rítmica de la técnica actual (STS)
     const playButton = screen.getByRole('button', { name: /comenzar práctica rítmica/i });
@@ -83,7 +115,7 @@ describe('Home Page - Unit Tests', () => {
   it('debe avanzar dinámicamente de vocal en la página completa al reproducir Easy Onset', () => {
     vi.useFakeTimers();
 
-    const { container } = render(<Home />);
+    const { container } = render(<Home initialView="practice" />);
 
     // Cambiar a Easy Onset
     const selectorButton = screen.getByTitle(/cambiar técnica clínica/i);

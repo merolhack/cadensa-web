@@ -16,6 +16,8 @@ import { BreathingPacer } from '@/components/BreathingPacer';
 import { FaqAndMethodology } from '@/components/FaqAndMethodology';
 import { TechniqueSelector } from '@/components/TechniqueSelector';
 import { TechniqueVisualizer } from '@/components/TechniqueVisualizer';
+import { TechniquesCatalogHome } from '@/components/TechniquesCatalogHome';
+import { TechniqueVideoModal } from '@/components/TechniqueVideoModal';
 import { TechniqueId, CLINICAL_TECHNIQUES, ClinicalTechnique } from '@/lib/clinicalTechniques';
 import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExercisesByCategory } from '@/lib/clinicalExercises';
 
@@ -26,7 +28,20 @@ const TRAINING_PHRASES = [
   'Hablar con calma y seguridad es posible',
 ];
 
-export default function Home() {
+export default function Home({ initialView = 'home' }: { initialView?: 'home' | 'practice' } = {}) {
+  // Vista actual: 'home' (Página de inicio y catálogo) o 'practice' (Estación de entrenamiento activo)
+  const [currentView, setCurrentView] = useState<'home' | 'practice'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') === 'practice') return 'practice';
+    }
+    return initialView;
+  });
+
+  // Estado para el modal de video explicativo de técnicas
+  const [videoModalTechnique, setVideoModalTechnique] = useState<ClinicalTechnique | null>(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   const [bpm, setBpm] = useState(80);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -218,6 +233,31 @@ export default function Home() {
     }
   };
 
+  // Navegación fluida entre la Página de Inicio y la Estación de Práctica
+  const handleSelectTechniqueFromHome = (tech: ClinicalTechnique) => {
+    handleSelectTechnique(tech);
+    setCurrentView('practice');
+  };
+
+  const handleBackToHome = () => {
+    if (metronomeRef.current && isPlaying) {
+      metronomeRef.current.stop();
+    }
+    setIsPlaying(false);
+    setIsPulsing(false);
+    setCurrentView('home');
+  };
+
+  const handleOpenVideoModal = (tech: ClinicalTechnique) => {
+    setVideoModalTechnique(tech);
+    setIsVideoModalOpen(true);
+  };
+
+  const handleStartPracticeFromVideoModal = (tech: ClinicalTechnique) => {
+    handleSelectTechnique(tech);
+    setCurrentView('practice');
+  };
+
   const handleToggleMute = () => {
     if (!metronomeRef.current) return;
     const muted = metronomeRef.current.toggleMute();
@@ -345,11 +385,65 @@ export default function Home() {
 
   const dailyProgressPercent = Math.min(100, Math.round((totalMinutes / 5) * 100));
 
+  // 1. Vista de Inicio / Catálogo General de Técnicas
+  if (currentView === 'home') {
+    return (
+      <>
+        <TechniquesCatalogHome
+          onSelectTechnique={handleSelectTechniqueFromHome}
+          onOpenVideoModal={handleOpenVideoModal}
+          streakDays={streakDays}
+          totalMinutes={totalMinutes}
+          xpPoints={xpPoints}
+          currentUserEmail={currentUserEmail}
+          onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          onOpenDashboard={() => setIsDashboardOpen(true)}
+        />
+
+        {/* Modal de Dashboard / Métricas */}
+        <Dashboard
+          isOpen={isDashboardOpen}
+          onClose={() => setIsDashboardOpen(false)}
+          streakDays={streakDays}
+          totalMinutes={totalMinutes}
+          xpPoints={xpPoints}
+          accuracy={lastAccuracy ? lastAccuracy.score : 88}
+        />
+
+        {/* Modal de Autenticación */}
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onSuccess={handleAuthSuccess}
+        />
+
+        {/* Modal de Video Explicativo */}
+        <TechniqueVideoModal
+          technique={videoModalTechnique}
+          isOpen={isVideoModalOpen}
+          onClose={() => setIsVideoModalOpen(false)}
+          onStartPractice={handleStartPracticeFromVideoModal}
+        />
+      </>
+    );
+  }
+
+  // 2. Vista de Estación de Entrenamiento Activo (Práctica)
   return (
-    <main className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-50 selection:bg-emerald-500 selection:text-zinc-950">
+    <main className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-50 selection:bg-emerald-500 selection:text-zinc-950 animate-fade-in">
       {/* Barra de Navegación Superior */}
       <nav className="w-full max-w-3xl flex items-center justify-between py-1.5 border-b border-zinc-900">
         <div className="flex items-center gap-2">
+          {/* Botón para regresar al Catálogo de Técnicas / Inicio */}
+          <button
+            onClick={handleBackToHome}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/40 text-xs text-emerald-300 font-semibold transition-all cursor-pointer shadow-sm"
+            title="Regresar a la Página de Inicio y Catálogo de Técnicas"
+          >
+            <span>←</span>
+            <span>Inicio</span>
+          </button>
+
           <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
             Cadensa
           </span>
@@ -359,6 +453,16 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Botón para ver video explicativo de la técnica activa */}
+          <button
+            onClick={() => handleOpenVideoModal(activeTechnique)}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 text-xs font-semibold transition-colors cursor-pointer"
+            title={`Ver video explicativo de ${activeTechnique.shortName}`}
+          >
+            <span>🎥</span>
+            <span className="hidden sm:inline">Video</span>
+          </button>
+
           {/* Menú Modular de Técnicas Fonoaudiológicas */}
           <TechniqueSelector
             currentTechniqueId={selectedTechniqueId}
@@ -779,6 +883,14 @@ export default function Home() {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         onSuccess={handleAuthSuccess}
+      />
+
+      {/* Modal de Video Explicativo de la Técnica Activa */}
+      <TechniqueVideoModal
+        technique={videoModalTechnique}
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        onStartPractice={handleStartPracticeFromVideoModal}
       />
     </main>
   );

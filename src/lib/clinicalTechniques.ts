@@ -46,11 +46,13 @@ export interface ClinicalTechnique {
   };
   exerciseGoal: string;
   recommendedCategory: ClinicalCategory | 'todas';
+  videoUrl?: string;
 }
 
 export interface TechniqueFamily {
   id: TechniqueFamilyId;
   name: string;
+  shortName: string;
   description: string;
   icon: string;
   techniques: TechniqueId[];
@@ -60,6 +62,7 @@ export const TECHNIQUE_FAMILIES: TechniqueFamily[] = [
   {
     id: 'fluency_shaping',
     name: 'Modelado de Fluidez (Fluency Shaping)',
+    shortName: 'Fluency Shaping',
     description: 'Técnicas que reconfiguran el patrón articulatorio general para inducir un habla suave, isocrónica y continua.',
     icon: '🌊',
     techniques: ['sts', 'easy_onset', 'light_contact', 'prolonged_speech'],
@@ -67,6 +70,7 @@ export const TECHNIQUE_FAMILIES: TechniqueFamily[] = [
   {
     id: 'physiological',
     name: 'Control Motor y Fisiológico',
+    shortName: 'Control Fisiológico',
     description: 'Optimización de la respiración diafragmática, flujo aéreo y disminución de la hipertonía neuromuscular.',
     icon: '🌬️',
     techniques: ['box_breathing'],
@@ -74,6 +78,7 @@ export const TECHNIQUE_FAMILIES: TechniqueFamily[] = [
   {
     id: 'stuttering_modification',
     name: 'Modificación del Bloqueo (Enfoque Van Riper)',
+    shortName: 'Modificación Van Riper',
     description: 'Gestión consciente de la tensión durante o después del bloqueo para transformar el espasmo en fluidez.',
     icon: '🔄',
     techniques: ['pull_out', 'cancellation'],

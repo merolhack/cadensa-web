@@ -31,6 +31,12 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
   // Estados de etapas interactivas para Pull-Out y Cancelación
   const [blockStage, setBlockStage] = useState<'idle' | 'frozen' | 'released'>('idle');
 
+  // Mutable ref to guarantee timers never get destroyed by parent re-renders
+  const onNextSyllableRef = useRef(onNextSyllable);
+  useEffect(() => {
+    onNextSyllableRef.current = onNextSyllable;
+  }, [onNextSyllable]);
+
   // Obtener la sílaba y fonemas actuales del ejercicio
   const syllables = currentPhrase ? flattenSentenceSyllables(currentPhrase) : [];
   const currentSyllable = syllables[activeSyllableIndex % Math.max(1, syllables.length)] || 'A';
@@ -59,7 +65,10 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
         setBreathPhase((curr) => {
           if (curr === 'inhalar') return 'sostener';
           if (curr === 'sostener') return 'exhalar';
-          if (curr === 'exhalar') return 'pausa';
+          if (curr === 'exhalar') {
+            onNextSyllableRef.current?.();
+            return 'pausa';
+          }
           return 'inhalar';
         });
         return 4;
@@ -73,14 +82,14 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
     };
   }, [technique.id, isPlaying]);
 
-  // 2. Rampa Fonoaudiológica Cadenciosa para Inicio Vocal Suave (3.6s por vocal con avance real)
+  // 2. Rampa Fonoaudiológica Cadenciosa para Inicio Vocal Suave (3.0s por vocal con avance real)
   useEffect(() => {
     if (technique.id !== 'easy_onset' || !isPlaying) {
       return;
     }
 
-    const durationMs = 3600; // 3.6 segundos por vocal (tiempo fisiológico de suspiro + subida + emisión)
-    const stepMs = 40;
+    const durationMs = 3000; // 3.0 segundos por vocal (1s suspiro + 1s subida + 1s fonación plena)
+    const stepMs = 100;
     let elapsed = 0;
 
     const timer = setInterval(() => {
@@ -91,7 +100,7 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
       if (elapsed >= durationMs) {
         elapsed = 0;
         setRampProgress(0);
-        onNextSyllable?.();
+        onNextSyllableRef.current?.();
       }
     }, stepMs);
 
@@ -99,21 +108,31 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
       clearInterval(timer);
       setRampProgress(0);
     };
-  }, [technique.id, isPlaying, onNextSyllable]);
+  }, [technique.id, isPlaying]);
 
-  // 3. Temporizador de avance cadencioso para Contacto Ligero y Habla Prolongada
+  // 3. Temporizador de avance cadencioso para Contacto Ligero (2.0s por sílaba)
   useEffect(() => {
-    if (!isPlaying) return;
+    if (technique.id !== 'light_contact' || !isPlaying) return;
 
-    if (technique.id === 'light_contact' || technique.id === 'prolonged_speech') {
-      const stepDuration = technique.id === 'light_contact' ? 2200 : 2500;
-      const timer = setInterval(() => {
-        onNextSyllable?.();
-      }, stepDuration);
+    const stepDuration = 2000;
+    const timer = setInterval(() => {
+      onNextSyllableRef.current?.();
+    }, stepDuration);
 
-      return () => clearInterval(timer);
-    }
-  }, [technique.id, isPlaying, onNextSyllable]);
+    return () => clearInterval(timer);
+  }, [technique.id, isPlaying]);
+
+  // 4. Temporizador de avance cadencioso para Habla Prolongada (2.2s de fonación sostenida)
+  useEffect(() => {
+    if (technique.id !== 'prolonged_speech' || !isPlaying) return;
+
+    const stepDuration = 2200;
+    const timer = setInterval(() => {
+      onNextSyllableRef.current?.();
+    }, stepDuration);
+
+    return () => clearInterval(timer);
+  }, [technique.id, isPlaying]);
 
   const activeProgress = technique.id === 'easy_onset' && isPlaying ? rampProgress : 0;
 
@@ -143,22 +162,8 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
   // 1. MODALIDAD INICIO VOCAL SUAVE (EASY ONSET)
   // =========================================================================
   if (technique.id === 'easy_onset') {
-    let phaseStepNumber = 1;
-    let phaseTitle = 'Paso 1: Suspiro Silencioso';
-    let phaseAction = 'Exhala un suspiro tibio por la boca sin voz, como empañando un cristal.';
-    let phaseColor = 'text-cyan-400';
-
-    if (activeProgress >= 25 && activeProgress < 70) {
-      phaseStepNumber = 2;
-      phaseTitle = 'Paso 2: Subida Gradual';
-      phaseAction = 'Deja entrar el sonido suavemente sin golpear la garganta.';
-      phaseColor = 'text-emerald-400';
-    } else if (activeProgress >= 70) {
-      phaseStepNumber = 3;
-      phaseTitle = `Paso 3: Pronuncia "${currentSyllable}"`;
-      phaseAction = `Emite la vocal "${currentSyllable}" con voz plena y libre de tensión.`;
-      phaseColor = 'text-teal-300';
-    }
+    // 3 etapas clínicas estables (Webster / Fluency Shaping)
+    const activeStep = !isPlaying ? 1 : activeProgress < 33 ? 1 : activeProgress < 66 ? 2 : 3;
 
     return (
       <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-cyan-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
@@ -167,52 +172,104 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
             <span>🌊</span>
             <span>Rampa de Fonación Progresiva</span>
           </span>
-          <span className="font-mono text-cyan-400 text-xs font-bold">
-            {isPlaying ? `${Math.round(activeProgress)}% Intensidad` : 'Pausado'}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-black font-mono shadow-sm">
+              Vocal: {currentSyllable}
+            </span>
+            <span className="font-mono text-cyan-400 text-xs font-bold min-w-[58px] text-right">
+              {isPlaying ? `${Math.round(activeProgress)}%` : 'Pausado'}
+            </span>
+          </div>
+        </div>
+
+        {/* 3 Etapas Clínicas Estables y Visibles Siempre (Sin saltos de diseño) */}
+        <div className="grid grid-cols-3 gap-2 py-1 text-left">
+          <div
+            className={`p-2.5 rounded-2xl border transition-all duration-200 ${
+              activeStep === 1
+                ? 'bg-cyan-500/15 border-cyan-400 text-cyan-200 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 opacity-60'
+            }`}
+          >
+            <div className="flex items-center gap-1 font-bold text-xs text-cyan-300">
+              <span>🌬️</span>
+              <span>1. Suspiro</span>
+            </div>
+            <div className="text-[10px] mt-1 leading-snug">
+              Exhala tibio sin voz
+            </div>
+          </div>
+
+          <div
+            className={`p-2.5 rounded-2xl border transition-all duration-200 ${
+              activeStep === 2
+                ? 'bg-teal-500/15 border-teal-400 text-teal-200 shadow-[0_0_12px_rgba(20,184,166,0.3)]'
+                : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 opacity-60'
+            }`}
+          >
+            <div className="flex items-center gap-1 font-bold text-xs text-teal-300">
+              <span>📈</span>
+              <span>2. Subida</span>
+            </div>
+            <div className="text-[10px] mt-1 leading-snug">
+              Entra voz gradual
+            </div>
+          </div>
+
+          <div
+            className={`p-2.5 rounded-2xl border transition-all duration-200 ${
+              activeStep === 3
+                ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200 shadow-[0_0_15px_rgba(16,185,129,0.4)] scale-102'
+                : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 opacity-60'
+            }`}
+          >
+            <div className="flex items-center gap-1 font-bold text-xs text-emerald-300">
+              <span>🗣️</span>
+              <span>3. Fonación</span>
+            </div>
+            <div className="text-[10px] mt-1 leading-snug font-bold">
+              Emite &quot;{currentSyllable}&quot;
+            </div>
+          </div>
         </div>
 
         {/* Barra de Rampa Visual Sincronizada */}
-        <div className="relative w-full h-8 bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 p-1 flex items-center">
+        <div className="relative w-full h-7 bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 p-0.5 flex items-center">
           <div
-            className="h-full rounded-xl bg-gradient-to-r from-cyan-600 via-teal-400 to-emerald-400 transition-all duration-75 shadow-[0_0_15px_rgba(45,212,191,0.5)]"
+            className="h-full rounded-lg bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 transition-all duration-100 ease-linear shadow-[0_0_15px_rgba(45,212,191,0.5)]"
             style={{ width: `${activeProgress}%` }}
           />
-          <div className="absolute inset-0 flex items-center justify-between px-3 text-[10px] text-zinc-300 font-mono pointer-events-none">
+          <div className="absolute inset-0 flex items-center justify-between px-3 text-[10px] text-zinc-300 font-mono pointer-events-none font-semibold">
             <span>0% Suspiro</span>
             <span>50% Subida</span>
             <span>100% Voz Plena</span>
           </div>
         </div>
 
-        {/* Guía Explicativa de la Fase Activa y Acción Concreta */}
-        <div className="p-3 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-1 text-left">
-          <div className="flex items-center justify-between">
-            <span className={`text-xs font-bold ${phaseColor}`}>
-              Fase {isPlaying ? phaseStepNumber : 1} / 3: {phaseTitle}
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold font-mono">
-              Vocal: {currentSyllable}
-            </span>
-          </div>
+        {/* Guía Explicativa de la Fase Activa - Altura Fija Libre de Saltos */}
+        <div className="p-3 min-h-[58px] rounded-2xl bg-zinc-900/90 border border-zinc-800 flex items-center justify-between text-left">
           <p className="text-xs text-zinc-200 font-medium leading-relaxed">
-            👉 {isPlaying ? phaseAction : 'Presiona "Iniciar Rampa de Inicio Suave" abajo para comenzar el ejercicio vocal paso a paso.'}
+            {!isPlaying
+              ? '👉 Presiona "Iniciar Rampa de Inicio Suave" abajo para comenzar el ejercicio vocal paso a paso.'
+              : activeStep === 1
+              ? '🌬️ Exhala un suspiro tibio por la boca sin voz, relajando la laringe.'
+              : activeStep === 2
+              ? '📈 Deja entrar el sonido suavemente sin golpear las cuerdas vocales.'
+              : `🗣️ ¡Emite la vocal "${currentSyllable}" con voz plena y libre de tensión!`}
           </p>
         </div>
 
         {/* Botón para avanzar manualmente si el usuario va a su ritmo */}
         <div className="flex items-center justify-between pt-1 text-xs">
           <span className="text-[11px] text-zinc-400">
-            Avanza automáticamente al 100%
+            {isPlaying ? 'Avanza automáticamente cada 3s' : 'Pausado'}
           </span>
-          {onNextSyllable && (
-            <button
-              onClick={onNextSyllable}
-              className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-cyan-300 border border-cyan-800/60 font-medium text-[11px] transition-colors cursor-pointer"
-            >
-              Avanzar Vocal ➡️
-            </button>
-          )}
+          <button
+            onClick={() => onNextSyllableRef.current?.()}
+            className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-cyan-300 border border-cyan-800/60 font-medium text-[11px] transition-colors cursor-pointer"
+          >
+            Avanzar Vocal ➡️
+          </button>
         </div>
       </div>
     );
@@ -231,9 +288,14 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
             <span>🪶</span>
             <span>Monitoreo de Presión Articular</span>
           </span>
-          <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 text-[10px] font-mono">
-            /p, t, k, b, d, g/
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-bold font-mono">
+              Sílaba: {currentSyllable}
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-purple-300 text-[10px] font-mono">
+              /p, t, k, b, d, g/
+            </span>
+          </div>
         </div>
 
         <div className="p-3 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-2 text-left">
@@ -247,10 +309,10 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
             <div className="w-1/3 bg-red-500/40" title="Exceso de fuerza / bloqueo" />
           </div>
 
-          <div className="pt-1">
+          <div className="pt-1 min-h-[38px] flex items-center">
             {isOcclusive ? (
               <div className="text-xs text-purple-200">
-                🎯 <strong>Consonante de presión en &quot;{currentSyllable}&quot;:</strong> Apenas roza los labios o la punta de la lengua. Siente el aire escapar como una pluma suave.
+                🎯 <strong>Consonante oclusiva en &quot;{currentSyllable}&quot;:</strong> Apenas roza los labios o lengua como pluma suave.
               </div>
             ) : (
               <div className="text-xs text-zinc-300">
@@ -262,16 +324,14 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
 
         <div className="flex items-center justify-between pt-1 text-xs">
           <span className="text-[11px] text-zinc-400">
-            Tiempo por sílaba: 2.2s
+            {isPlaying ? 'Avanza automáticamente cada 2.0s' : 'Pausado'}
           </span>
-          {onNextSyllable && (
-            <button
-              onClick={onNextSyllable}
-              className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-purple-300 border border-purple-800/60 font-medium text-[11px] transition-colors cursor-pointer"
-            >
-              Siguiente Sílaba ➡️
-            </button>
-          )}
+          <button
+            onClick={() => onNextSyllableRef.current?.()}
+            className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-purple-300 border border-purple-800/60 font-medium text-[11px] transition-colors cursor-pointer"
+          >
+            Siguiente Sílaba ➡️
+          </button>
         </div>
       </div>
     );
@@ -288,7 +348,12 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
             <span>〰️</span>
             <span>Estiramiento Vocálico y Fonación Continua</span>
           </span>
-          <span className="font-mono text-amber-400 text-xs font-bold">Escala 2×</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold font-mono">
+              Sílaba: {currentSyllable}
+            </span>
+            <span className="font-mono text-amber-400 text-xs font-bold">Escala 2×</span>
+          </div>
         </div>
 
         {/* Visualización de la cinta elástica vocal */}
@@ -302,22 +367,20 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
           <span className="text-zinc-500 text-xs">Sin pausas</span>
         </div>
 
-        <p className="text-xs text-zinc-300 text-left leading-relaxed">
-          👉 <strong>Instrucción:</strong> Alarga la vocal de &quot;{currentSyllable}&quot; al doble de su duración natural y enlázala de inmediato con la siguiente sin cortar la fonación.
+        <p className="text-xs text-zinc-300 text-left leading-relaxed min-h-[38px] flex items-center">
+          👉 <strong>Instrucción:</strong> Alarga la vocal de &quot;{currentSyllable}&quot; al doble de su duración natural y enlázala de inmediato con la siguiente.
         </p>
 
         <div className="flex items-center justify-between pt-1 text-xs">
           <span className="text-[11px] text-zinc-400">
-            Transición Legato: 2.5s
+            {isPlaying ? 'Avanza automáticamente cada 2.2s' : 'Pausado'}
           </span>
-          {onNextSyllable && (
-            <button
-              onClick={onNextSyllable}
-              className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-amber-300 border border-amber-800/60 font-medium text-[11px] transition-colors cursor-pointer"
-            >
-              Siguiente Sílaba ➡️
-            </button>
-          )}
+          <button
+            onClick={() => onNextSyllableRef.current?.()}
+            className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-amber-300 border border-amber-800/60 font-medium text-[11px] transition-colors cursor-pointer"
+          >
+            Siguiente Sílaba ➡️
+          </button>
         </div>
       </div>
     );
@@ -423,19 +486,17 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
               <span className="text-xs font-bold text-cyan-300">
                 ✅ ¡Salida suave lograda! Pronuncia &quot;{currentSyllable}&quot; relajadamente.
               </span>
-              {onNextSyllable && (
-                <div>
-                  <button
-                    onClick={() => {
-                      setBlockStage('idle');
-                      onNextSyllable();
-                    }}
-                    className="px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-zinc-950 font-bold text-xs cursor-pointer transition-colors"
-                  >
-                    Siguiente Palabra ➡️
-                  </button>
-                </div>
-              )}
+              <div className="pt-1">
+                <button
+                  onClick={() => {
+                    setBlockStage('idle');
+                    onNextSyllableRef.current?.();
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-zinc-950 font-bold text-xs cursor-pointer transition-colors"
+                >
+                  Siguiente Palabra ➡️
+                </button>
+              </div>
             </div>
           ) : (
             <button
@@ -483,19 +544,17 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
               <span className="text-xs font-bold text-emerald-300">
                 ✅ ¡Pausa de 3s cumplida! Repite &quot;{currentSyllable}&quot; con Inicio Suave.
               </span>
-              {onNextSyllable && (
-                <div>
-                  <button
-                    onClick={() => {
-                      setBlockStage('idle');
-                      onNextSyllable();
-                    }}
-                    className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-zinc-950 font-bold text-xs cursor-pointer transition-colors"
-                  >
-                    Siguiente Palabra ➡️
-                  </button>
-                </div>
-              )}
+              <div className="pt-1">
+                <button
+                  onClick={() => {
+                    setBlockStage('idle');
+                    onNextSyllableRef.current?.();
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-zinc-950 font-bold text-xs cursor-pointer transition-colors"
+                >
+                  Siguiente Palabra ➡️
+                </button>
+              </div>
             </div>
           ) : (
             <button

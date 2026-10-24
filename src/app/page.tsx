@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { AudioMetronome, TimeSignature, SoundPreset } from '@/lib/audioMetronome';
 import { flattenSentenceSyllables } from '@/lib/syllables';
 import { evaluateRhythmicAccuracy, AccuracyResult, triggerHapticFeedback } from '@/lib/voiceDetection';
@@ -261,6 +261,11 @@ export default function Home() {
     setTimeout(() => setSaveSuccessMsg(null), 3000);
   };
 
+  // Manejador memoizado y estable para el avance de sílaba a través de técnicas fonoaudiológicas
+  const handleNextSyllable = useCallback(() => {
+    setActiveSyllableIndex((prev) => (prev + 1) % (totalSyllablesRef.current || 1));
+  }, []);
+
   // Simular o capturar pulsación vocal en sincronía con el compás
   const handleSimulateVoiceTap = () => {
     const now = performance.now() / 1000;
@@ -473,7 +478,7 @@ export default function Home() {
           bpm={bpm}
           activeSyllableIndex={activeSyllableIndex}
           currentPhrase={currentPhrase}
-          onNextSyllable={() => setActiveSyllableIndex((prev) => (prev + 1) % totalSyllablesRef.current)}
+          onNextSyllable={handleNextSyllable}
         />
 
         {/* Lector de Sílabas y Ejercicio Activo */}

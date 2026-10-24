@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import Home from './page';
 
 describe('Home Page - Unit Tests', () => {
@@ -78,5 +78,46 @@ describe('Home Page - Unit Tests', () => {
     expect(screen.getByRole('button', { name: /iniciar fonación continua/i })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /pausar/i })).not.toBeInTheDocument();
     expect(screen.getByText(/01\. Fonación Continua/i)).toBeInTheDocument();
+  });
+
+  it('debe avanzar dinámicamente de vocal en la página completa al reproducir Easy Onset', () => {
+    vi.useFakeTimers();
+
+    const { container } = render(<Home />);
+
+    // Cambiar a Easy Onset
+    const selectorButton = screen.getByTitle(/cambiar técnica clínica/i);
+    fireEvent.click(selectorButton);
+    const easyOnsetOption = screen.getByText('Inicio Vocal Suave (Easy Onset)');
+    fireEvent.click(easyOnsetOption);
+
+    // Iniciar rampa de inicio suave
+    const startButton = screen.getByRole('button', { name: /iniciar rampa de inicio suave/i });
+    fireEvent.click(startButton);
+
+    // Debe mostrar la vocal inicial activa
+    const activeElementsInitial = container.querySelectorAll('.from-emerald-500');
+    expect(activeElementsInitial.length).toBeGreaterThan(0);
+    expect(activeElementsInitial[0]?.textContent).toBe('A');
+
+    // Avanzar 3000ms en el tiempo simulado
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+
+    // Ahora la sílaba activa en el lector de sílabas debe haber avanzado a 'e'
+    const activeElementsStep2 = container.querySelectorAll('.from-emerald-500');
+    expect(activeElementsStep2[0]?.textContent).toBe('e');
+
+    // Avanzar otros 3000ms
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+
+    // Ahora debe ser 'i'
+    const activeElementsStep3 = container.querySelectorAll('.from-emerald-500');
+    expect(activeElementsStep3[0]?.textContent).toBe('i');
+
+    vi.useRealTimers();
   });
 });

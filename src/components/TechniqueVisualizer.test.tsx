@@ -58,4 +58,36 @@ describe('TechniqueVisualizer Component - Unit Tests', () => {
 
     expect(screen.getByText(/suelta la tensión en mandíbula y cuello/i)).toBeInTheDocument();
   });
+
+  it('debe renderizar el orbe de respiración cuadrada para Box Breathing', () => {
+    render(
+      <TechniqueVisualizer
+        technique={CLINICAL_TECHNIQUES.box_breathing}
+        isPlaying={true}
+        bpm={80}
+      />
+    );
+
+    expect(screen.getByText(/orbe de respiración cuadrada/i)).toBeInTheDocument();
+    expect(screen.getByText(/ciclo activo/i)).toBeInTheDocument();
+  });
+
+  it('debe permitir avanzar manualmente de vocal en Easy Onset', () => {
+    let advanced = false;
+    render(
+      <TechniqueVisualizer
+        technique={CLINICAL_TECHNIQUES.easy_onset}
+        isPlaying={false}
+        bpm={80}
+        activeSyllableIndex={0}
+        currentPhrase="A e i o u"
+        onNextSyllable={() => { advanced = true; }}
+      />
+    );
+
+    const nextBtn = screen.getByRole('button', { name: /avanzar vocal/i });
+    expect(nextBtn).toBeInTheDocument();
+    fireEvent.click(nextBtn);
+    expect(advanced).toBe(true);
+  });
 });

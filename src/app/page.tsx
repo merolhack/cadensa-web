@@ -471,6 +471,9 @@ export default function Home() {
           technique={activeTechnique}
           isPlaying={isPlaying}
           bpm={bpm}
+          activeSyllableIndex={activeSyllableIndex}
+          currentPhrase={currentPhrase}
+          onNextSyllable={() => setActiveSyllableIndex((prev) => (prev + 1) % totalSyllablesRef.current)}
         />
 
         {/* Lector de Sílabas y Ejercicio Activo */}

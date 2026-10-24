@@ -1,8 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import {
+  TechniqueId,
+  CLINICAL_TECHNIQUES,
+  TECHNIQUE_FAMILIES,
+  ClinicalTechnique,
+} from '@/lib/clinicalTechniques';
 
-interface FaqItem {
+interface GlobalFaqItem {
   id: string;
   category: string;
   question: string;
@@ -10,7 +16,7 @@ interface FaqItem {
   answer: React.ReactNode;
 }
 
-const FAQ_ITEMS: FaqItem[] = [
+const GLOBAL_BUTTON_FAQS: GlobalFaqItem[] = [
   {
     id: 'controles-principales',
     category: 'Controles Principales',
@@ -139,16 +145,33 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-export const FaqAndMethodology: React.FC = () => {
+interface FaqAndMethodologyProps {
+  activeTechniqueId?: TechniqueId;
+  onSelectTechnique?: (technique: ClinicalTechnique) => void;
+}
+
+export const FaqAndMethodology: React.FC<FaqAndMethodologyProps> = ({
+  activeTechniqueId,
+  onSelectTechnique,
+}) => {
+  const [userSelectedTab, setUserSelectedTab] = useState<'general' | TechniqueId | null>(null);
   const [openFaqId, setOpenFaqId] = useState<string | null>('controles-principales');
+
+  const selectedTab = userSelectedTab ?? activeTechniqueId ?? 'general';
+
+  const selectTab = (tab: 'general' | TechniqueId) => {
+    setUserSelectedTab(tab);
+  };
 
   const toggleFaq = (id: string) => {
     setOpenFaqId((prev) => (prev === id ? null : id));
   };
 
+  const currentTechnique = selectedTab !== 'general' ? CLINICAL_TECHNIQUES[selectedTab] : null;
+
   return (
     <div className="w-full max-w-3xl space-y-6 my-4 animate-fade-in text-left">
-      {/* SECCIÓN 1: FAQ - GUÍA DE BOTONES */}
+      {/* SECCIÓN 1: FAQ - GUÍA DE BOTONES Y TÉCNICAS */}
       <section
         aria-label="Preguntas Frecuentes y Guía de Uso"
         className="p-4 sm:p-6 rounded-3xl bg-zinc-900/60 border border-zinc-800 shadow-xl space-y-4"
@@ -160,7 +183,7 @@ export const FaqAndMethodology: React.FC = () => {
               <span>Preguntas Frecuentes y Guía de Botones</span>
             </h2>
             <p className="text-xs text-zinc-400">
-              Conoce el propósito de cada control para aprovechar tu entrenamiento al máximo
+              Consulta las respuestas de uso general o selecciona una técnica clínica para ver su guía especializada
             </p>
           </div>
           <span className="self-start sm:self-auto text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
@@ -168,56 +191,178 @@ export const FaqAndMethodology: React.FC = () => {
           </span>
         </div>
 
-        {/* Acordeón de preguntas */}
-        <div className="space-y-2">
-          {FAQ_ITEMS.map((item) => {
-            const isOpen = openFaqId === item.id;
+        {/* Pestañas de Navegación por Técnica y General */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          <button
+            onClick={() => {
+              selectTab('general');
+              setOpenFaqId('controles-principales');
+            }}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+              selectedTab === 'general'
+                ? 'bg-zinc-100 text-zinc-950 shadow-sm'
+                : 'bg-zinc-950/60 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
+            }`}
+          >
+            📋 Botones Globales
+          </button>
+
+          {Object.values(CLINICAL_TECHNIQUES).map((tech) => {
+            const isTabActive = selectedTab === tech.id;
             return (
-              <div
-                key={item.id}
-                className={`rounded-2xl border transition-all ${
-                  isOpen
-                    ? 'bg-zinc-950/80 border-emerald-500/30 shadow-md'
-                    : 'bg-zinc-950/40 border-zinc-800/60 hover:border-zinc-700/80'
+              <button
+                key={tech.id}
+                onClick={() => {
+                  selectTab(tech.id);
+                  setOpenFaqId(tech.faqItems[0]?.id || null);
+                  if (onSelectTechnique) {
+                    onSelectTechnique(tech);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  isTabActive
+                    ? 'bg-emerald-500 text-zinc-950 font-bold shadow-sm'
+                    : 'bg-zinc-950/60 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
                 }`}
               >
-                <button
-                  type="button"
-                  onClick={() => toggleFaq(item.id)}
-                  aria-expanded={isOpen}
-                  className="w-full p-3 sm:p-4 flex items-center justify-between gap-3 text-left cursor-pointer"
-                >
-                  <div className="flex items-center gap-2.5">
-                    {item.badge && (
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700/60 whitespace-nowrap">
-                        {item.badge}
-                      </span>
-                    )}
-                    <span className="text-xs sm:text-sm font-semibold text-zinc-200">
-                      {item.question}
-                    </span>
-                  </div>
-                  <span
-                    className={`text-zinc-400 text-xs transition-transform duration-200 shrink-0 ${
-                      isOpen ? 'rotate-180 text-emerald-400' : ''
-                    }`}
-                  >
-                    ▼
-                  </span>
-                </button>
-
-                {isOpen && (
-                  <div className="px-4 pb-4 pt-1 text-xs sm:text-sm border-t border-zinc-900 leading-relaxed text-zinc-300">
-                    {item.answer}
-                  </div>
-                )}
-              </div>
+                <span>{tech.icon}</span>
+                <span>{tech.shortName}</span>
+              </button>
             );
           })}
         </div>
+
+        {/* Tarjeta explicativa de la técnica seleccionada si no está en 'general' */}
+        {currentTechnique && (
+          <div className="p-4 rounded-2xl bg-zinc-950/90 border border-emerald-500/30 space-y-3 animate-fade-in">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800/80 pb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">{currentTechnique.icon}</span>
+                <div>
+                  <h3 className="text-sm font-bold text-zinc-100">{currentTechnique.name}</h3>
+                  <span className="text-[10px] text-emerald-400 font-mono">{currentTechnique.badge} • Dificultad {currentTechnique.difficulty}</span>
+                </div>
+              </div>
+              <span className="text-xs px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300">
+                🎯 {currentTechnique.clinicalObjective}
+              </span>
+            </div>
+
+            <p className="text-xs text-zinc-300 leading-relaxed">
+              {currentTechnique.summary}
+            </p>
+
+            {/* Pasos de ejecución paso a paso */}
+            <div className="space-y-1.5 pt-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                Instrucciones prácticas de ejecución:
+              </span>
+              <ol className="list-decimal pl-5 space-y-1 text-xs text-zinc-300">
+                {currentTechnique.practicalSteps.map((step, idx) => (
+                  <li key={idx}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        )}
+
+        {/* Listado de Acordeón según pestaña activa */}
+        <div className="space-y-2">
+          {selectedTab === 'general' ? (
+            GLOBAL_BUTTON_FAQS.map((item) => {
+              const isOpen = openFaqId === item.id;
+              return (
+                <div
+                  key={item.id}
+                  className={`rounded-2xl border transition-all ${
+                    isOpen
+                      ? 'bg-zinc-950/80 border-emerald-500/30 shadow-md'
+                      : 'bg-zinc-950/40 border-zinc-800/60 hover:border-zinc-700/80'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(item.id)}
+                    aria-expanded={isOpen}
+                    className="w-full p-3 sm:p-4 flex items-center justify-between gap-3 text-left cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      {item.badge && (
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700/60 whitespace-nowrap">
+                          {item.badge}
+                        </span>
+                      )}
+                      <span className="text-xs sm:text-sm font-semibold text-zinc-200">
+                        {item.question}
+                      </span>
+                    </div>
+                    <span
+                      className={`text-zinc-400 text-xs transition-transform duration-200 shrink-0 ${
+                        isOpen ? 'rotate-180 text-emerald-400' : ''
+                      }`}
+                    >
+                      ▼
+                    </span>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-4 pb-4 pt-1 text-xs sm:text-sm border-t border-zinc-900 leading-relaxed text-zinc-300">
+                      {item.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            currentTechnique?.faqItems.map((faq) => {
+              const isOpen = openFaqId === faq.id;
+              return (
+                <div
+                  key={faq.id}
+                  className={`rounded-2xl border transition-all ${
+                    isOpen
+                      ? 'bg-zinc-950/80 border-emerald-500/30 shadow-md'
+                      : 'bg-zinc-950/40 border-zinc-800/60 hover:border-zinc-700/80'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(faq.id)}
+                    aria-expanded={isOpen}
+                    className="w-full p-3 sm:p-4 flex items-center justify-between gap-3 text-left cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      {faq.badge && (
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700/60 whitespace-nowrap">
+                          {faq.badge}
+                        </span>
+                      )}
+                      <span className="text-xs sm:text-sm font-semibold text-zinc-200">
+                        {faq.question}
+                      </span>
+                    </div>
+                    <span
+                      className={`text-zinc-400 text-xs transition-transform duration-200 shrink-0 ${
+                        isOpen ? 'rotate-180 text-emerald-400' : ''
+                      }`}
+                    >
+                      ▼
+                    </span>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-4 pb-4 pt-1 text-xs sm:text-sm border-t border-zinc-900 leading-relaxed text-zinc-300">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
       </section>
 
-      {/* SECCIÓN 2: FUNDAMENTO CLÍNICO - QUÉ ES HABLA RÍTMICA SILÁBICA (STS) */}
+      {/* SECCIÓN 2: FUNDAMENTO CLÍNICO - QUÉ ES HABLA RÍTMICA SILÁBICA (STS) Y FAMILIAS DE TRATAMIENTO */}
       <section
         aria-label="Fundamento Clínico de Habla Rítmica Silábica"
         className="p-4 sm:p-6 rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-emerald-950/30 border border-emerald-500/20 shadow-xl space-y-4"
@@ -271,6 +416,26 @@ export const FaqAndMethodology: React.FC = () => {
             <p className="text-xs text-zinc-400 leading-relaxed">
               La práctica deliberada de <strong>5 a 10 minutos diarios</strong> ayuda a consolidar patrones neuromotores más estables. Mediante el desafío de atenuación rítmica (fading), el objetivo no es hablar siempre como robot, sino internalizar una cadencia serena y controlada que puedas evocar cuando sientas tensión en situaciones cotidianas, laborales o sociales.
             </p>
+          </div>
+
+          {/* Resumen de las 3 Familias Fonoaudiológicas */}
+          <div className="pt-2 border-t border-zinc-800/80 space-y-2">
+            <span className="font-bold text-xs text-zinc-200">
+              Ecosistema Integral de Técnicas en Cadensa:
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              {TECHNIQUE_FAMILIES.map((fam) => (
+                <div key={fam.id} className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800 space-y-1">
+                  <div className="font-bold text-zinc-300 flex items-center gap-1.5">
+                    <span>{fam.icon}</span>
+                    <span className="text-[11px]">{fam.name.split('(')[0]}</span>
+                  </div>
+                  <p className="text-[10px] text-zinc-400 leading-tight">
+                    {fam.description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

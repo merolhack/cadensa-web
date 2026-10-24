@@ -249,3 +249,29 @@
   - `features/faq_and_sts_methodology.feature`, `features/step_definitions/faq_steps.ts`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-23] ingest | Implementación del Menú Modular de Técnicas Clínicas y Modalidad Easy Onset
+- **Detalle**:
+  1. **Catálogo Unificado de Metodologías Fonoaudiológicas (`clinicalTechniques.ts`)**:
+     - Estructuración de 3 familias terapéuticas: Modelado de Fluidez, Control Fisiológico y Modificación del Bloqueo (Van Riper).
+     - 7 técnicas clínicas integradas: Habla Rítmica Silábica (STS), Inicio Vocal Suave (Easy Onset), Contacto Articular Suave (Light Contact), Habla Prolongada, Respiración 4-4-4-4, Salida del Bloqueo (Pull-Out) y Cancelación.
+     - Cada técnica contiene su definición, objetivo clínico, bases neurobiológicas, pasos prácticos y banco de preguntas frecuentes (FAQ) especializadas.
+  2. **Componentes Interactivos**:
+     - `TechniqueSelector.tsx`: Botón disparador con técnica activa en navbar y modal accesible para selección de metodología.
+     - `TechniqueVisualizer.tsx`: Visualizador adaptativo para Inicio Vocal Suave con rampa dinámica de fonación gradual (0% a 100%), indicador de tacto pluma para Contacto Ligero, estiramiento vocálico para Habla Prolongada y temporizador de 3 segundos para técnicas de Van Riper.
+     - `FaqAndMethodology.tsx`: Acordeón multi-pestaña para consultar tanto los botones generales como el FAQ exclusivo de cada técnica.
+  3. **Cobertura de Pruebas**:
+     - 91 pruebas unitarias pasando al 100% en Vitest (suites en `TechniqueSelector.test.tsx`, `TechniqueVisualizer.test.tsx`, `clinicalTechniques.test.ts`, `FaqAndMethodology.test.tsx`).
+     - 49 escenarios BDD en Cucumber.js pasando al 100% (189 pasos).
+     - 0 errores y 0 advertencias en ESLint; compilación de producción Next.js limpia.
+- **Archivos creados/modificados**:
+  - `src/lib/clinicalTechniques.ts`, `src/lib/clinicalTechniques.test.ts`
+  - `src/components/TechniqueSelector.tsx`, `src/components/TechniqueSelector.test.tsx`
+  - `src/components/TechniqueVisualizer.tsx`, `src/components/TechniqueVisualizer.test.tsx`
+  - `src/components/FaqAndMethodology.tsx`, `src/components/FaqAndMethodology.test.tsx`
+  - `src/app/page.tsx`
+  - `features/modular_clinical_techniques.feature`, `features/step_definitions/technique_steps.ts`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

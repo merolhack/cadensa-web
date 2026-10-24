@@ -14,6 +14,9 @@ import { AuthModal } from '@/components/AuthModal';
 import { CommunityBanner } from '@/components/CommunityBanner';
 import { BreathingPacer } from '@/components/BreathingPacer';
 import { FaqAndMethodology } from '@/components/FaqAndMethodology';
+import { TechniqueSelector } from '@/components/TechniqueSelector';
+import { TechniqueVisualizer } from '@/components/TechniqueVisualizer';
+import { TechniqueId, CLINICAL_TECHNIQUES } from '@/lib/clinicalTechniques';
 import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExercisesByCategory } from '@/lib/clinicalExercises';
 
 const TRAINING_PHRASES = [
@@ -42,6 +45,9 @@ export default function Home() {
   const [isCustomPhraseOpen, setIsCustomPhraseOpen] = useState(false);
   const [customPhraseInput, setCustomPhraseInput] = useState('');
   const [customExercises, setCustomExercises] = useState<ClinicalExercise[]>([]);
+  const [selectedTechniqueId, setSelectedTechniqueId] = useState<TechniqueId>('sts');
+
+  const activeTechnique = CLINICAL_TECHNIQUES[selectedTechniqueId] || CLINICAL_TECHNIQUES.sts;
 
   // Estados de Usuario, Sesión y Modales con inicialización perezosa segura
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(() => {
@@ -325,6 +331,12 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Menú Modular de Técnicas Fonoaudiológicas */}
+          <TechniqueSelector
+            currentTechniqueId={selectedTechniqueId}
+            onSelectTechnique={(tech) => setSelectedTechniqueId(tech.id)}
+          />
+
           <button
             onClick={() => setIsDashboardOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-xs text-zinc-200 transition-colors cursor-pointer"
@@ -425,6 +437,13 @@ export default function Home() {
           currentBeat={currentBeat}
           isPulsing={isPulsing}
           timeSignature={timeSignature}
+        />
+
+        {/* Visualizador Adaptativo de la Técnica Activa (ej. Rampa Easy Onset / Presión Articular) */}
+        <TechniqueVisualizer
+          technique={activeTechnique}
+          isPlaying={isPlaying}
+          bpm={bpm}
         />
 
         {/* Lector de Sílabas y Ejercicio Activo */}
@@ -686,7 +705,10 @@ export default function Home() {
       </section>
 
       {/* Guía Interactiva de Botones (FAQ) y Fundamento Clínico STS */}
-      <FaqAndMethodology />
+      <FaqAndMethodology
+        activeTechniqueId={selectedTechniqueId}
+        onSelectTechnique={(tech) => setSelectedTechniqueId(tech.id)}
+      />
 
       {/* Banner Comunitario Oficial AMTTM */}
       <CommunityBanner />

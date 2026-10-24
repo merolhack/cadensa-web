@@ -39,4 +39,14 @@ describe('FaqAndMethodology Component - Unit Tests', () => {
     expect(screen.getByText(/marcapasos neural alternativo/i)).toBeInTheDocument();
     expect(screen.getByText(/alivio de la ansiedad anticipatoria/i)).toBeInTheDocument();
   });
+
+  it('debe permitir cambiar a la pestaña de una técnica (ej. Inicio Suave) y consultar su FAQ especializado', () => {
+    render(<FaqAndMethodology />);
+
+    const easyOnsetTab = screen.getByRole('button', { name: /inicio suave/i });
+    fireEvent.click(easyOnsetTab);
+
+    expect(screen.getByText('Inicio Vocal Suave (Easy Onset)')).toBeInTheDocument();
+    expect(screen.getByText(/¿qué es el "ataque glótico duro" y por qué bloquea la voz\?/i)).toBeInTheDocument();
+  });
 });

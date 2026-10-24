@@ -331,3 +331,26 @@
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-24] ingest | Integración de Enlace Oficial de YouTube en el Banner Comunitario de la AMTTM
+- **Detalle**:
+  1. **Unificación en el Mismo Banner (`CommunityBanner.tsx`)**:
+     - Se evaluó la arquitectura de UI/UX y se determinó que consolidar ambos canales en el mismo banner evita la saturación vertical y mantiene la cohesión de la entidad.
+     - Botón de Facebook con isotipo SVG oficial de Facebook (`https://www.facebook.com/AMTTM/`).
+     - Botón de YouTube con isotipo SVG oficial de YouTube (`https://www.youtube.com/@amtartamudez`).
+     - Etiquetas de accesibilidad `aria-label`, atributos de seguridad `rel="noopener noreferrer"` y apertura en nueva pestaña (`target="_blank"`).
+     - Diseño responsivo adaptado para envolver elegantemente en pantallas móviles y de escritorio.
+  2. **Actualización de Pruebas Unitarias y BDD**:
+     - `CommunityBanner.test.tsx` actualizado con pruebas dedicadas para ambos canales oficiales (Facebook y YouTube).
+     - `community_and_breathing.feature` y `community_steps.ts` ampliados con la verificación del canal oficial de YouTube.
+     - 114 pruebas unitarias y 59 escenarios BDD validados con 100% de éxito.
+- **Archivos creados/modificados**:
+  - `src/components/CommunityBanner.tsx`
+  - `src/components/CommunityBanner.test.tsx`
+  - `features/community_and_breathing.feature`
+  - `features/step_definitions/community_steps.ts`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+

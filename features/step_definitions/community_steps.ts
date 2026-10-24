@@ -5,6 +5,7 @@ import { AudioMetronome, TimeSignature, SoundPreset } from '../../src/lib/audioM
 interface CommunityContext {
   bannerVisible: boolean;
   bannerLink: string;
+  youtubeLink: string;
   bannerRel: string;
   breathingActive: boolean;
   breathingPhase: string;
@@ -16,6 +17,7 @@ interface CommunityContext {
 const context: CommunityContext = {
   bannerVisible: false,
   bannerLink: '',
+  youtubeLink: '',
   bannerRel: '',
   breathingActive: false,
   breathingPhase: '',
@@ -28,12 +30,14 @@ const context: CommunityContext = {
 Given('que un usuario ingresa a Cadensa en busca de apoyo integral', function () {
   context.bannerVisible = false;
   context.bannerLink = '';
+  context.youtubeLink = '';
   context.bannerRel = '';
 });
 
 When('visualiza la sección inferior de la aplicación antes del pie de página', function () {
   context.bannerVisible = true;
   context.bannerLink = 'https://www.facebook.com/AMTTM/';
+  context.youtubeLink = 'https://www.youtube.com/@amtartamudez';
   context.bannerRel = 'noopener noreferrer';
 });
 
@@ -45,6 +49,10 @@ Then('se presenta un banner con enlace seguro hacia la "Asociación Mexicana de 
 Then('el enlace apunta al grupo oficial de Facebook con rel noopener noreferrer', function () {
   assert.strictEqual(context.bannerRel.includes('noopener'), true);
   assert.strictEqual(context.bannerRel.includes('noreferrer'), true);
+});
+
+Then('el banner incluye el enlace al canal oficial de YouTube de la AMTTM', function () {
+  assert.strictEqual(context.youtubeLink, 'https://www.youtube.com/@amtartamudez');
 });
 
 // Escenario: Inicio de sesión de respiración diafragmática 4-4-4-4

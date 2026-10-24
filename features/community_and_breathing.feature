@@ -9,6 +9,7 @@ Característica: Vinculación comunitaria AMTTM y herramientas de control orofac
     Cuando visualiza la sección inferior de la aplicación antes del pie de página
     Entonces se presenta un banner con enlace seguro hacia la "Asociación Mexicana de Tartamudez"
     Y el enlace apunta al grupo oficial de Facebook con rel noopener noreferrer
+    Y el banner incluye el enlace al canal oficial de YouTube de la AMTTM
 
   Escenario: Inicio de sesión de respiración diafragmática 4-4-4-4
     Dado que el usuario siente tensión o bloqueo antes de hablar

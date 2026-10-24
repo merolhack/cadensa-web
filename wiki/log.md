@@ -372,5 +372,36 @@
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-24] ingest | Homogeneización de Ancho del Sitio y Auditoría Técnica de Base de Datos en Supabase
+- **Detalle**:
+  1. **Homogeneización de Anchos y Eliminación de Layout Shift**:
+     - Diagnóstico de disparidad entre la vista Home (`max-w-5xl`) y la estación de entrenamiento (`max-w-3xl` / `max-w-xl`).
+     - Estandarización de la jerarquía de anchos en todo el sitio:
+       - **Marco Global (Navbar y Footer):** `w-full max-w-5xl` (1024px) en ambas vistas, eliminando el desplazamiento horizontal de 128px al navegar.
+       - **Estudio de Entrenamiento y Tarjetas Clínicas:** `w-full max-w-4xl` (896px) con acolchado `p-4 sm:p-7`, eliminando el efecto de "túnel" estrecho en pantallas de escritorio.
+       - **Secciones de Soporte:** `FaqAndMethodology` y `CommunityBanner` ajustados simétricamente a `max-w-4xl`.
+       - **Componentes Fisiológicos:** `TechniqueVisualizer` (rampas, diagramas en 3 etapas) y `SyllableReader` expandidos a `max-w-2xl` para evitar truncamiento de texto.
+  2. **Auditoría Técnica y Estado de Supabase**:
+     - Inspección directa mediante API PostgREST y GoTrue Auth en el proyecto `kddeejyhnxrnmkmiwjxp`.
+     - Hallazgo: El servicio de autenticación está activo y saludable. Sin embargo, las tablas públicas (`public.exercises`, `public.profiles`, `public.training_sessions`, `public.user_streaks`) aún no existen en el esquema remoto (HTTP 404), ya que las migraciones locales (`supabase/migrations/`) no se han ejecutado en PostgreSQL de producción.
+     - Diagnóstico de pruebas: No existen datos de prueba en Supabase; las 114 pruebas unitarias y 59 escenarios BDD se ejecutan de manera aislada localmente (Zero-Pollution). La aplicación web continúa operativa mediante su arquitectura resiliente de catálogo local y persistencia en `localStorage`.
+  3. **Documentación en LLM Wiki**:
+     - Creación de [`wiki/architecture/layout_and_responsive_standards.md`](wiki/architecture/layout_and_responsive_standards.md).
+     - Creación de [`wiki/architecture/supabase_audit_and_schema_state.md`](wiki/architecture/supabase_audit_and_schema_state.md) con la guía paso a paso para ejecutar las migraciones SQL en Supabase Dashboard o CLI.
+     - Actualización del catálogo central [`wiki/index.md`](wiki/index.md).
+- **Archivos creados/modificados**:
+  - `src/app/page.tsx`
+  - `src/components/CommunityBanner.tsx`
+  - `src/components/FaqAndMethodology.tsx`
+  - `src/components/SyllableReader.tsx`
+  - `src/components/TechniqueVisualizer.tsx`
+  - `wiki/architecture/layout_and_responsive_standards.md`
+  - `wiki/architecture/supabase_audit_and_schema_state.md`
+  - `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+
 
 

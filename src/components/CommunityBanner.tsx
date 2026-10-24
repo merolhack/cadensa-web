@@ -15,7 +15,7 @@ export const CommunityBanner: React.FC = () => {
   return (
     <aside
       aria-label="Apoyo Comunitario"
-      className="w-full max-w-3xl my-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-950/60 via-zinc-900/80 to-emerald-950/60 border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.15)] flex flex-col sm:flex-row items-center justify-between gap-3.5 text-xs animate-fade-in"
+      className="w-full max-w-4xl my-3 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-950/60 via-zinc-900/80 to-emerald-950/60 border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.15)] flex flex-col sm:flex-row items-center justify-between gap-3.5 text-xs animate-fade-in"
     >
       <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
         <span className="text-2xl p-1.5 rounded-xl bg-blue-500/10 border border-blue-500/30 flex-shrink-0">

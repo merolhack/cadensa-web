@@ -30,7 +30,7 @@ export const SyllableReader: React.FC<SyllableReaderProps> = ({
   }[fontScale];
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2.5 p-3.5 bg-zinc-900/60 border border-zinc-800 rounded-2xl max-w-xl mx-auto shadow-inner">
+    <div className="flex flex-wrap items-center justify-center gap-2.5 p-3.5 bg-zinc-900/60 border border-zinc-800 rounded-2xl max-w-2xl mx-auto shadow-inner">
       {parsedWords.map((wordItem, wordIdx) => {
         return (
           <div

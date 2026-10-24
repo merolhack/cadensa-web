@@ -166,7 +166,7 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
     const activeStep = !isPlaying ? 1 : activeProgress < 33 ? 1 : activeProgress < 66 ? 2 : 3;
 
     return (
-      <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-cyan-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
+      <div className="w-full max-w-2xl mx-auto p-4 sm:p-5 rounded-3xl bg-zinc-950/80 border border-cyan-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
         <div className="flex items-center justify-between text-xs text-zinc-400">
           <span className="flex items-center gap-1 font-semibold text-cyan-300">
             <span>🌊</span>
@@ -282,7 +282,7 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
     const isOcclusive = /[ptkbdg]/i.test(currentSyllable);
 
     return (
-      <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-purple-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
+      <div className="w-full max-w-2xl mx-auto p-4 sm:p-5 rounded-3xl bg-zinc-950/80 border border-purple-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
         <div className="flex items-center justify-between text-xs text-zinc-400">
           <span className="flex items-center gap-1 font-semibold text-purple-300">
             <span>🪶</span>
@@ -342,7 +342,7 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
   // =========================================================================
   if (technique.id === 'prolonged_speech') {
     return (
-      <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-amber-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
+      <div className="w-full max-w-2xl mx-auto p-4 sm:p-5 rounded-3xl bg-zinc-950/80 border border-amber-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
         <div className="flex items-center justify-between text-xs text-zinc-400">
           <span className="flex items-center gap-1 font-semibold text-amber-300">
             <span>〰️</span>
@@ -398,7 +398,7 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
     }[breathPhase];
 
     return (
-      <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-teal-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
+      <div className="w-full max-w-2xl mx-auto p-4 sm:p-5 rounded-3xl bg-zinc-950/80 border border-teal-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
         <div className="flex items-center justify-between text-xs text-zinc-400">
           <span className="flex items-center gap-1 font-semibold text-teal-300">
             <span>🌬️</span>
@@ -440,7 +440,7 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
   // =========================================================================
   if (technique.id === 'pull_out') {
     return (
-      <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-amber-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
+      <div className="w-full max-w-2xl mx-auto p-4 sm:p-5 rounded-3xl bg-zinc-950/80 border border-amber-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
         <div className="flex items-center justify-between text-xs text-zinc-400">
           <span className="flex items-center gap-1 font-semibold text-amber-300">
             <span>🔄</span>
@@ -520,7 +520,7 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
   // =========================================================================
   if (technique.id === 'cancellation') {
     return (
-      <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-rose-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
+      <div className="w-full max-w-2xl mx-auto p-4 sm:p-5 rounded-3xl bg-zinc-950/80 border border-rose-500/30 shadow-lg space-y-3.5 text-center animate-fade-in">
         <div className="flex items-center justify-between text-xs text-zinc-400">
           <span className="flex items-center gap-1 font-semibold text-rose-300">
             <span>⏸️</span>

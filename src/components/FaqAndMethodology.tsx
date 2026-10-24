@@ -170,7 +170,7 @@ export const FaqAndMethodology: React.FC<FaqAndMethodologyProps> = ({
   const currentTechnique = selectedTab !== 'general' ? CLINICAL_TECHNIQUES[selectedTab] : null;
 
   return (
-    <div className="w-full max-w-3xl space-y-6 my-4 animate-fade-in text-left">
+    <div className="w-full max-w-4xl space-y-6 my-4 animate-fade-in text-left">
       {/* SECCIÓN 1: FAQ - GUÍA DE BOTONES Y TÉCNICAS */}
       <section
         aria-label="Preguntas Frecuentes y Guía de Uso"

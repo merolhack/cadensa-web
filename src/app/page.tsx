@@ -431,8 +431,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   // 2. Vista de Estación de Entrenamiento Activo (Práctica)
   return (
     <main className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-50 selection:bg-emerald-500 selection:text-zinc-950 animate-fade-in">
-      {/* Barra de Navegación Superior */}
-      <nav className="w-full max-w-3xl flex items-center justify-between py-1.5 border-b border-zinc-900">
+      {/* Barra de Navegación Superior Homogénea (max-w-5xl) */}
+      <nav className="w-full max-w-5xl flex items-center justify-between py-1.5 sm:py-2 border-b border-zinc-900 mb-2">
         <div className="flex items-center gap-2">
           {/* Botón para regresar al Catálogo de Técnicas / Inicio */}
           <button
@@ -500,8 +500,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         </div>
       </nav>
 
-      {/* Header Compacto */}
-      <header className="max-w-xl w-full text-center space-y-1 pt-1 sm:pt-2">
+      {/* Header Compacto Centrado (max-w-4xl) */}
+      <header className="max-w-4xl w-full text-center space-y-1.5 pt-1 sm:pt-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] text-zinc-400">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           Prueba de Concepto - Infraestructura Base
@@ -538,8 +538,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         )}
       </header>
 
-      {/* Tarjeta de Práctica Rítmica Ergonomica (Botones Siempre Visibles) */}
-      <section className="max-w-xl w-full my-2 sm:my-3 p-4 sm:p-6 bg-zinc-900/40 border border-zinc-800/80 rounded-3xl backdrop-blur-md shadow-2xl space-y-3.5">
+      {/* Tarjeta de Práctica Rítmica Ergonómica Homogénea (max-w-4xl) */}
+      <section className="max-w-4xl w-full my-2 sm:my-3 p-4 sm:p-7 bg-zinc-900/40 border border-zinc-800/80 rounded-3xl backdrop-blur-md shadow-2xl space-y-4">
         {/* Selector de Categorías Clínicas con conteos */}
         <div className="flex items-center justify-center gap-1.5 flex-wrap">
           {[
@@ -824,8 +824,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         </div>
       </section>
 
-      {/* Tarjetas Clínicas de Base Científica */}
-      <section className="max-w-3xl w-full grid grid-cols-1 md:grid-cols-3 gap-3 text-left my-2">
+      {/* Tarjetas Clínicas de Base Científica (max-w-4xl) */}
+      <section className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-3 gap-3.5 text-left my-2">
         <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-1">
           <div className="text-emerald-400 text-sm font-bold">01. {activeTechnique.badge}</div>
           <p className="text-xs text-zinc-400 leading-relaxed">
@@ -857,8 +857,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       {/* Banner Comunitario Oficial AMTTM */}
       <CommunityBanner />
 
-      {/* Footer */}
-      <footer className="w-full max-w-3xl text-center py-2 border-t border-zinc-900 text-xs text-zinc-500">
+      {/* Footer Homogéneo (max-w-5xl) */}
+      <footer className="w-full max-w-5xl text-center pt-6 pb-3 border-t border-zinc-900 text-xs text-zinc-500">
         Cadensa Web — Terapia Rítmica Silábica • Next.js 16 • Supabase • Cloudflare Pages
       </footer>
 

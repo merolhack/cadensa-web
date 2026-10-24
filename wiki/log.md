@@ -435,3 +435,36 @@
   - `wiki/architecture/supabase_audit_and_schema_state.md`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-24] ingest | Auditoría Integral de Seguridad: Remediación RLS en Supabase y Hardening HTTP
+- **Detalle**:
+  1. **Remediación de Alerta Crítica en Supabase Security Advisor (`RLS Disabled in Public`)**:
+     - Diagnóstico: La tabla interna de control `public._schema_migrations` carecía de Row Level Security (RLS), detonando alerta crítica en el Advisor de Supabase y exponiendo potencialmente el historial de versiones en la API PostgREST.
+     - Solución:
+       - Creación y ejecución de la migración `20261024170000_security_hardening.sql`.
+       - Habilitación de RLS (`ALTER TABLE public._schema_migrations ENABLE ROW LEVEL SECURITY;`).
+       - Revocación estricta de privilegios (`REVOKE ALL ON TABLE public._schema_migrations FROM anon, authenticated;`).
+       - Verificación: Las consultas anónimas y de usuarios autenticados vía PostgREST retornan HTTP 401 Unauthorized (`permission denied`).
+  2. **Hardening de Funciones PostgreSQL (Mitigación search_path Poisoning)**:
+     - Detección de la función `handle_new_user()` con `SECURITY DEFINER` y `search_path` mutable.
+     - Remediación aplicando `SET search_path = ''`, garantizando que la función trigger de registro no sea vulnerable a manipulación de esquemas.
+  3. **Auditoría de Dependencias y Aplicación (`package.json`)**:
+     - Ejecución de `npm audit`: 0 vulnerabilidades reportadas.
+     - Verificación de variables en cliente: El frontend únicamente consume `NEXT_PUBLIC_SUPABASE_ANON_KEY` y `NEXT_PUBLIC_SUPABASE_URL`. Cero exposición de tokens administrativos o claves `service_role`.
+     - Adición del script `npm run security:audit` en `package.json` para auditorías automatizadas periódicas.
+  4. **Cabeceras de Seguridad HTTP en Cloudflare Pages (`public/_headers`)**:
+     - Implementación de `X-Frame-Options: DENY` (anti-clickjacking).
+     - `X-Content-Type-Options: nosniff`.
+     - `Referrer-Policy: strict-origin-when-cross-origin`.
+     - `Permissions-Policy`: Restricción estricta de micrófono a `self` (`microphone=(self)`), bloqueando captura de audio desde iframes o dominios de terceros.
+     - `Content-Security-Policy`: Definición de directivas seguras para orígenes de Supabase y analíticas.
+- **Archivos creados/modificados**:
+  - `public/_headers`
+  - `package.json`
+  - `scripts/migrate_supabase.cjs`
+  - `scripts/security_audit.cjs`
+  - `supabase/migrations/20261024170000_security_hardening.sql`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

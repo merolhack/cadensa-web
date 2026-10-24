@@ -41,12 +41,14 @@ async function runMigrations() {
   console.log(`📂 Migraciones detectadas: ${migrationFiles.length}`);
   console.log(`=======================================================\n`);
 
-  // 1. Asegurar tabla de control de migraciones
+  // 1. Asegurar tabla de control de migraciones con RLS activo y acceso revocado
   const setupTrackerSql = `
     CREATE TABLE IF NOT EXISTS public._schema_migrations (
       version text PRIMARY KEY,
       applied_at timestamptz NOT NULL DEFAULT now()
     );
+    ALTER TABLE public._schema_migrations ENABLE ROW LEVEL SECURITY;
+    REVOKE ALL ON TABLE public._schema_migrations FROM anon, authenticated;
   `;
 
   await fetch(`https://api.supabase.com/v1/projects/${projectRef}/database/query`, {

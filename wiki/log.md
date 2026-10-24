@@ -275,3 +275,28 @@
   - `features/modular_clinical_techniques.feature`, `features/step_definitions/technique_steps.ts`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-24] ingest | Creación del Compendio Clínico y Documentación Exhaustiva de las 7 Técnicas de Fluidez
+- **Detalle**:
+  1. **Generación de Documentación Modular en `wiki/concepts/`**:
+     - `clinical_techniques_overview.md`: Visión holística, taxonomía en 3 familias fonoaudiológicas (Fluency Shaping, Stuttering Modification de Van Riper, Regulación Autónoma), matriz comparativa y sinergia terapéutica.
+     - `easy_onset.md`: Protocolo anatómico de Inicio Vocal Suave, desarticulación del espasmo aductor y ataque glótico en 3 pasos fisiológicos (Suspiro silencioso, Subida gradual, Fonación plena).
+     - `light_articulatory_contact.md`: Despresurización de consonantes oclusivas (/p, t, k, b, d, g/), prevención del taponamiento mecánico y regla del Tacto de Pluma (≤30% de presión).
+     - `prolonged_speech.md`: Habla Prolongada y legato vocal continuo, eliminación de cortes glóticos (*voicing breaks*) y estiramiento vocálico 2×.
+     - `box_breathing.md`: Respiración Cuadrada 4-4-4-4, estimulación del nervio vago, desaceleración del tono simpático y erradicación del habla con volumen residual vacío.
+     - `pull_out_technique.md`: Desactivación en tiempo real del bloqueo (Van Riper), etapas clínicas de Congelar (sin empujar) → Aflojar (reducir fuerza) → Deslizar suavemente.
+     - `cancellation_technique.md`: Protocolo de Cancelación post-bloqueo, pausa consciente obligatoria de 3 segundos, desarticulación del reflejo de escape y reintento con inicio suave.
+  2. **Actualización del Catálogo Maestro (`wiki/index.md`)**:
+     - Indexación completa de los 8 nuevos documentos conceptuales.
+- **Archivos creados/modificados**:
+  - `wiki/concepts/clinical_techniques_overview.md`
+  - `wiki/concepts/easy_onset.md`
+  - `wiki/concepts/light_articulatory_contact.md`
+  - `wiki/concepts/prolonged_speech.md`
+  - `wiki/concepts/box_breathing.md`
+  - `wiki/concepts/pull_out_technique.md`
+  - `wiki/concepts/cancellation_technique.md`
+  - `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

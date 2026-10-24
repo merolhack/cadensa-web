@@ -36,7 +36,14 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 
 | Documento | Descripción Breve | Etiquetas |
 |---|---|---|
-| [syllable_timed_speech.md](concepts/syllable_timed_speech.md) | Fundamento clínico del habla rítmica silábica, compensación de ganglios basales y fases de fluidez. | `clinical`, `speech-therapy`, `rhythm` |
+| [clinical_techniques_overview.md](concepts/clinical_techniques_overview.md) | Compendio y taxonomía de las 7 técnicas fonoaudiológicas: Fluency Shaping, Van Riper y Regulación Autónoma. | `clinical`, `overview`, `speech-therapy`, `fluency` |
+| [syllable_timed_speech.md](concepts/syllable_timed_speech.md) | Fundamento clínico del habla rítmica silábica (STS), compensación de ganglios basales y fases de fluidez. | `clinical`, `speech-therapy`, `rhythm` |
+| [easy_onset.md](concepts/easy_onset.md) | Inicio Vocal Suave: descomposición en 3 pasos (suspiro, subida, fonación) y control del espasmo aductor. | `clinical`, `easy-onset`, `laryngeal-control` |
+| [light_articulatory_contact.md](concepts/light_articulatory_contact.md) | Contacto Articular Ligero: despresurización de consonantes oclusivas (/p, t, k, b, d, g/) y tacto de pluma (≤30%). | `clinical`, `light-contact`, `articulation`, `plosives` |
+| [prolonged_speech.md](concepts/prolonged_speech.md) | Habla Prolongada y Fonación Continua: ligado vocal en legato (2.2s), eliminación de cortes glóticos y escala 2×. | `clinical`, `prolonged-speech`, `legato` |
+| [box_breathing.md](concepts/box_breathing.md) | Respiración Cuadrada Diafragmática (4-4-4-4): estimulación del nervio vago y prevención del habla sin reserva aérea. | `clinical`, `breathing`, `autonomic-nervous-system` |
+| [pull_out_technique.md](concepts/pull_out_technique.md) | Desactivación Activa en Bloqueo (Pull-Out de Van Riper): 3 etapas para congelar la fuerza, aflojar y deslizar. | `clinical`, `pull-out`, `van-riper`, `stuttering-modification` |
+| [cancellation_technique.md](concepts/cancellation_technique.md) | Cancelación Post-Bloqueo de Van Riper: pausa reflexiva de 3s para cortar el reflejo de escape y reintentar con inicio suave. | `clinical`, `cancellation`, `van-riper`, `post-block` |
 | [zero_trust_rls.md](concepts/zero_trust_rls.md) | Seguridad delegada a PostgreSQL: por qué el cliente es untrusted y cómo opera Row Level Security. | `security`, `postgres`, `rls`, `zero-trust` |
 | [static_spa_paradigm.md](concepts/static_spa_paradigm.md) | Justificación técnica de `output: 'export'`, eliminación de servidores Node.js y restricciones. | `jamstack`, `spa`, `performance`, `edge` |
 

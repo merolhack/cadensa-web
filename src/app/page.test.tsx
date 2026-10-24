@@ -64,8 +64,8 @@ describe('Home Page - Unit Tests', () => {
     const playButton = screen.getByRole('button', { name: /comenzar práctica rítmica/i });
     fireEvent.click(playButton);
 
-    // Debe estar en reproducción activa
-    expect(screen.getByRole('button', { name: /pausar entrenamiento/i })).toBeInTheDocument();
+    // Debe estar en reproducción activa con el texto específico de STS
+    expect(screen.getByRole('button', { name: /pausar ritmo sts/i })).toBeInTheDocument();
 
     // Abrir selector y cambiar a otra técnica (ej. Habla Prolongada y Fonación Continua)
     const selectorButton = screen.getByTitle(/cambiar técnica clínica/i);
@@ -74,9 +74,9 @@ describe('Home Page - Unit Tests', () => {
     const prolongedOption = screen.getByText('Habla Prolongada y Fonación Continua');
     fireEvent.click(prolongedOption);
 
-    // La técnica previa debe haberse detenido limpiamente y el botón debe volver a "Comenzar Práctica Rítmica"
-    expect(screen.getByRole('button', { name: /comenzar práctica rítmica/i })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /pausar entrenamiento/i })).not.toBeInTheDocument();
+    // La técnica previa debe haberse detenido limpiamente y el botón debe adaptarse a Habla Prolongada
+    expect(screen.getByRole('button', { name: /iniciar fonación continua/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /pausar/i })).not.toBeInTheDocument();
     expect(screen.getByText(/01\. Fonación Continua/i)).toBeInTheDocument();
   });
 });

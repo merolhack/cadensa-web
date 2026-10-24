@@ -22,6 +22,8 @@ export interface TechniqueFaqItem {
   badge?: string;
 }
 
+import { ClinicalCategory } from './clinicalExercises';
+
 export interface ClinicalTechnique {
   id: TechniqueId;
   familyId: TechniqueFamilyId;
@@ -36,6 +38,14 @@ export interface ClinicalTechnique {
   practicalSteps: string[];
   visualMode: 'metronome_beats' | 'smooth_ramp' | 'light_articulators' | 'vowel_elastic' | 'breathing_orb' | 'block_decompression';
   faqItems: TechniqueFaqItem[];
+  isRhythmic: boolean;
+  actionButton: {
+    start: string;
+    stop: string;
+    icon: string;
+  };
+  exerciseGoal: string;
+  recommendedCategory: ClinicalCategory | 'todas';
 }
 
 export interface TechniqueFamily {
@@ -109,6 +119,14 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
         badge: 'Tempo',
       },
     ],
+    isRhythmic: true,
+    actionButton: {
+      start: 'Comenzar Práctica Rítmica',
+      stop: 'Pausar Ritmo STS',
+      icon: '⏱️',
+    },
+    exerciseGoal: 'Marcapasos auditivo-motor con compás e isocronía regular',
+    recommendedCategory: 'todas',
   },
 
   easy_onset: {
@@ -149,6 +167,14 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
         badge: 'Aplicación',
       },
     ],
+    isRhythmic: false,
+    actionButton: {
+      start: 'Iniciar Rampa de Inicio Suave',
+      stop: 'Pausar Rampa Vocal',
+      icon: '🌊',
+    },
+    exerciseGoal: 'Aspiración silenciosa previa y ascenso gradual de sonoridad en vocales',
+    recommendedCategory: 'vocales',
   },
 
   light_contact: {
@@ -157,7 +183,7 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     name: 'Contacto Articular Suave (Light Contact)',
     shortName: 'Contacto Suave',
     icon: '🪶',
-    badge: 'Consonantes Oclusivas',
+    badge: 'Contacto Articular Ligero',
     difficulty: 'Intermedio',
     summary: 'Aproximación mínima y rozamiento sutil de labios, lengua y dientes en consonantes de alta presión (/p/, /t/, /k/, /b/, /d/, /g/).',
     clinicalObjective: 'Eliminar la hiperpresión intrabucal y evitar que los articuladores se queden pegados por exceso de fuerza motriz.',
@@ -189,6 +215,14 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
         badge: 'Autocontrol',
       },
     ],
+    isRhythmic: false,
+    actionButton: {
+      start: 'Iniciar Práctica de Contacto Pluma',
+      stop: 'Pausar Monitoreo de Presión',
+      icon: '🪶',
+    },
+    exerciseGoal: 'Tacto ligero de articuladores en consonantes oclusivas (/p, t, k, b, d, g/)',
+    recommendedCategory: 'diadococinesia',
   },
 
   prolonged_speech: {
@@ -229,6 +263,14 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
         badge: 'Escala Camperdown',
       },
     ],
+    isRhythmic: false,
+    actionButton: {
+      start: 'Iniciar Fonación Continua (Legato)',
+      stop: 'Pausar Habla Prolongada',
+      icon: '〰️',
+    },
+    exerciseGoal: 'Elongación vocálica elástica y ligamiento ininterrumpido entre palabras',
+    recommendedCategory: 'vocales',
   },
 
   box_breathing: {
@@ -269,6 +311,14 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
         badge: 'Propósito',
       },
     ],
+    isRhythmic: false,
+    actionButton: {
+      start: 'Iniciar Ciclo de Respiración 4-4-4-4',
+      stop: 'Detener Respiración Guiada',
+      icon: '🌬️',
+    },
+    exerciseGoal: 'Calma diafragmática y regulación vagal previa a la fonación',
+    recommendedCategory: 'todas',
   },
 
   pull_out: {
@@ -309,6 +359,14 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
         badge: 'Progresión',
       },
     ],
+    isRhythmic: false,
+    actionButton: {
+      start: 'Simular y Desactivar Bloqueo (Pull-Out)',
+      stop: 'Reiniciar Ejercicio Pull-Out',
+      icon: '🔄',
+    },
+    exerciseGoal: 'Detención voluntaria de fuerza y escape suave del espasmo',
+    recommendedCategory: 'frases_complejas',
   },
 
   cancellation: {
@@ -349,6 +407,14 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
         badge: 'Neuroplasticidad',
       },
     ],
+    isRhythmic: false,
+    actionButton: {
+      start: 'Iniciar Protocolo de Cancelación (3s)',
+      stop: 'Reiniciar Secuencia de Cancelación',
+      icon: '⏸️',
+    },
+    exerciseGoal: 'Pausa deliberada de 3 segundos post-bloqueo y reformulación motriz suave',
+    recommendedCategory: 'frases_complejas',
   },
 };
 

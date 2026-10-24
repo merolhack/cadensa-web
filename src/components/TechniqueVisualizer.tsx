@@ -18,6 +18,10 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
   const [countdown, setCountdown] = useState<number | null>(null);
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Estados para Respiración Diafragmática (Box Breathing 4-4-4-4)
+  const [breathPhase, setBreathPhase] = useState<'inhalar' | 'sostener' | 'exhalar' | 'pausa'>('inhalar');
+  const [breathSeconds, setBreathSeconds] = useState(4);
+
   // Limpieza total del temporizador de descompresión al cambiar de técnica o desmontar
   useEffect(() => {
     return () => {
@@ -28,6 +32,32 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
       setCountdown(null);
     };
   }, [technique.id]);
+
+  // Ciclo de Respiración Diafragmática 4-4-4-4
+  useEffect(() => {
+    if (technique.id !== 'box_breathing' || !isPlaying) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setBreathSeconds((prev) => {
+        if (prev > 1) return prev - 1;
+        setBreathPhase((curr) => {
+          if (curr === 'inhalar') return 'sostener';
+          if (curr === 'sostener') return 'exhalar';
+          if (curr === 'exhalar') return 'pausa';
+          return 'inhalar';
+        });
+        return 4;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+      setBreathSeconds(4);
+      setBreathPhase('inhalar');
+    };
+  }, [technique.id, isPlaying]);
 
   // Animación de rampa suave para Easy Onset sincronizada con el tempo
   useEffect(() => {
@@ -188,17 +218,119 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
     );
   }
 
-  // 4. Modalidad Modificación del Bloqueo (Pull-Out / Cancelación)
-  if (technique.id === 'pull_out' || technique.id === 'cancellation') {
+  // 4. Modalidad Respiración Diafragmática (Box Breathing 4-4-4-4)
+
+  if (technique.id === 'box_breathing') {
+    const phaseData = {
+      inhalar: { label: 'Inhala profundamente por la nariz (Abdomen)', color: 'from-cyan-400 to-blue-500', scale: 'scale-110' },
+      sostener: { label: 'Sostén el aire sin tensión en el cuello', color: 'from-blue-500 to-emerald-400', scale: 'scale-110' },
+      exhalar: { label: 'Exhala lento y tibio por la boca', color: 'from-emerald-400 to-teal-500', scale: 'scale-95' },
+      pausa: { label: 'Pausa en calma antes del siguiente ciclo', color: 'from-zinc-500 to-zinc-400', scale: 'scale-95' },
+    }[breathPhase];
+
+    return (
+      <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-teal-500/30 shadow-lg space-y-3 text-center animate-fade-in">
+        <div className="flex items-center justify-between text-xs text-zinc-400">
+          <span className="flex items-center gap-1 font-semibold text-teal-300">
+            <span>🌬️</span>
+            <span>Orbe de Respiración Cuadrada (4-4-4-4)</span>
+          </span>
+          <span className="px-2 py-0.5 rounded-md bg-teal-500/20 text-teal-300 text-[10px] font-mono">
+            {isPlaying ? 'Ciclo Activo' : 'En Espera'}
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center justify-center py-2 space-y-3">
+          <div className="relative flex items-center justify-center w-36 h-36">
+            <div
+              className={`w-28 h-28 rounded-full bg-gradient-to-tr ${phaseData.color} shadow-[0_0_35px_rgba(45,212,191,0.35)] transition-all duration-1000 flex flex-col items-center justify-center text-zinc-950 font-black ${
+                isPlaying ? phaseData.scale : 'scale-100 opacity-80'
+              }`}
+            >
+              <span className="text-3xl font-black">{isPlaying ? breathSeconds : '4'}</span>
+              <span className="text-[9px] uppercase tracking-wider font-bold opacity-80">
+                segundos
+              </span>
+            </div>
+          </div>
+
+          <div className="text-xs font-bold text-teal-300">
+            {isPlaying ? phaseData.label : 'Presiona "Iniciar Ciclo de Respiración" para comenzar'}
+          </div>
+        </div>
+
+        <p className="text-[11px] text-zinc-400 leading-relaxed">
+          🌬️ La respiración diafragmática estimula el nervio vago y previene la hipertonía laríngea antes del habla.
+        </p>
+      </div>
+    );
+  }
+
+  // 5. Modalidad Salida Suave del Bloqueo (Pull-Out)
+  if (technique.id === 'pull_out') {
+    return (
+      <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-amber-500/30 shadow-lg space-y-3 text-center animate-fade-in">
+        <div className="flex items-center justify-between text-xs text-zinc-400">
+          <span className="flex items-center gap-1 font-semibold text-amber-300">
+            <span>🔄</span>
+            <span>Rescate Activo en Bloqueo (Pull-Out)</span>
+          </span>
+          <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-mono">
+            Tiempo Real
+          </span>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 py-2 text-[10px]">
+          <div className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300">
+            <div className="text-amber-400 font-bold mb-1">1. Congelar</div>
+            <span>No empujar ni luchar</span>
+          </div>
+          <div className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300">
+            <div className="text-emerald-400 font-bold mb-1">2. Aflojar</div>
+            <span>Soltar tensión mandibular</span>
+          </div>
+          <div className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300">
+            <div className="text-cyan-400 font-bold mb-1">3. Deslizar</div>
+            <span>Transición suave a vocal</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center justify-center py-1">
+          {countdown !== null ? (
+            <div className="flex flex-col items-center justify-center">
+              <div className="w-14 h-14 rounded-full border-2 border-amber-400 flex items-center justify-center text-xl font-black text-amber-300 animate-ping">
+                {countdown}
+              </div>
+              <span className="text-xs text-amber-200 mt-2">Suelta la tensión en mandíbula y cuello...</span>
+            </div>
+          ) : (
+            <button
+              onClick={handleStartDecompression}
+              className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-zinc-950 font-bold text-xs shadow-md cursor-pointer transition-colors"
+            >
+              🔄 Iniciar Pausa de 3 Segundos (Pull-Out)
+            </button>
+          )}
+        </div>
+
+        <p className="text-[11px] text-zinc-400 leading-relaxed">
+          🔄 <strong>Protocolo Van Riper:</strong> Al detectar un bloqueo, apaga el impulso de empujar. Suaviza el músculo y deslízate hacia la salida.
+        </p>
+      </div>
+    );
+  }
+
+  // 6. Modalidad Cancelación Post-Bloqueo (Cancellation)
+  if (technique.id === 'cancellation') {
     return (
       <div className="w-full max-w-md mx-auto p-4 rounded-3xl bg-zinc-950/80 border border-rose-500/30 shadow-lg space-y-3 text-center animate-fade-in">
         <div className="flex items-center justify-between text-xs text-zinc-400">
           <span className="flex items-center gap-1 font-semibold text-rose-300">
-            <span>{technique.icon}</span>
-            <span>{technique.shortName}</span>
+            <span>⏸️</span>
+            <span>Cancelación Post-Bloqueo</span>
           </span>
           <span className="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 text-[10px] font-mono">
-            Descompresión
+            Pausa de 3s
           </span>
         </div>
 
@@ -208,27 +340,25 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
               <div className="w-16 h-16 rounded-full border-2 border-rose-400 flex items-center justify-center text-2xl font-black text-rose-300 animate-ping">
                 {countdown}
               </div>
-              <span className="text-xs text-zinc-300 mt-2">Suelta la tensión en mandíbula y cuello...</span>
+              <span className="text-xs text-zinc-300 mt-2">Pausa consciente: Respira y suelta el cuello...</span>
             </div>
           ) : (
             <button
               onClick={handleStartDecompression}
               className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md cursor-pointer transition-colors"
             >
-              ⏱️ Iniciar Pausa de 3 Segundos
+              ⏸️ Iniciar Pausa Consciente de 3s
             </button>
           )}
         </div>
 
         <p className="text-[11px] text-zinc-400 leading-relaxed">
-          {technique.id === 'pull_out'
-            ? '🔄 Si sientes el bloqueo, no empujes con fuerza. Afloja los músculos de la cara y deslízate suavemente hacia afuera.'
-            : '⏸️ Tras un bloqueo, detén el habla, cuenta 3 segundos respirando en calma y repite la palabra con Inicio Suave.'}
+          ⏸️ Tras el bloqueo, detén el habla inmediatamente. Cuenta 3 segundos en calma y repite la palabra usando Inicio Suave.
         </p>
       </div>
     );
   }
 
-  // Modalidad por defecto (STS / Respiración se apoya en MetronomeVisual / BreathingPacer)
+  // Modalidad por defecto (STS se apoya en MetronomeVisual)
   return null;
 };

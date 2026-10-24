@@ -187,10 +187,19 @@ export default function Home() {
   };
 
   const handleTogglePlay = () => {
-    if (!metronomeRef.current) return;
-    const playing = metronomeRef.current.toggle();
-    setIsPlaying(playing);
-    if (!playing) {
+    if (activeTechnique.isRhythmic) {
+      if (!metronomeRef.current) return;
+      const playing = metronomeRef.current.toggle();
+      setIsPlaying(playing);
+      if (!playing) {
+        setIsPulsing(false);
+      }
+    } else {
+      // Técnica no rítmica: animación/temporizador especializado sin metrónomo sonoro invasivo
+      if (metronomeRef.current && isPlaying) {
+        metronomeRef.current.stop();
+      }
+      setIsPlaying((prev) => !prev);
       setIsPulsing(false);
     }
   };
@@ -199,11 +208,14 @@ export default function Home() {
     // Detener de inmediato la reproducción si la técnica previa estaba ejecutándose
     if (metronomeRef.current && isPlaying) {
       metronomeRef.current.stop();
-      setIsPlaying(false);
-      setIsPulsing(false);
     }
+    setIsPlaying(false);
+    setIsPulsing(false);
     setActiveSyllableIndex(0);
     setSelectedTechniqueId(tech.id);
+    if (tech.recommendedCategory) {
+      handleCategorySelect(tech.recommendedCategory);
+    }
   };
 
   const handleToggleMute = () => {
@@ -443,16 +455,18 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Metrónomo Visual Compacto con Compás Dinámico */}
-        <MetronomeVisual
-          isPlaying={isPlaying}
-          bpm={bpm}
-          currentBeat={currentBeat}
-          isPulsing={isPulsing}
-          timeSignature={timeSignature}
-        />
+        {/* Metrónomo Visual solo para técnicas rítmicas (STS) */}
+        {activeTechnique.isRhythmic && (
+          <MetronomeVisual
+            isPlaying={isPlaying}
+            bpm={bpm}
+            currentBeat={currentBeat}
+            isPulsing={isPulsing}
+            timeSignature={timeSignature}
+          />
+        )}
 
-        {/* Visualizador Adaptativo de la Técnica Activa (ej. Rampa Easy Onset / Presión Articular) */}
+        {/* Visualizador Adaptativo de la Técnica Activa (ej. Rampa Easy Onset / Presión Articular / Box Breathing) */}
         <TechniqueVisualizer
           technique={activeTechnique}
           isPlaying={isPlaying}
@@ -481,8 +495,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="text-[11px] text-zinc-400 italic">
-            🎯 {activeExercise.clinicalObjective}
+          <div className="flex flex-col items-center gap-0.5 text-center">
+            <span className="text-[10px] text-emerald-400 font-semibold">
+              {activeTechnique.badge}: {activeTechnique.exerciseGoal}
+            </span>
+            <span className="text-[11px] text-zinc-400 italic">
+              🎯 {activeExercise.clinicalObjective}
+            </span>
           </div>
 
           {/* Formulario de Frase Propia */}
@@ -513,7 +532,7 @@ export default function Home() {
           />
         </div>
 
-        {/* BOTONES DE ACCIÓN PRINCIPAL */}
+        {/* BOTONES DE ACCIÓN PRINCIPAL DIFERENCIADOS POR TÉCNICA */}
         <div className="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-zinc-800/80">
           <button
             onClick={handleTogglePlay}
@@ -526,12 +545,12 @@ export default function Home() {
             {isPlaying ? (
               <>
                 <span className="w-2.5 h-2.5 bg-zinc-300 rounded-sm" />
-                Pausar Entrenamiento
+                {activeTechnique.actionButton.stop}
               </>
             ) : (
               <>
-                <span className="w-0 h-0 border-y-5 border-y-transparent border-l-8 border-l-zinc-950 ml-0.5" />
-                Comenzar Práctica Rítmica
+                <span className="text-base">{activeTechnique.actionButton.icon}</span>
+                {activeTechnique.actionButton.start}
               </>
             )}
           </button>

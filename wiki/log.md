@@ -468,3 +468,28 @@
   - `supabase/migrations/20261024170000_security_hardening.sql`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-24] ingest | Integración y Verificación de Google Analytics 4, Search Console y Bing Webmaster Tools
+- **Detalle**:
+  1. **Google Analytics (GA4)**:
+     - Creación de la propiedad y flujo de datos web `Cadensa Web` en la cuenta `a389930119` con ID de medición `G-HCTT9146TJ`.
+     - Inserción de scripts `gtag.js` en `src/app/layout.tsx` mediante `next/script` optimizado para carga `afterInteractive`.
+     - Actualización de CSP en `public/_headers` para permitir orígenes `https://www.googletagmanager.com`, `https://*.google-analytics.com` y `https://*.analytics.google.com`.
+  2. **Google Search Console**:
+     - Registro de la propiedad con prefijo `https://cadensa-web.pages.dev/`.
+     - Implementación de la etiqueta de verificación `<meta name="google-site-verification" content="n2GCgYUYH1CHgZTm_iYkWM-bXqGR7o-c8kXoy3jB5EQ" />` en `src/app/layout.tsx`.
+     - Verificación automatizada exitosa confirmada vía navegador (`Ownership verified`).
+  3. **Bing Webmaster Tools**:
+     - Configuración del sitio `https://cadensa-web.pages.dev/`.
+     - Integración del meta tag de autenticación `<meta name="msvalidate.01" content="856757614FFC2C5582FBCB81B1B4E4CA" />` en los encabezados globales.
+     - Verificación confirmada en el panel de Bing.
+  4. **Despliegue y Validación CI/CD**:
+     - Suite completa de 114 pruebas unitarias y 59 escenarios BDD pasando limpiamente.
+     - Despliegue en Cloudflare Pages ([Run 40141821613](https://github.com/merolhack/cadensa-web/actions/runs/40141821613)) con HTTP 200 en producción.
+- **Archivos creados/modificados**:
+  - `src/app/layout.tsx`
+  - `public/_headers`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

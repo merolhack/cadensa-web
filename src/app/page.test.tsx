@@ -19,7 +19,7 @@ describe('Home Page - Unit Tests', () => {
     const playButton = screen.getByRole('button', { name: /comenzar práctica rítmica/i });
     expect(playButton).toBeInTheDocument();
 
-    const audioButton = screen.getByRole('button', { name: /audio/i });
+    const audioButton = screen.getByRole('button', { name: /^🔊 audio/i });
     expect(audioButton).toBeInTheDocument();
   });
 
@@ -30,7 +30,7 @@ describe('Home Page - Unit Tests', () => {
     expect(screen.getByText(/estabilización métrica silábica/i)).toBeInTheDocument();
 
     // Al pulsar "Diadococinesia", cambia visiblemente el objetivo clínico y los fonemas
-    const ddkButton = screen.getByRole('button', { name: /diadococinesia/i });
+    const ddkButton = screen.getByRole('button', { name: /^diadococinesia/i });
     fireEvent.click(ddkButton);
 
     expect(screen.getByText(/coordinación motriz velo-lingual/i)).toBeInTheDocument();

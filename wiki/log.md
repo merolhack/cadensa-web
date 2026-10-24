@@ -224,3 +224,28 @@
 - **Archivos creados/modificados**:
   - `src/app/page.tsx`, `features/community_and_breathing.feature`, `features/step_definitions/community_steps.ts`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-23] ingest | Publicación de Guía Interactiva FAQ de Botones y Fundamento Clínico STS
+- **Detalle**:
+  1. **Componente FAQ y Metodología (`FaqAndMethodology.tsx`)**:
+     - Implementación de acordeón interactivo ubicado estratégicamente arriba del banner de la AMTTM.
+     - Guía detallada y didáctica de cada botón y grupo funcional:
+       - Controles principales: Práctica Rítmica, Audio/Mute, Respiración Diafragmática (4-4-4-4) y Guardado de sesión.
+       - Evaluación y feedback: Explicación de la medición en milisegundos de "Registrar Sílaba" (±60ms, ±120ms, >120ms), micro-vibración háptica y reto de atenuación rítmica (Fading 4/2).
+       - Catálogo y personalización: Categorías fonoaudiológicas (Fonética, Diadococinesia, Vocales, Polisílabos) y función "+ Mi Frase".
+       - Parámetros musicales: Rango de BPM, Compases (4/4, 3/4, 2/4), Timbres acústicos sintéticos y escala de texto accesible.
+       - Perfil y sincronización: Racha diaria, minutos acumulados y acceso con Google OAuth / modo invitado.
+  2. **Fundamento Clínico de Habla Rítmica Silábica (STS)**:
+     - Explicación de las bases neurobiológicas: el ritmo isocrónico como marcapasos neural sustitutivo frente al déficit temporal de los ganglios basales.
+     - Beneficios en la reducción de la ansiedad anticipatoria, facilitación de inicios suaves (*easy onset*) y neuroplasticidad mediante sesiones diarias de 5 a 10 minutos.
+  3. **Cobertura de Pruebas**:
+     - 3 nuevas pruebas unitarias en `src/components/FaqAndMethodology.test.tsx` (total 79 pasando).
+     - Nuevo archivo de escenarios BDD `features/faq_and_sts_methodology.feature` con 8 pasos en `features/step_definitions/faq_steps.ts` (total 46 escenarios pasando).
+- **Archivos creados/modificados**:
+  - `src/components/FaqAndMethodology.tsx`, `src/components/FaqAndMethodology.test.tsx`
+  - `src/app/page.tsx`, `src/app/page.test.tsx`
+  - `features/faq_and_sts_methodology.feature`, `features/step_definitions/faq_steps.ts`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

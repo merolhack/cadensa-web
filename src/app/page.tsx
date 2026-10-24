@@ -13,6 +13,7 @@ import { Dashboard } from '@/components/Dashboard';
 import { AuthModal } from '@/components/AuthModal';
 import { CommunityBanner } from '@/components/CommunityBanner';
 import { BreathingPacer } from '@/components/BreathingPacer';
+import { FaqAndMethodology } from '@/components/FaqAndMethodology';
 import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExercisesByCategory } from '@/lib/clinicalExercises';
 
 const TRAINING_PHRASES = [
@@ -683,6 +684,9 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {/* Guía Interactiva de Botones (FAQ) y Fundamento Clínico STS */}
+      <FaqAndMethodology />
 
       {/* Banner Comunitario Oficial AMTTM */}
       <CommunityBanner />

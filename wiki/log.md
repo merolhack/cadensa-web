@@ -353,4 +353,24 @@
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-24] ingest | Visibilidad Permanente y Alineación Horizontal de Botones en el Banner Oficial AMTTM
+- **Detalle**:
+  1. **Visibilidad Permanente del Banner (`CommunityBanner.tsx`)**:
+     - Se eliminó el botón de descarte (`✕`) y el estado condicional de ocultamiento, asegurando que el banner institucional de la AMTTM permanezca siempre visible para todos los usuarios.
+     - Se incorporó limpieza preventiva en `useEffect` para invalidar claves residuales de `cadensa_amttm_banner_dismissed` en navegadores existentes.
+  2. **Alineación Fija Horizontal de Botones de Redes Sociales**:
+     - Se eliminó el comportamiento `flex-wrap` en el grupo de botones, fijando un contenedor `flex items-center gap-2.5 flex-shrink-0`.
+     - Ambos botones (Facebook y YouTube) poseen idéntico padding vertical (`px-3.5 py-2`), alineación perfecta de isotipos vectoriales y flecha de apertura externa.
+  3. **Actualización de Suite de Pruebas**:
+     - Actualizado `CommunityBanner.test.tsx` para verificar la permanencia continua del banner y la ausencia de botones de descarte destructivos.
+     - 114/114 pruebas unitarias y 59/59 escenarios BDD pasando limpiamente.
+- **Archivos creados/modificados**:
+  - `src/components/CommunityBanner.tsx`
+  - `src/components/CommunityBanner.test.tsx`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+
 

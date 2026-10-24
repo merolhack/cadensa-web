@@ -402,6 +402,36 @@
   - `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
 
-
-
+## [2026-10-24] ingest | Generación de Personal Access Token y Migración Desatendida de Base de Datos en Supabase
+- **Detalle**:
+  1. **Generación de Credenciales Administrativas**:
+     - Acceso asistido vía browser subagent al dashboard oficial (`https://supabase.com/dashboard/account/tokens`).
+     - Creación del Personal Access Token (PAT) `cadensa-migrations` (`sbp_...`) con privilegios administrativos para la Management API.
+     - Resguardo seguro de credenciales:
+       - Configuración en `.env` local (`SUPABASE_ACCESS_TOKEN`), estrictamente protegido en `.gitignore`.
+       - Actualización de `.env.example` con la nueva variable documentada.
+       - Aprovisionamiento como secreto de repositorio en GitHub Actions (`gh secret set SUPABASE_ACCESS_TOKEN`).
+  2. **Pipeline de Migraciones Desatendidas (`scripts/migrate_supabase.cjs`)**:
+     - Creación de script de migración automatizada compatible con CI/CD que interactúa con `https://api.supabase.com/v1/projects/{ref}/database/query`.
+     - Ejecución ordenada y atómica de los archivos de migración:
+       - `20260531140826_init_schema.sql` (creación de tabla `profiles`, trigger `on_auth_user_created`, políticas RLS).
+       - `20261023140000_training_and_streaks.sql` (creación de tablas `exercises`, `training_sessions`, `user_streaks`, semillas iniciales de técnicas clínicas y funciones PL/pgSQL).
+     - Incorporación del comando `npm run db:migrate` en `package.json`.
+     - Integración del paso condicional de migración en `.github/workflows/deploy.yml` para despliegues continuos automáticos.
+  3. **Validación y Estado de Salud en Vivo**:
+     - Verificación directa contra la API PostgREST (`https://kddeejyhnxrnmkmiwjxp.supabase.co/rest/v1/`):
+       - `public.profiles`: ACTIVA (HTTP 200).
+       - `public.exercises`: ACTIVA (HTTP 200, 2 ejercicios semilla disponibles).
+       - `public.training_sessions`: ACTIVA (HTTP 200).
+       - `public.user_streaks`: ACTIVA (HTTP 200).
+     - Documentación actualizada en `wiki/architecture/supabase_audit_and_schema_state.md`.
+- **Archivos creados/modificados**:
+  - `.env.example`
+  - `package.json`
+  - `scripts/migrate_supabase.cjs`
+  - `.github/workflows/deploy.yml`
+  - `wiki/architecture/supabase_audit_and_schema_state.md`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

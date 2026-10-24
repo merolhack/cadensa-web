@@ -6,6 +6,7 @@ last_updated: "2026-10-24"
 sources:
   - "src/lib/supabaseClient.ts"
   - "src/lib/trainingService.ts"
+  - "scripts/migrate_supabase.cjs"
   - "supabase/migrations/20260531140826_init_schema.sql"
   - "supabase/migrations/20261023140000_training_and_streaks.sql"
 related:
@@ -16,43 +17,59 @@ related:
 
 # Auditoría Técnica de Supabase en Cadensa
 
-Este documento detalla el diagnóstico exhaustivo realizado sobre el entorno de **Supabase** del proyecto Cadensa (Proyecto: `kddeejyhnxrnmkmiwjxp`), analizando qué información reside actualmente en la base de datos remota, cómo se gestionan los datos de las pruebas automatizadas y el estado de ejecución de las migraciones SQL.
+Este documento detalla el diagnóstico y la automatización integral de **Supabase** en el proyecto Cadensa (Proyecto: `kddeejyhnxrnmkmiwjxp`), documentando la ejecución desatendida de migraciones SQL, la verificación en tiempo real de las tablas de PostgreSQL y el aislamiento estricto de las pruebas automatizadas.
 
 ---
 
-## 1. Resumen Ejecutivo del Diagnóstico
+## 1. Resumen Ejecutivo del Estado Remoto
 
-| Componente | Estado Remoto en Supabase | Detalle / Causa Raíz |
+| Componente | Estado Remoto en Supabase | Detalle / Verificación PostgREST |
 | :--- | :---: | :--- |
 | **Servicio de Autenticación (GoTrue)** | ✅ **Activo / Saludable** | Endpoint de Auth y `getSession` responden con código 200 sin errores. |
-| **Tabla `public.profiles`** | ⚠️ **Pendiente de Migración** | HTTP 404 (`Could not find the table 'public.profiles' in the schema cache`). |
-| **Tabla `public.exercises`** | ⚠️ **Pendiente de Migración** | HTTP 404 (`Could not find the table 'public.exercises' in the schema cache`). |
-| **Tabla `public.training_sessions`** | ⚠️ **Pendiente de Migración** | HTTP 404 (`Could not find the table 'public.training_sessions' in the schema cache`). |
-| **Tabla `public.user_streaks`** | ⚠️ **Pendiente de Migración** | HTTP 404 (`Could not find the table 'public.user_streaks' in the schema cache`). |
-| **Datos de Pruebas Unitarias y BDD** | 🛡️ **Aislados Localmente** | Las 114 pruebas unitarias y 59 escenarios BDD se ejecutan contra mocks y memoria local. |
-| **Experiencia de Usuario en la Web** | ✅ **Operativa (Offline-First)** | El cliente web conmuta automáticamente al catálogo de respaldo y almacenamiento local. |
+| **Tabla `public.profiles`** | ✅ **Migrada y Activa** | HTTP 200 OK — Políticas RLS y trigger `on_auth_user_created` activos. |
+| **Tabla `public.exercises`** | ✅ **Migrada y Activa** | HTTP 200 OK — Catálogo clínico inicial insertado en PostgreSQL. |
+| **Tabla `public.training_sessions`** | ✅ **Migrada y Activa** | HTTP 200 OK — Aislamiento Zero-Trust por `auth.uid() = user_id`. |
+| **Tabla `public.user_streaks`** | ✅ **Migrada y Activa** | HTTP 200 OK — Gamificación (rachas, XP, minutos) lista para sincronización. |
+| **Datos de Pruebas Unitarias y BDD** | 🛡️ **Aislados Localmente** | 114 pruebas unitarias y 59 escenarios BDD corren con mocks (Zero-Pollution). |
+| **Automatización CI/CD** | 🤖 **100% Desatendida** | Migraciones integradas en GitHub Actions y ejecutables con `npm run db:migrate`. |
 
 ---
 
-## 2. Diagnóstico de la Base de Datos Remota
+## 2. Automatización Desatendida de Migraciones
 
-Al inspeccionar directamente la instancia remota de Supabase con las credenciales configuradas en `.env` (`NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`), se obtuvieron las siguientes respuestas de la API PostgREST:
+Para eliminar la intervención manual mediante copiado y pegado en dashboards web, se implementó un flujo directo a través de la **Supabase Management REST API**:
 
+### Pipeline de Ejecución (`scripts/migrate_supabase.cjs`)
+1. Carga de credenciales desde `.env` (`SUPABASE_ACCESS_TOKEN` tipo `sbp_...`).
+2. Lectura secuencial de las migraciones SQL en `supabase/migrations/`.
+3. Envío directo al endpoint administrativo de Supabase:
+   `POST https://api.supabase.com/v1/projects/kddeejyhnxrnmkmiwjxp/database/query`
+4. Sondeo inmediato a través de PostgREST con la clave anon para certificar que el schema cache de PostgreSQL registre las tablas con HTTP 200.
+
+### Resultado de la Ejecución en Vivo:
 ```text
-Supabase URL: https://kddeejyhnxrnmkmiwjxp.supabase.co
-Supabase Key: [Configurada y verificada]
+=======================================================
+🚀 Iniciando Ejecución Desatendida de Migraciones SQL
+📌 Proyecto Supabase: kddeejyhnxrnmkmiwjxp
+📂 Migraciones detectadas: 2
+=======================================================
 
-1. public.exercises: 404 Not Found (Could not find table in schema cache)
-2. public.profiles: 404 Not Found (Could not find table in schema cache)
-3. public.training_sessions: 404 Not Found (Could not find table in schema cache)
-4. public.user_streaks: 404 Not Found (Could not find table in schema cache)
-5. Auth Health: getSession = OK (true)
+⏳ [1/2] Enviando migración: 20260531140826_init_schema.sql...
+✅ [2/2] Migración 20260531140826_init_schema.sql ejecutada exitosamente.
+
+⏳ [1/2] Enviando migración: 20261023140000_training_and_streaks.sql...
+✅ [2/2] Migración 20261023140000_training_and_streaks.sql ejecutada exitosamente.
+
+-------------------------------------------------------
+🔍 Validando estado de tablas en PostgreSQL vía PostgREST...
+-------------------------------------------------------
+✅ Tabla public.profiles: ACTIVA (HTTP 200) - Registros devueltos: 0
+✅ Tabla public.exercises: ACTIVA (HTTP 200) - Registros devueltos: 2
+✅ Tabla public.training_sessions: ACTIVA (HTTP 200) - Registros devueltos: 0
+✅ Tabla public.user_streaks: ACTIVA (HTTP 200) - Registros devueltos: 0
+
+🎉 ¡Todas las tablas fueron creadas y verificadas exitosamente en Supabase!
 ```
-
-### ¿Por qué ocurre esto?
-Las migraciones SQL existen como código fuente versionado en el repositorio (`supabase/migrations/`), pero **aún no se han corrido en la base de datos PostgreSQL de producción de Supabase**. 
-
-Como la clave provista en el cliente web es la `anon` (clave pública con permisos de cliente y sujeta a Row Level Security), esta no cuenta con privilegios DDL (`CREATE TABLE`) para autogenerar las tablas en tiempo de ejecución. La creación de tablas debe realizarse a través de la consola de Supabase o mediante la CLI con credenciales administrativas.
 
 ---
 
@@ -67,38 +84,26 @@ Como la clave provista en el cliente web es la `anon` (clave pública con permis
    - Validan la lógica fonoaudiológica, las fórmulas de isocronía y el renderizado estático de componentes (`renderToString`).
    - No realizan mutaciones de red en Supabase.
 3. **Persistencia Local de Usuario (Fallback Offline-First):**
-   - Cuando un paciente entrena en la aplicación web sin haber iniciado sesión o cuando las tablas de Supabase no responden, [`trainingService.ts`](file:///Ubuntu-20.04/home/merolhack/fl/cadensa-web/src/lib/trainingService.ts) activa el modo de resiliencia local:
-     - `cadensa_streak_days`: Días continuos de entrenamiento.
-     - `cadensa_total_minutes`: Tiempo diario acumulado.
-     - `cadensa_xp_points`: Puntos de experiencia ganados.
-     - `cadensa_user_email`: Identificador de sesión.
+   - Cuando un paciente entrena en la aplicación web sin haber iniciado sesión o en modo sin conexión, [`trainingService.ts`](file:///Ubuntu-20.04/home/merolhack/fl/cadensa-web/src/lib/trainingService.ts) mantiene los registros en `localStorage` (`cadensa_streak_days`, `cadensa_total_minutes`, `cadensa_xp_points`, `cadensa_user_email`).
+   - Al iniciar sesión mediante Google OAuth o Magic Link, el cliente sincroniza de forma transparente los datos locales hacia las tablas `training_sessions` y `user_streaks`.
 
 ---
 
-## 4. Guía para Aplicar las Migraciones en Supabase
+## 4. Integración en el Flujo de Trabajo (Comandos y CI/CD)
 
-Para que las tablas queden plenamente creadas en PostgreSQL y comiencen a recibir las sesiones de los usuarios autenticados, se deben aplicar las dos migraciones existentes:
-
-### Opción A: Desde el Editor SQL de Supabase Dashboard (Recomendada)
-1. Iniciar sesión en [Supabase Dashboard](https://supabase.com/dashboard/project/kddeejyhnxrnmkmiwjxp).
-2. Entrar a la sección **SQL Editor** (`/sql/new`).
-3. Pegar y ejecutar secuencialmente los scripts:
-   - **Script 1:** [`supabase/migrations/20260531140826_init_schema.sql`](file:///Ubuntu-20.04/home/merolhack/fl/cadensa-web/supabase/migrations/20260531140826_init_schema.sql)
-     - Crea `public.profiles`.
-     - Habilita RLS (lectura pública, edición exclusiva del propietario).
-     - Instala trigger automático `on_auth_user_created` para vincular perfiles en el registro.
-   - **Script 2:** [`supabase/migrations/20261023140000_training_and_streaks.sql`](file:///Ubuntu-20.04/home/merolhack/fl/cadensa-web/supabase/migrations/20261023140000_training_and_streaks.sql)
-     - Crea `public.exercises`, `public.training_sessions` y `public.user_streaks`.
-     - Configura políticas Zero-Trust RLS (aislamiento estricto por `auth.uid() = user_id`).
-     - Inserta los ejercicios clínicos de semilla inicial.
-
-### Opción B: Mediante Supabase CLI
-```bash
-# Vincular el proyecto con la CLI de Supabase
-npx supabase link --project-ref kddeejyhnxrnmkmiwjxp
-
-# Enviar todas las migraciones locales a la base remota
-npx supabase db push
-```
-
-Una vez ejecutadas, el cliente de Cadensa sincronizará de forma transparente tanto en la nube como en local.
+- **Ejecución Local Desatendida:**
+  ```bash
+  npm run db:migrate
+  ```
+- **Integración en GitHub Actions (`.github/workflows/deploy.yml`):**
+  El pipeline de despliegue continuo cuenta con el paso condicional:
+  ```yaml
+  - name: Apply Supabase Migrations
+    if: github.ref == 'refs/heads/main' && secrets.SUPABASE_ACCESS_TOKEN != ''
+    run: npm run db:migrate
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  ```
+  El secreto `SUPABASE_ACCESS_TOKEN` ya se encuentra aprovisionado en el almacén seguro de GitHub Secrets, asegurando que cualquier migración SQL futura que se añada a `supabase/migrations/` se aplique automáticamente en producción con cada push a la rama `main`.

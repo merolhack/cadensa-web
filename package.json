@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "test:bdd": "tsx ./node_modules/.bin/cucumber-js",
     "test:all": "npm run test && npm run test:bdd",
+    "db:migrate": "node scripts/migrate_supabase.cjs",
     "supabase:gen-types": "npx supabase gen types typescript --local > src/types/supabase.ts"
   },
   "dependencies": {

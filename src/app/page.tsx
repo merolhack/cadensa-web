@@ -16,7 +16,7 @@ import { BreathingPacer } from '@/components/BreathingPacer';
 import { FaqAndMethodology } from '@/components/FaqAndMethodology';
 import { TechniqueSelector } from '@/components/TechniqueSelector';
 import { TechniqueVisualizer } from '@/components/TechniqueVisualizer';
-import { TechniqueId, CLINICAL_TECHNIQUES } from '@/lib/clinicalTechniques';
+import { TechniqueId, CLINICAL_TECHNIQUES, ClinicalTechnique } from '@/lib/clinicalTechniques';
 import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExercisesByCategory } from '@/lib/clinicalExercises';
 
 const TRAINING_PHRASES = [
@@ -195,6 +195,17 @@ export default function Home() {
     }
   };
 
+  const handleSelectTechnique = (tech: ClinicalTechnique) => {
+    // Detener de inmediato la reproducción si la técnica previa estaba ejecutándose
+    if (metronomeRef.current && isPlaying) {
+      metronomeRef.current.stop();
+      setIsPlaying(false);
+      setIsPulsing(false);
+    }
+    setActiveSyllableIndex(0);
+    setSelectedTechniqueId(tech.id);
+  };
+
   const handleToggleMute = () => {
     if (!metronomeRef.current) return;
     const muted = metronomeRef.current.toggleMute();
@@ -334,7 +345,7 @@ export default function Home() {
           {/* Menú Modular de Técnicas Fonoaudiológicas */}
           <TechniqueSelector
             currentTechniqueId={selectedTechniqueId}
-            onSelectTechnique={(tech) => setSelectedTechniqueId(tech.id)}
+            onSelectTechnique={handleSelectTechnique}
           />
 
           <button
@@ -379,8 +390,10 @@ export default function Home() {
           Cadensa
         </h1>
 
-        <p className="text-xs sm:text-sm text-zinc-400 font-light italic">
-          Encuentra el ritmo de tu voz — Habla rítmica silábica (STS)
+        <p className="text-xs sm:text-sm text-zinc-400 font-light italic transition-colors">
+          {activeTechnique.id === 'sts'
+            ? 'Encuentra el ritmo de tu voz — Habla rítmica silábica (STS)'
+            : `${activeTechnique.name} — ${activeTechnique.clinicalObjective}`}
         </p>
 
         {/* Anillo de Meta Diaria de Entrenamiento (5 min objetivo) */}
@@ -683,16 +696,16 @@ export default function Home() {
       {/* Tarjetas Clínicas de Base Científica */}
       <section className="max-w-3xl w-full grid grid-cols-1 md:grid-cols-3 gap-3 text-left my-2">
         <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-1">
-          <div className="text-emerald-400 text-sm font-bold">01. Isocronía</div>
+          <div className="text-emerald-400 text-sm font-bold">01. {activeTechnique.badge}</div>
           <p className="text-xs text-zinc-400 leading-relaxed">
-            Cada sílaba recibe la misma duración temporal compensando el déficit de los ganglios basales.
+            {activeTechnique.neurobiologicalBasis}
           </p>
         </div>
 
         <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-1">
-          <div className="text-cyan-400 text-sm font-bold">02. Neuroplasticidad</div>
+          <div className="text-cyan-400 text-sm font-bold">02. {activeTechnique.shortName}</div>
           <p className="text-xs text-zinc-400 leading-relaxed">
-            5 a 10 minutos diarios automatizan el patrón rítmico reduciendo los bloqueos en situaciones cotidianas.
+            {activeTechnique.clinicalObjective}
           </p>
         </div>
 
@@ -707,7 +720,7 @@ export default function Home() {
       {/* Guía Interactiva de Botones (FAQ) y Fundamento Clínico STS */}
       <FaqAndMethodology
         activeTechniqueId={selectedTechniqueId}
-        onSelectTechnique={(tech) => setSelectedTechniqueId(tech.id)}
+        onSelectTechnique={handleSelectTechnique}
       />
 
       {/* Banner Comunitario Oficial AMTTM */}

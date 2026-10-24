@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ClinicalTechnique } from '@/lib/clinicalTechniques';
 
 interface TechniqueVisualizerProps {
@@ -16,6 +16,18 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
 }) => {
   const [rampProgress, setRampProgress] = useState(0);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Limpieza total del temporizador de descompresión al cambiar de técnica o desmontar
+  useEffect(() => {
+    return () => {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+        countdownIntervalRef.current = null;
+      }
+      setCountdown(null);
+    };
+  }, [technique.id]);
 
   // Animación de rampa suave para Easy Onset sincronizada con el tempo
   useEffect(() => {
@@ -44,11 +56,17 @@ export const TechniqueVisualizer: React.FC<TechniqueVisualizerProps> = ({
 
   // Manejador del temporizador de descompresión para Cancelación y Pull-Out
   const handleStartDecompression = () => {
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+    }
     setCountdown(3);
-    const interval = setInterval(() => {
+    countdownIntervalRef.current = setInterval(() => {
       setCountdown((prev) => {
         if (prev === null || prev <= 1) {
-          clearInterval(interval);
+          if (countdownIntervalRef.current) {
+            clearInterval(countdownIntervalRef.current);
+            countdownIntervalRef.current = null;
+          }
           return null;
         }
         return prev - 1;

@@ -1,0 +1,81 @@
+{
+  "updated_at": "2026-10-25T16:37:39.896Z",
+  "period": "Últimos 7 días",
+  "target_url": "https://cadensa-web.pages.dev/",
+  "summary": {
+    "weekly_active_users": 5,
+    "total_page_views": 12,
+    "search_impressions": 0,
+    "search_clicks": 0
+  },
+  "sources": {
+    "google_analytics": {
+      "active_users": 5,
+      "sessions": 5,
+      "page_views": 12,
+      "avg_session_duration_sec": 975,
+      "countries": [
+        {
+          "country": "France",
+          "users": 2,
+          "views": 2
+        },
+        {
+          "country": "Argentina",
+          "users": 1,
+          "views": 1
+        },
+        {
+          "country": "Mexico",
+          "users": 1,
+          "views": 1
+        },
+        {
+          "country": "Peru",
+          "users": 1,
+          "views": 8
+        }
+      ]
+    },
+    "google_search_console": {
+      "clicks": 0,
+      "impressions": 0,
+      "ctr": 0,
+      "avg_position": 0,
+      "top_countries": []
+    },
+    "bing_webmaster": {
+      "clicks": 0,
+      "impressions": 0
+    },
+    "cloudflare": {
+      "requests": 0,
+      "bandwidth_mb": 0,
+      "status": "active"
+    }
+  },
+  "global_reach": {
+    "top_countries": [
+      {
+        "country": "France",
+        "users": 2,
+        "views": 2
+      },
+      {
+        "country": "Argentina",
+        "users": 1,
+        "views": 1
+      },
+      {
+        "country": "Mexico",
+        "users": 1,
+        "views": 1
+      },
+      {
+        "country": "Peru",
+        "users": 1,
+        "views": 8
+      }
+    ]
+  }
+}

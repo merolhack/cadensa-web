@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   CLINICAL_TECHNIQUES,
   ClinicalTechnique,
@@ -60,6 +61,16 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             <span className="text-zinc-600">|</span>
             <span className="text-emerald-400 font-bold">⏱️ {totalMinutes}m</span>
           </div>
+
+          {/* Enlace a Estadísticas Globales */}
+          <Link
+            href="/stats"
+            className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+            title="Ver estadísticas globales y telemetría"
+          >
+            <span>📊</span>
+            <span className="hidden sm:inline">Estadísticas</span>
+          </Link>
 
           {/* Botón de Acceso / Perfil */}
           {currentUserEmail ? (
@@ -245,7 +256,25 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
       </div>
 
       {/* 7. Footer */}
-      <footer className="max-w-5xl w-full pt-6 pb-2 border-t border-zinc-900 text-center text-xs text-zinc-400">
+      <footer className="max-w-5xl w-full pt-6 pb-2 border-t border-zinc-900 text-center text-xs text-zinc-400 space-y-2">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-zinc-400">
+          <Link
+            href="/stats"
+            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
+          >
+            <span>📊</span>
+            <span>Estadísticas de Uso e Impacto Global</span>
+          </Link>
+          <span className="hidden sm:inline">•</span>
+          <a
+            href="https://amtartamudez.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-emerald-400 transition-colors"
+          >
+            Asociación Mexicana de Tartamudez
+          </a>
+        </div>
         <p>© 2026 Cadensa — Plataforma de Fluidez del Habla. Diseñado con enfoque en fonoaudiología clínica y accesibilidad.</p>
       </footer>
     </div>

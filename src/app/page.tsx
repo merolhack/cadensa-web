@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import { AudioMetronome, TimeSignature, SoundPreset } from '@/lib/audioMetronome';
 import { flattenSentenceSyllables } from '@/lib/syllables';
 import { evaluateRhythmicAccuracy, AccuracyResult, triggerHapticFeedback } from '@/lib/voiceDetection';
@@ -858,8 +859,19 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       <CommunityBanner />
 
       {/* Footer Homogéneo (max-w-5xl) */}
-      <footer className="w-full max-w-5xl text-center pt-6 pb-3 border-t border-zinc-900 text-xs text-zinc-500">
-        Cadensa Web — Terapia Rítmica Silábica • Next.js 16 • Supabase • Cloudflare Pages
+      <footer className="w-full max-w-5xl text-center pt-6 pb-3 border-t border-zinc-900 text-xs text-zinc-500 space-y-2">
+        <div className="flex flex-wrap items-center justify-center gap-3 text-zinc-400">
+          <Link
+            href="/stats"
+            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
+          >
+            <span>📊</span>
+            <span>Estadísticas de Uso e Impacto Global</span>
+          </Link>
+          <span className="hidden sm:inline">•</span>
+          <span>Cadensa Web — Terapia Rítmica Silábica</span>
+        </div>
+        <p className="text-[11px] text-zinc-600">Next.js 16 • Supabase • Cloudflare Pages</p>
       </footer>
 
       {/* Modal de Respiración Diafragmática */}

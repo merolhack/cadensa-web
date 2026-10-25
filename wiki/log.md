@@ -493,3 +493,39 @@
   - `public/_headers`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-25] ingest | Pipeline Automatizado de Telemetría Semanal y Página de Estadísticas Globales
+- **Detalle**:
+  1. **Generación de Credenciales y Acceso Asistido de Cuentas de Servicio**:
+     - Creación de la Service Account de Google Cloud `cadensa-metrics-extractor@cadensa-web-dev.iam.gserviceaccount.com`.
+     - Habilitación de APIs en Google Cloud: `analyticsdata.googleapis.com` (GA4 Data API) y `searchconsole.googleapis.com` (Search Console API).
+     - Generación y resguardo de la clave privada JSON en GitHub Secrets (`GCP_SA_METRICS_KEY`).
+     - Asignación de rol Lector (Viewer) a la Service Account en Google Analytics (propiedad `560646502`) y Search Console (`https://cadensa-web.pages.dev/`).
+     - Obtención de la clave API de Bing Webmaster Tools (`BING_API_KEY`) y verificación de titularidad del sitio en el panel de Bing.
+     - Aprovisionamiento en GitHub Secrets de `GA4_PROPERTY_ID`, `GSC_SITE_URL`, `BING_API_KEY` y `GCP_SA_METRICS_KEY`.
+  2. **Script de Agregación de Métricas (`scripts/fetch_platform_metrics.cjs`)**:
+     - Conexión vía OAuth2 JWT firmado a Google Analytics Data API para extraer sesiones, usuarios activos, vistas de página y desglose por país (`country`).
+     - Conexión a Google Search Console Searchanalytics API para clics, impresiones y CTR.
+     - Conexión a Bing Webmaster Tools API para clics e impresiones.
+     - Extracción y consolidación normalizada de métricas en `src/data/platform_stats.json`.
+  3. **Página Dedicada de Estadísticas e Impacto Global (`src/app/stats/page.tsx`)**:
+     - Creación de ruta pública `/stats` optimizada para exportación estática Jamstack.
+     - KPIs principales: Usuarios activos, vistas de página, búsquedas orgánicas y duración media de sesión.
+     - Módulo de Alcance Internacional con banderas y barras de progreso por país (Francia, Argentina, México, Perú, etc.).
+     - Desglose técnico de telemetría por plataforma (GA4, GSC, Bing y Cloudflare Edge).
+     - Enlaces de navegación añadidos en el header y footer de `TechniquesCatalogHome.tsx` y en el footer de la vista de práctica de `page.tsx`.
+  4. **Orquestación de GitHub Actions (`.github/workflows/weekly-metrics.yml`)**:
+     - Cron programado semanalmente (lunes a las 06:00 UTC) y ejecución manual `workflow_dispatch`.
+     - Ejecuta la extracción de métricas, detecta cambios en `src/data/platform_stats.json`, y realiza commit y push automático a `main` para re-desplegar Cloudflare Pages sin intervención manual.
+- **Archivos creados/modificados**:
+  - `scripts/fetch_platform_metrics.cjs`
+  - `src/data/platform_stats.json`
+  - `src/app/stats/page.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`
+  - `src/app/page.tsx`
+  - `package.json`
+  - `.github/workflows/weekly-metrics.yml`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

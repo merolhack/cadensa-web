@@ -58,6 +58,13 @@ Todas las credenciales, Client IDs, Client Secrets, tokens de acceso y API Keys 
 2. **Protección Estricta en Git:** El archivo `.env` **NUNCA** debe versionarse ni exponerse en el repositorio de Git (garantizado mediante `.gitignore`).
 3. **Sincronización de Plantilla:** Cada nueva variable incorporada a `.env` debe reflejarse como plantilla de referencia (placeholder) en `.env.example` para guiar la configuración de entornos y GitHub Actions Secrets.
 
+### 7. Sincronización Mandatoria de la Página 'Acerca de' (`/about`) ante Cambios en TODO o ROADMAP
+**REGLA DE TRANSPARENCIA Y SINCRONIZACIÓN DE HOJA DE RUTA:**
+Siempre que se actualice, modifique, complete o agregue cualquier tarea pendiente (**TODO**), hito funcional o plan estratégico (**ROADMAP**) en el repositorio (incluyendo documentos en `wiki/roadmap/`, issues o planes de versión):
+1. **Modificación Inmediata de `/about`:** El agente o desarrollador **DEBE modificar y actualizar la página pública de "Acerca de" (`src/app/about/page.tsx`)**, reflejando con exactitud los hitos completados y los futuros pasos planificados.
+2. **Coherencia con el LLM Wiki:** Las secciones de estado del proyecto y próximos lanzamientos de `/about` deben mantenerse en estricta sincronía con los documentos en `wiki/roadmap/` (`product_evolution.md`, `activity_plan.md`, `evolution_v2_plan.md`, `next_steps_plan.md`).
+3. **Validación en Suite de Pruebas:** Toda modificación en la página `/about` debe mantener el 100% de éxito en sus pruebas unitarias (`src/app/about/page.test.tsx`) y escenarios BDD (`features/about_page.feature`).
+
 ---
 
 ## 📌 Concepto Clínico y de Producto

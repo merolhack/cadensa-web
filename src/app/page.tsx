@@ -464,6 +464,16 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             <span className="hidden sm:inline">Video</span>
           </button>
 
+          {/* Enlace a Acerca de */}
+          <Link
+            href="/about"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/40 text-zinc-300 text-xs font-semibold transition-colors cursor-pointer"
+            title="Conoce el propósito del sitio, futuros pasos y autor"
+          >
+            <span>ℹ️</span>
+            <span className="hidden sm:inline">Acerca de</span>
+          </Link>
+
           {/* Menú Modular de Técnicas Fonoaudiológicas */}
           <TechniqueSelector
             currentTechniqueId={selectedTechniqueId}
@@ -861,6 +871,14 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       {/* Footer Homogéneo (max-w-5xl) */}
       <footer className="w-full max-w-5xl text-center pt-6 pb-3 border-t border-zinc-900 text-xs text-zinc-500 space-y-2">
         <div className="flex flex-wrap items-center justify-center gap-3 text-zinc-400">
+          <Link
+            href="/about"
+            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
+          >
+            <span>ℹ️</span>
+            <span>Acerca de</span>
+          </Link>
+          <span className="hidden sm:inline">•</span>
           <Link
             href="/stats"
             className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"

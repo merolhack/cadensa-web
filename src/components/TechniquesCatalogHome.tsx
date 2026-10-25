@@ -62,6 +62,16 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             <span className="text-emerald-400 font-bold">⏱️ {totalMinutes}m</span>
           </div>
 
+          {/* Enlace a Acerca de */}
+          <Link
+            href="/about"
+            className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+            title="Conoce el propósito del sitio, futuros pasos y autor"
+          >
+            <span>ℹ️</span>
+            <span>Acerca de</span>
+          </Link>
+
           {/* Enlace a Estadísticas Globales */}
           <Link
             href="/stats"
@@ -259,20 +269,28 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
       <footer className="max-w-5xl w-full pt-6 pb-2 border-t border-zinc-900 text-center text-xs text-zinc-400 space-y-2">
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-zinc-400">
           <Link
+            href="/about"
+            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
+          >
+            <span>ℹ️</span>
+            <span>Acerca de Cadensa</span>
+          </Link>
+          <span className="hidden sm:inline">•</span>
+          <Link
             href="/stats"
             className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
           >
             <span>📊</span>
-            <span>Estadísticas de Uso e Impacto Global</span>
+            <span>Estadísticas de Uso</span>
           </Link>
           <span className="hidden sm:inline">•</span>
           <a
-            href="https://amtartamudez.org"
+            href="https://www.facebook.com/AMTTM/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-emerald-400 transition-colors"
           >
-            Asociación Mexicana de Tartamudez
+            Asociación Mexicana de la Tartamudez (Facebook)
           </a>
         </div>
         <p>© 2026 Cadensa — Plataforma de Fluidez del Habla. Diseñado con enfoque en fonoaudiología clínica y accesibilidad.</p>

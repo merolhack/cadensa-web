@@ -31,6 +31,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [auth_and_data_budget.md](architecture/auth_and_data_budget.md) | Diagnóstico de GitHub Actions, flujos OAuth/Magic Link, Soft Confirmation y dimensionamiento de datos por usuario. | `auth`, `oauth`, `ci-cd`, `database-budget` |
 | [layout_and_responsive_standards.md](architecture/layout_and_responsive_standards.md) | Jerarquía de anchos homogéneos (max-w-5xl marco exterior, max-w-4xl contenido central, max-w-2xl componentes). | `frontend`, `layout`, `responsive`, `design-system` |
 | [supabase_audit_and_schema_state.md](architecture/supabase_audit_and_schema_state.md) | Diagnóstico de tablas en Supabase, estado 404 del schema cache, aislamiento de pruebas y guía de migración SQL. | `supabase`, `database`, `audit`, `migrations` |
+| [about_and_roadmap_sync.md](architecture/about_and_roadmap_sync.md) | Arquitectura de la página Acerca de (/about), perfil del autor Lenin Meza y regla mandatoria de sincronización de TODO/ROADMAP. | `about`, `roadmap`, `governance`, `author` |
 
 ---
 

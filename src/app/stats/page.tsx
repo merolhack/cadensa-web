@@ -62,13 +62,22 @@ export default function StatsPage() {
             </span>
           </div>
 
-          <Link
-            href="/"
-            className="px-3.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
-          >
-            <span>←</span>
-            <span>Volver al Inicio</span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/about"
+              className="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>ℹ️</span>
+              <span className="hidden sm:inline">Acerca de</span>
+            </Link>
+            <Link
+              href="/"
+              className="px-3.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>←</span>
+              <span>Volver al Inicio</span>
+            </Link>
+          </div>
         </header>
 
         {/* 2. Hero de Estadísticas */}
@@ -330,18 +339,22 @@ export default function StatsPage() {
           <p>
             Métricas recopiladas de forma anónima y agregada en cumplimiento con la privacidad del usuario clínico.
           </p>
-          <div className="flex items-center justify-center gap-3 text-zinc-400">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-zinc-400">
             <Link href="/" className="hover:text-emerald-400 transition-colors">
               Inicio
             </Link>
             <span>•</span>
+            <Link href="/about" className="hover:text-emerald-400 transition-colors">
+              Acerca de Cadensa
+            </Link>
+            <span>•</span>
             <a
-              href="https://amtartamudez.org"
+              href="https://www.facebook.com/AMTTM/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-emerald-400 transition-colors"
             >
-              Asociación Mexicana de Tartamudez
+              Asociación Mexicana de la Tartamudez (Facebook)
             </a>
           </div>
         </footer>

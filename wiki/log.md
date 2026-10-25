@@ -529,3 +529,35 @@
   - `.github/workflows/weekly-metrics.yml`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-25] ingest | Creación de Página Acerca de (/about), Sincronización Mandatoria de Roadmap y Referencia del Autor
+- **Detalle**:
+  1. **Página Pública Acerca de (`src/app/about/page.tsx`)**:
+     - Exposición detallada del propósito clínico de Cadensa: compensación de déficits temporales en los ganglios basales mediante el método de Habla Rítmica Silábica (STS), micro-hábitos diarios de 5 minutos, gamificación y arquitectura Zero Trust.
+     - Sección de estado del proyecto y hoja de ruta (ROADMAP / TODO): desglose transparente de hitos consolidados (v2.0) y futuros pasos en desarrollo activo (diadococinesia oral, reportes clínicos descargables, Audio Worklet, simulaciones reales y PWA nativa).
+     - Perfil completo del autor e impulsor técnico **Lenin Meza** con enlaces verificados a su sitio personal en GitHub Pages (`https://merolhack.github.io`), su perfil en LinkedIn (`http://www.linkedin.com/in/leninmezazarco`), su cuenta de GitHub (`https://github.com/merolhack`) y referencia a su libro *"Playbook de Arquitectura MACH"* (Amazon KDP 2026).
+  2. **Regla de Gobernanza de Sincronización Mandatoria**:
+     - Formalización en `AGENTS.md` (Regla 7), `wiki/SCHEMA.md` y `wiki/architecture/about_and_roadmap_sync.md`: siempre que se modifique o actualice el ROADMAP o tareas pendientes (TODO), es obligatorio actualizar la página `/about`.
+  3. **Integración de Navegación y Enlaces**:
+     - Botones y enlaces hacia `/about` incorporados en el header y footer de `TechniquesCatalogHome.tsx`, en el footer de `src/app/page.tsx` y en el header/footer de `src/app/stats/page.tsx`.
+  4. **Cobertura de Pruebas Unitarias y BDD**:
+     - Suite unitaria en Vitest (`src/app/about/page.test.tsx`): 5 pruebas completadas exitosamente.
+     - Escenarios BDD en Cucumber.js (`features/about_page.feature` y `features/step_definitions/about_steps.ts`): 3 escenarios y 11 pasos validados con éxito.
+     - Validación integral con `npm run test:all` (119 pruebas unitarias y 62 escenarios BDD / 241 pasos en verde) y compilación estática Next.js exitosa (`npm run build`).
+- **Archivos creados/modificados**:
+  - `src/app/about/page.tsx`
+  - `src/app/about/page.test.tsx`
+  - `features/about_page.feature`
+  - `features/step_definitions/about_steps.ts`
+  - `src/components/TechniquesCatalogHome.tsx`
+  - `src/app/page.tsx`
+  - `src/app/stats/page.tsx`
+  - `AGENTS.md`
+  - `wiki/SCHEMA.md`
+  - `wiki/index.md`
+  - `wiki/architecture/about_and_roadmap_sync.md`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+

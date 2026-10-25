@@ -146,4 +146,7 @@ grep "^## \[" wiki/log.md | tail -5
    - Delegar tareas mecánicas o repetitivas (generación de fixtures, docstrings, formateo de datos) a `consultar_modelo_local` (1. `gemma4:cloud`, 2. `qwen3:8b-8k`).
 3. **Validación Continua de Calidad (Unitarias + BDD):**
    - Cualquier componente, módulo o función desarrollada debe tener cobertura de pruebas unitarias (`*.test.ts`, `*.test.tsx`) y escenarios BDD en Gherkin (`features/*.feature` con sus step definitions en TypeScript). Ver [wiki/architecture/testing.md](architecture/testing.md).
+4. **Sincronización Mandatoria de la Página 'Acerca de' (`/about`):**
+   - Cualquier cambio, avance, completitud o incorporación en el **ROADMAP** o **TODO** (documentos en `wiki/roadmap/`) exige la actualización inmediata de la página pública `src/app/about/page.tsx` para mantener transparencia con la comunidad y fonoaudiólogos. Ver [wiki/architecture/about_and_roadmap_sync.md](architecture/about_and_roadmap_sync.md).
+
 

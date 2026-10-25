@@ -277,7 +277,7 @@ export default function AboutPage() {
                 Con más de 17 años de experiencia profesional en ingeniería de software, arquitectura empresarial (TOGAF, BIAN) y sistemas distribuidos de alta disponibilidad (Bank as a Service, verificación de identidad biométrica, multi-cloud GCP/AWS), Lenin Meza ha enfocado el diseño de Cadensa en fusionar la excelencia técnica con una necesidad social crítica.
               </p>
               <p>
-                Es autor de <strong className="text-zinc-100">"Playbook de Arquitectura MACH: Estrategias Prácticas para Sistemas Componibles, Microservicios y Headless en la Era Agente"</strong> (Amazon KDP 2026, ASIN: B0HFYGC34D), obra técnica de 314 páginas que profundiza en arquitecturas desacopladas, resiliencia distribuida y flujos de automatización con agentes de inteligencia artificial mediante el Model Context Protocol (MCP).
+                Es autor de <strong className="text-zinc-100">&ldquo;Playbook de Arquitectura MACH: Estrategias Prácticas para Sistemas Componibles, Microservicios y Headless en la Era Agente&rdquo;</strong> (Amazon KDP 2026, ASIN: B0HFYGC34D), obra técnica de 314 páginas que profundiza en arquitecturas desacopladas, resiliencia distribuida y flujos de automatización con agentes de inteligencia artificial mediante el Model Context Protocol (MCP).
               </p>
               <p className="text-zinc-400">
                 Cadensa nace con el propósito de aportar una herramienta web gratuita, científicamente fundada y de grado profesional a la comunidad hispanohablante de personas que tartamudean, logopedas y familias.

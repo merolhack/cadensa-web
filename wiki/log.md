@@ -561,3 +561,35 @@
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-25] ingest | Incrustación de Video HD y Thumbnail de Técnica STS con Patrón Façade
+- **Detalle**:
+  1. **Ubicación y Limpieza de Recursos Multimedia**:
+     - Almacenamiento de `cadensa_sts_montaje_limpio_final.mp4` (8.75 MB) y `cadensa_sts_portada.png` (4.14 MB) en `public/media/techniques/`.
+     - Eliminación de archivos residuales de Windows (`*:Zone.Identifier`, `Thumbs.db`, `desktop.ini`) y blindaje en `.gitignore`.
+  2. **Modelado de Datos (`src/lib/clinicalTechniques.ts`)**:
+     - Extensión de la interfaz `ClinicalTechnique` con `thumbnailUrl?: string`.
+     - Vinculación de `videoUrl` y `thumbnailUrl` en la técnica canónica `sts`.
+  3. **Reproductor Nativo con Patrón Façade (`src/components/TechniqueVideoModal.tsx`)**:
+     - Implementación de estado declarativo Click-to-Play para cero consumo de ancho de banda hasta la interacción del usuario.
+     - Portada optimizada con Next.js `Image`, botón de play glowing y transición fluida a elemento `<video controls playsInline autoPlay />`.
+     - Pausa automática y reset de reproducción al cerrar el modal o cambiar de técnica.
+  4. **Parrilla de Catálogo en Home (`src/components/TechniquesCatalogHome.tsx`)**:
+     - Vista previa interactiva con thumbnail y badge `🎬 Video HD` directamente en la tarjeta de la técnica STS.
+  5. **Validación de Calidad**:
+     - 120 pruebas unitarias en Vitest (`TechniqueVideoModal.test.tsx` actualizado para validar thumbnail y video).
+     - 62 escenarios BDD en Cucumber.js passing al 100%.
+     - `npm run lint` y `npm run build` completados con 0 errores y 0 warnings.
+- **Archivos creados/modificados**:
+  - `public/media/techniques/cadensa_sts_montaje_limpio_final.mp4`
+  - `public/media/techniques/cadensa_sts_portada.png`
+  - `.gitignore`
+  - `src/lib/clinicalTechniques.ts`
+  - `src/components/TechniqueVideoModal.tsx`
+  - `src/components/TechniqueVideoModal.test.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+

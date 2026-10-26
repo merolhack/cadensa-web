@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 import { ClinicalTechnique } from '@/lib/clinicalTechniques';
 
 interface TechniqueVideoModalProps {
@@ -16,10 +17,28 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
   onClose,
   onStartPractice,
 }) => {
+  // Estado declarativo: rastrea qué técnica está reproduciéndose activamente
+  const [playingTechniqueId, setPlayingTechniqueId] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const isPlayingVideo = Boolean(isOpen && technique && playingTechniqueId === technique.id);
+
+  const handleClose = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+    setPlayingTechniqueId(null);
+    onClose();
+  };
+
   // Manejador de tecla Escape para accesibilidad
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
+        if (videoRef.current) {
+          videoRef.current.pause();
+        }
+        setPlayingTechniqueId(null);
         onClose();
       }
     };
@@ -35,7 +54,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
       aria-modal="true"
       aria-labelledby="video-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-zinc-950/85 backdrop-blur-md animate-fade-in"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
@@ -55,6 +74,11 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-medium">
                   {technique.difficulty}
                 </span>
+                {technique.videoUrl && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 font-medium font-mono">
+                    HD 1080p
+                  </span>
+                )}
               </div>
               <h2 id="video-modal-title" className="text-lg sm:text-xl font-bold text-zinc-100 mt-1">
                 {technique.name}
@@ -63,7 +87,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
           </div>
 
           <button
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Cerrar modal de video"
             className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-100 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer"
           >
@@ -71,17 +95,72 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
           </button>
         </div>
 
-        {/* Reproductor o Contenedor de Video */}
-        <div className="relative w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 aspect-video flex flex-col items-center justify-center text-center p-4">
+        {/* Reproductor o Contenedor de Video (Façade Pattern) */}
+        <div className="relative w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 aspect-video flex flex-col items-center justify-center text-center">
           {technique.videoUrl ? (
-            <video
-              src={technique.videoUrl}
-              controls
-              playsInline
-              className="w-full h-full object-cover rounded-xl"
-            />
+            isPlayingVideo ? (
+              <video
+                ref={videoRef}
+                src={technique.videoUrl}
+                poster={technique.thumbnailUrl}
+                autoPlay
+                controls
+                playsInline
+                className="w-full h-full object-contain bg-black rounded-2xl"
+              />
+            ) : (
+              <div
+                onClick={() => setPlayingTechniqueId(technique.id)}
+                className="relative w-full h-full cursor-pointer group flex items-center justify-center overflow-hidden"
+              >
+                {technique.thumbnailUrl ? (
+                  <Image
+                    src={technique.thumbnailUrl}
+                    alt={`Portada del video demostrativo de ${technique.name}`}
+                    width={960}
+                    height={540}
+                    unoptimized
+                    priority
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-zinc-900 flex items-center justify-center text-zinc-600">
+                    <span>Sin imagen de portada</span>
+                  </div>
+                )}
+
+                {/* Overlay oscuro para contraste y foco visual */}
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-transparent group-hover:bg-zinc-950/30 transition-colors" />
+
+                {/* Badge de video demostrativo */}
+                <div className="absolute top-3 left-3 flex items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-full bg-zinc-950/80 backdrop-blur-md border border-zinc-700/80 text-[11px] font-medium text-emerald-300 flex items-center gap-1.5 shadow-md">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>Video Demostrativo de {technique.shortName}</span>
+                  </span>
+                </div>
+
+                {/* Botón de reproducción central con efecto resplandor */}
+                <button
+                  type="button"
+                  aria-label={`Reproducir video demostrativo de ${technique.name}`}
+                  className="relative z-10 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 flex items-center justify-center shadow-[0_0_35px_rgba(16,185,129,0.55)] group-hover:scale-110 active:scale-95 transition-all duration-300"
+                >
+                  <svg className="w-7 h-7 sm:w-8 sm:h-8 fill-current ml-1" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </button>
+
+                {/* Instrucción inferior */}
+                <div className="absolute bottom-3 inset-x-0 text-center px-4">
+                  <span className="inline-block text-xs font-semibold text-zinc-200 bg-zinc-950/80 backdrop-blur-sm border border-zinc-800/80 px-3 py-1 rounded-full shadow-sm">
+                    ▶ Clic para reproducir video con audio y explicación guiada
+                  </span>
+                </div>
+              </div>
+            )
           ) : (
-            <div className="space-y-3 max-w-md">
+            <div className="space-y-3 max-w-md p-4">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 via-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(16,185,129,0.2)]">
                 <span className="text-3xl animate-pulse">🎬</span>
               </div>
@@ -119,7 +198,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
         {/* Acciones del Modal */}
         <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-zinc-800">
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs transition-colors cursor-pointer"
           >
             Cerrar
@@ -127,7 +206,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
           <button
             onClick={() => {
               onStartPractice(technique);
-              onClose();
+              handleClose();
             }}
             className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 font-bold text-xs shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all cursor-pointer flex items-center gap-1.5"
           >

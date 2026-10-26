@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   CLINICAL_TECHNIQUES,
   ClinicalTechnique,
@@ -218,6 +219,32 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
                     {technique.summary}
                   </p>
 
+                  {/* Thumbnail de Video (si está disponible para la técnica) */}
+                  {technique.thumbnailUrl && (
+                    <div
+                      onClick={() => onOpenVideoModal(technique)}
+                      className="relative w-full aspect-video rounded-2xl overflow-hidden border border-zinc-800/80 group cursor-pointer shadow-md"
+                      title={`Reproducir video de ${technique.name}`}
+                    >
+                      <Image
+                        src={technique.thumbnailUrl}
+                        alt={`Portada de ${technique.name}`}
+                        width={640}
+                        height={360}
+                        unoptimized
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                        <div className="w-11 h-11 rounded-full bg-emerald-500/90 text-zinc-950 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                          <span className="text-base font-black pl-0.5">▶</span>
+                        </div>
+                      </div>
+                      <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-zinc-950/85 text-[10px] font-mono text-emerald-300 border border-emerald-500/30 backdrop-blur-sm">
+                        🎬 Video HD
+                      </span>
+                    </div>
+                  )}
+
                   <div className="p-2 rounded-xl bg-zinc-950/70 border border-zinc-900 text-[11px] text-zinc-400">
                     <strong className="text-emerald-400">Objetivo: </strong>
                     {technique.exerciseGoal}
@@ -232,7 +259,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
                     title={`Ver video explicativo de ${technique.shortName}`}
                   >
                     <span>🎥</span>
-                    <span>Ver Video</span>
+                    <span>{technique.videoUrl ? 'Ver Video (HD)' : 'Ver Video'}</span>
                   </button>
 
                   <button

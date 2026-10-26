@@ -47,6 +47,7 @@ export interface ClinicalTechnique {
   exerciseGoal: string;
   recommendedCategory: ClinicalCategory | 'todas';
   videoUrl?: string;
+  thumbnailUrl?: string;
 }
 
 export interface TechniqueFamily {
@@ -132,6 +133,8 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     },
     exerciseGoal: 'Marcapasos auditivo-motor con compás e isocronía regular',
     recommendedCategory: 'todas',
+    videoUrl: '/media/techniques/cadensa_sts_montaje_limpio_final.mp4',
+    thumbnailUrl: '/media/techniques/cadensa_sts_portada.png',
   },
 
   easy_onset: {

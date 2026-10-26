@@ -66,4 +66,31 @@ describe('TechniqueVideoModal Component - Unit Tests', () => {
     expect(onStartPractice).toHaveBeenCalledWith(technique);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it('renderiza la portada interactiva y monta el video al hacer clic en reproducir para la técnica STS', () => {
+    const stsTechnique = CLINICAL_TECHNIQUES.sts;
+    render(
+      <TechniqueVideoModal
+        technique={stsTechnique}
+        isOpen={true}
+        onClose={vi.fn()}
+        onStartPractice={vi.fn()}
+      />
+    );
+
+    // Debe mostrar la imagen de portada y el botón de play
+    const posterImg = screen.getByAltText(/portada del video demostrativo/i);
+    expect(posterImg).toBeInTheDocument();
+    expect(posterImg).toHaveAttribute('src', stsTechnique.thumbnailUrl);
+
+    const playBtn = screen.getByRole('button', { name: /reproducir video demostrativo/i });
+    expect(playBtn).toBeInTheDocument();
+
+    // Al hacer clic en play, se monta el elemento video
+    fireEvent.click(playBtn);
+
+    const videoEl = screen.getByRole('dialog').querySelector('video');
+    expect(videoEl).toBeInTheDocument();
+    expect(videoEl).toHaveAttribute('src', stsTechnique.videoUrl);
+  });
 });

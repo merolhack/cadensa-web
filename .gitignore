@@ -23,6 +23,10 @@
 # misc
 .DS_Store
 *.pem
+*:Zone.Identifier
+*.Zone.Identifier
+Thumbs.db
+desktop.ini
 
 # debug
 npm-debug.log*

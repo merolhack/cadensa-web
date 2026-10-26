@@ -111,7 +111,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
             ) : (
               <div
                 onClick={() => setPlayingTechniqueId(technique.id)}
-                className="relative w-full h-full cursor-pointer group flex items-center justify-center overflow-hidden"
+                className="relative w-full h-full cursor-pointer group overflow-hidden"
               >
                 {technique.thumbnailUrl ? (
                   <Image
@@ -130,30 +130,30 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                 )}
 
                 {/* Overlay oscuro para contraste y foco visual */}
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-transparent group-hover:bg-zinc-950/30 transition-colors" />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-transparent group-hover:bg-zinc-950/20 transition-colors" />
 
                 {/* Badge de video demostrativo */}
-                <div className="absolute top-3 left-3 flex items-center gap-2">
+                <div className="absolute top-3 left-3 flex items-center gap-2 pointer-events-none">
                   <span className="px-2.5 py-1 rounded-full bg-zinc-950/80 backdrop-blur-md border border-zinc-700/80 text-[11px] font-medium text-emerald-300 flex items-center gap-1.5 shadow-md">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     <span>Video Demostrativo de {technique.shortName}</span>
                   </span>
                 </div>
 
-                {/* Botón de reproducción central con efecto resplandor */}
-                <button
-                  type="button"
-                  aria-label={`Reproducir video demostrativo de ${technique.name}`}
-                  className="relative z-10 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 flex items-center justify-center shadow-[0_0_35px_rgba(16,185,129,0.55)] group-hover:scale-110 active:scale-95 transition-all duration-300"
-                >
-                  <svg className="w-7 h-7 sm:w-8 sm:h-8 fill-current ml-1" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </button>
+                {/* Botón de reproducción central perfectamente centrado (igual al thumbnail del catálogo) */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <button
+                    type="button"
+                    aria-label={`Reproducir video demostrativo de ${technique.name}`}
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 flex items-center justify-center shadow-[0_0_35px_rgba(16,185,129,0.6)] group-hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer"
+                  >
+                    <span className="text-2xl sm:text-3xl font-black text-zinc-950 pl-1">▶</span>
+                  </button>
+                </div>
 
                 {/* Instrucción inferior */}
-                <div className="absolute bottom-3 inset-x-0 text-center px-4">
-                  <span className="inline-block text-xs font-semibold text-zinc-200 bg-zinc-950/80 backdrop-blur-sm border border-zinc-800/80 px-3 py-1 rounded-full shadow-sm">
+                <div className="absolute bottom-3 inset-x-0 text-center px-4 pointer-events-none">
+                  <span className="inline-block text-xs font-semibold text-zinc-200 bg-zinc-950/85 backdrop-blur-sm border border-zinc-800/80 px-3.5 py-1.5 rounded-full shadow-sm">
                     ▶ Clic para reproducir video con audio y explicación guiada
                   </span>
                 </div>

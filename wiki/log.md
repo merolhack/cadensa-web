@@ -592,4 +592,25 @@
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
 
+## [2026-10-26] ingest | Documentación Modular de Arquitectura Multimedia y Entidad de Medios Técnicos
+- **Detalle**:
+  1. **Documentación de Arquitectura Multimedia (`multimedia_and_video_facade.md`)**:
+     - Formalización del principio clínico-técnico de inclusión de video para técnicas fonoaudiológicas sin penalización de rendimiento.
+     - Detalle del Patrón Façade Click-to-Play: portada interactiva con Next.js `Image` (`unoptimized`, relación 16:9 fija, CLS = 0), botón central esmeralda glowing y cero consumo de red hasta la acción del usuario.
+     - Montaje reactivo de HTML5 `<video>` con `playsInline` (evita fullscreen involuntario en iOS Safari), streaming HTTP 206 Range desde Cloudflare Pages y limpieza de ciclo de vida (`pause()` y reset de estado en unmount/escape).
+  2. **Documentación de Entidad de Medios (`technique_media.md`)**:
+     - Especificación canónica de almacenamiento en `public/media/techniques/`.
+     - Matriz de codecs y formatos: MP4 H.264/AAC para video (≤ 25 MB) y PNG/WebP 16:9 para posters (≤ 5 MB).
+     - Blindaje estricto en `.gitignore` contra contaminación de metadatos NTFS/Windows (`*:Zone.Identifier`, `Thumbs.db`, `desktop.ini`).
+     - Tipado TypeScript de `videoUrl` y `thumbnailUrl` en `ClinicalTechnique`.
+  3. **Mantenimiento del Catálogo Maestro (`wiki/index.md`)**:
+     - Indexación de `multimedia_and_video_facade.md` en Arquitectura y `technique_media.md` en Entidades.
+     - Actualización de metadatos globales.
+- **Archivos creados/modificados**:
+  - `wiki/architecture/multimedia_and_video_facade.md`
+  - `wiki/entities/technique_media.md`
+  - `wiki/index.md`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

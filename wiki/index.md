@@ -1,7 +1,7 @@
 # Catálogo Maestro del LLM Wiki — Cadensa
 
 > **Índice de Contenidos y Navegación Rápida**  
-> Última actualización: 2026-10-23  
+> Última actualización: 2026-10-26  
 > Esquema de gobernanza: [SCHEMA.md](SCHEMA.md) | Bitácora de operaciones: [log.md](log.md)
 
 Este catálogo resume e indexa de forma modular todas las páginas del conocimiento persistente de Cadensa. Los agentes LLM deben consultar este índice como paso previo antes de explorar páginas individuales.
@@ -32,6 +32,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [layout_and_responsive_standards.md](architecture/layout_and_responsive_standards.md) | Jerarquía de anchos homogéneos (max-w-5xl marco exterior, max-w-4xl contenido central, max-w-2xl componentes). | `frontend`, `layout`, `responsive`, `design-system` |
 | [supabase_audit_and_schema_state.md](architecture/supabase_audit_and_schema_state.md) | Diagnóstico de tablas en Supabase, estado 404 del schema cache, aislamiento de pruebas y guía de migración SQL. | `supabase`, `database`, `audit`, `migrations` |
 | [about_and_roadmap_sync.md](architecture/about_and_roadmap_sync.md) | Arquitectura de la página Acerca de (/about), perfil del autor Lenin Meza y regla mandatoria de sincronización de TODO/ROADMAP. | `about`, `roadmap`, `governance`, `author` |
+| [multimedia_and_video_facade.md](architecture/multimedia_and_video_facade.md) | Reproducción de video nativo con patrón Façade, cero CLS, lazy transfer y streaming HTTP 206. | `architecture`, `multimedia`, `video`, `player`, `performance` |
 
 ---
 
@@ -59,6 +60,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [supabase.md](entities/supabase.md) | Instancia singleton del cliente, variables de entorno requeridas y flujo de Supabase CLI. | `entities`, `supabase`, `postgres`, `auth` |
 | [cloudflare_pages.md](entities/cloudflare_pages.md) | Infraestructura de edge hosting Anycast, configuración del action y distribución global. | `entities`, `cloudflare`, `hosting`, `edge` |
 | [profiles_table.md](entities/profiles_table.md) | Esquema de la tabla `public.profiles`, foreign keys en cascada, triggers y políticas RLS. | `entities`, `database`, `schema`, `profiles` |
+| [technique_media.md](entities/technique_media.md) | Estructura de activos de video y pósters (H.264/AAC, PNG/WebP 16:9), cuotas y blindaje contra archivos residuales de SO. | `entities`, `media`, `video`, `storage` |
 
 ---
 

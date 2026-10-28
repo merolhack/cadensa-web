@@ -68,3 +68,4 @@ Cada envío exitoso emite el evento fonoaudiológico:
 * Evento: `feedback_submitted`
 * Parámetros: `{ category: payload.category, technique_id: payload.techniqueId || 'none' }`
 Permite correlacionar qué videos o técnicas presentan mayor tasa de incidencias reportadas en producción.
+

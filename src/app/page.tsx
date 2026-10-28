@@ -979,6 +979,15 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             <span>Comentarios y Reportes</span>
           </button>
           <span className="hidden sm:inline">•</span>
+          <Link
+            href="/admin"
+            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
+            title="Panel de Administración Zero Trust"
+          >
+            <span>🛡️</span>
+            <span>Admin</span>
+          </Link>
+          <span className="hidden sm:inline">•</span>
           <span>Cadensa Web — Terapia Rítmica Silábica</span>
         </div>
         <p className="text-[11px] text-zinc-600">Next.js 16 • Supabase • Cloudflare Pages</p>

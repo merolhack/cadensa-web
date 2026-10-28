@@ -35,3 +35,4 @@ export const TechniqueFeedbackButton: React.FC<TechniqueFeedbackButtonProps> = (
     </>
   );
 };
+

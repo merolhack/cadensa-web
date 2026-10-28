@@ -26,3 +26,4 @@ Característica: Sistema de Retroalimentación Comunitaria y Reporte de Errores
     Dado que un usuario realiza múltiples envíos en una ventana de 1 hora
     Cuando intenta superar el límite máximo de 3 reportes
     Entonces el sistema debe aplicar rate limiting indicando el tiempo de espera restante
+

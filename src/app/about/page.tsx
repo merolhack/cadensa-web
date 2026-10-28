@@ -188,6 +188,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Canal de Feedback Comunitario y Calidad Clínica (Zero-Leak RLS):</strong> Reporte directo de fallas en videos o dudas en técnicas para visitantes y usuarios registrados, con protección anti-spam honeypot, rate limiting, soporte offline y almacenamiento confidencial en Supabase.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Dashboard Privado de Administración y Gobierno Clínico (/admin):</strong> Consola protegida con Zero Trust RLS para visualización unificada de métricas de GA4, Search Console, Bing Webmaster, directorio de usuarios y moderación de reportes de calidad terapéutica.</span>
+                </li>
               </ul>
             </div>
 

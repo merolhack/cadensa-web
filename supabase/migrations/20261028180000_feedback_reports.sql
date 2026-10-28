@@ -50,3 +50,4 @@ TO authenticated
 USING (auth.uid() = user_id);
 
 -- Los usuarios anónimos tienen SELECT revocado/denegado por omisión (sin política permisiva)
+

@@ -29,3 +29,4 @@ describe('TechniqueFeedbackButton', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 });
+

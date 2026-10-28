@@ -187,12 +187,66 @@ export type Database = {
         }
         Relationships: []
       }
+      app_admins: {
+        Row: {
+          user_id: string
+          role: string
+          granted_at: string
+        }
+        Insert: {
+          user_id: string
+          role?: string
+          granted_at?: string
+        }
+        Update: {
+          user_id?: string
+          role?: string
+          granted_at?: string
+        }
+        Relationships: []
+      }
+      platform_metrics_snapshots: {
+        Row: {
+          id: string
+          snapshot_date: string
+          ga4_metrics: Json
+          gsc_metrics: Json
+          bing_metrics: Json
+          cloudflare_metrics: Json
+          summary: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          snapshot_date?: string
+          ga4_metrics?: Json
+          gsc_metrics?: Json
+          bing_metrics?: Json
+          cloudflare_metrics?: Json
+          summary?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          snapshot_date?: string
+          ga4_metrics?: Json
+          gsc_metrics?: Json
+          bing_metrics?: Json
+          cloudflare_metrics?: Json
+          summary?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_user_is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

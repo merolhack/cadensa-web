@@ -136,7 +136,7 @@ async function runMigrations() {
     return;
   }
 
-  const tables = ['profiles', 'exercises', 'training_sessions', 'user_streaks', 'feedback_reports'];
+  const tables = ['profiles', 'exercises', 'training_sessions', 'user_streaks', 'feedback_reports', 'app_admins', 'platform_metrics_snapshots'];
   let allHealthy = true;
 
   for (const table of tables) {

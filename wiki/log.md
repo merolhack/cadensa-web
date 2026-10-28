@@ -723,3 +723,48 @@
   - `wiki/concepts/feedback_and_quality_reports.md`, `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-28] — Implementación del Dashboard Privado de Administración y Gobierno Clínico (/admin)
+- **Tipo de Operación**: `FEATURE` / `DATABASE` / `SECURITY` / `TESTS`
+- **Descripción**:
+  1. **Migración Supabase PostgreSQL (`supabase/migrations/20261028200000_admin_roles_and_metrics.sql`)**:
+     - Creación de tabla `public.app_admins` con clave foránea a `auth.users(id)` y roles `admin` y `clinical_director`.
+     - Implementación de función `public.is_admin()` (`SECURITY DEFINER`, `search_path = public`) para evitar ataques de inyección y bucles de recursión en RLS.
+     - Creación de tabla de snapshots de telemetría `public.platform_metrics_snapshots`.
+     - Políticas RLS Zero Trust:
+       - Solo administradores pueden consultar (`SELECT`) y actualizar (`UPDATE`) la totalidad de los reportes en `feedback_reports`.
+       - Solo administradores pueden consultar todos los perfiles de `profiles`, sesiones de `training_sessions` y rachas de `user_streaks`.
+       - Registro y verificación de las tablas con `scripts/migrate_supabase.cjs` (7 tablas activas).
+  2. **Servicio de Administración (`src/lib/adminService.ts`)**:
+     - Función `checkIsAdmin()` para comprobación de rol mediante RPC o tabla `app_admins`.
+     - `fetchAdminFeedbackReports()` con filtrado dinámico por categoría y estado.
+     - `updateFeedbackReportStatus()` para moderar y resolver incidencias fonoaudiológicas.
+     - `fetchAdminUsersList()` y `fetchAdminSummary()` para consolidar KPIs de adherencia.
+     - Envoltorio de resiliencia `withNetworkTimeout` (1,200 ms) para prevenir bloqueos por latencia de red.
+  3. **Consola Administrativa de Interfaz (`src/app/admin/page.tsx`)**:
+     - Pantalla de guardia de acceso restringido (403) con flujo de inicio de sesión integrado para administradores.
+     - Pestaña 1: Bandeja de Calidad y Feedback con acciones rápidas (Revisar, Resolver, Descartar).
+     - Pestaña 2: Directorio de Usuarios con rachas consecutivas, minutos acumulados y puntos XP.
+     - Pestaña 3: Métricas de Tráfico de GA4, Google Search Console, Bing Webmaster e IndexNow.
+     - Pestaña 4: Diagnóstico Fonoaudiológico, calibración de metrónomo y cumplimiento YMYL/AdSense.
+     - Enlace discreto de acceso a `/admin` en el pie de página de la aplicación principal.
+  4. **Gobernanza y Sincronización de Hoja de Ruta**:
+     - Actualización de `src/app/about/page.tsx` reflejando el nuevo panel de control como hito completado.
+     - Ingesta de `wiki/architecture/admin_dashboard.md` y actualización del catálogo `wiki/index.md`.
+  5. **Batería de Pruebas**:
+     - 153 pruebas unitarias Vitest en 32 suites pasando al 100%.
+     - 73 escenarios BDD en Cucumber (`281 pasos`) en español pasando al 100%.
+     - Compilación estática Next.js Turbopack generando 18 rutas limpiamente sin errores.
+     - ESLint con 0 errores y 0 advertencias.
+- **Archivos creados/modificados**:
+  - `supabase/migrations/20261028200000_admin_roles_and_metrics.sql`
+  - `scripts/migrate_supabase.cjs`
+  - `src/types/supabase.ts`
+  - `src/lib/adminService.ts`, `src/lib/adminService.test.ts`
+  - `src/app/admin/page.tsx`, `src/app/admin/page.test.tsx`
+  - `src/app/page.tsx`, `src/app/about/page.tsx`
+  - `features/admin_dashboard.feature`, `features/step_definitions/admin_steps.ts`
+  - `wiki/architecture/admin_dashboard.md`, `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+

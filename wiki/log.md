@@ -614,3 +614,68 @@
   - `wiki/index.md`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-28] ingest | Auditoría Multi-Plataforma (GA4, GSC, AdSense, Bing) y Plan Maestro de Remediación SEO y Funcional
+- **Detalle**:
+  1. **Extracción en Vivo de Telemetría y Diagnóstico de Errores**:
+     - **Google Analytics 4 (`560646502`)**: Actualización de `src/data/platform_stats.json` (21 usuarios activos, 37 sesiones, 61 vistas de pantalla, 7 países incluyendo Suecia y Estados Unidos). Detección de rebote de 67.57%, ausencia de eventos clínicos personalizados y tráfico 404 hacia `/🐛`.
+     - **Google Search Console (`https://cadensa-web.pages.dev/`)**: Inspección de URLs (`urlInspection/index:inspect`). La ruta `/` está indexada (`PASS`), pero `/about` y `/stats` figuran como `NEUTRAL` ("Google no reconoce esta URL") por ausencia de `/sitemap.xml` (HTTP 404) y `robots.txt` propio.
+     - **Google AdSense (`adsense.googleapis.com`)**: Detección y remediación inmediata de `SERVICE_DISABLED` (HTTP 403 -> HTTP 200) habilitando la API en el proyecto GCP `cadensa-web-dev`. Identificación de ausencia de `/ads.txt`, meta tag `google-adsense-account` (`ca-pub-2700240339792942`), bloqueo en CSP (`public/_headers`) y páginas YMYL (`/privacy`, `/terms` con aviso médico fonoaudiológico).
+     - **Bing Webmaster Tools**: Sitio verificado (`IsVerified: true`), pero `GetUrlInfo` reporta `AnchorCount: 0` y `TotalChildUrlCount: 0` por falta de Sitemap, IndexNow y datos estructurados JSON-LD.
+  2. **Planificación Modular y Sincronización Mandatoria**:
+     - Creación de `wiki/roadmap/platform_telemetry_and_seo_plan.md` con el diagnóstico completo y el plan de acción en 4 fases (SEO Técnico e IndexNow, Telemetría Clínica GA4, Cumplimiento AdSense/YMYL y Nuevas Funcionalidades Clínicas).
+     - Actualización de `wiki/index.md`, `src/app/about/page.tsx` (Hito 6 en hoja de ruta) y `src/app/stats/page.tsx` (soporte para Suecia `🇸🇪`).
+- **Archivos creados/modificados**:
+  - `src/data/platform_stats.json`
+  - `src/app/stats/page.tsx`
+  - `src/app/about/page.tsx`
+  - `wiki/roadmap/platform_telemetry_and_seo_plan.md`
+  - `wiki/index.md`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-28] ingest | Implementación Integral de SEO Técnico, IndexNow, Cumplimiento AdSense YMYL y Nuevas Funcionalidades
+- **Detalle**:
+  1. **Fase A: SEO Técnico, Indexación e IndexNow**:
+     - Implementación de generadores estáticos `src/app/sitemap.ts` (12 URLs: estáticas + 7 técnicas) y `src/app/robots.ts` apuntando a `https://cadensa-web.pages.dev/sitemap.xml`.
+     - Inyección de datos estructurados Schema.org `WebApplication` y `MedicalWebPage` en `src/lib/structuredData.ts` y vinculados en `src/app/layout.tsx`.
+     - Archivo de verificación IndexNow (`public/856757614ffc2c5582fbcb81b1b4e4ca.txt`) y script `scripts/submit_seo_index.cjs` que envía URLs y sitemaps a Bing API y protocolo IndexNow (HTTP 202 Aceptado).
+     - Creación de página personalizada de error 404 (`src/app/not-found.tsx`) con navegación guiada al catálogo clínico.
+  2. **Fase B: Telemetría Clínica GA4 y Monitoreo Avanzado**:
+     - Módulo `src/lib/analytics.ts` con función `trackClinicalEvent()` para capturar eventos fonoaudiológicos: `metronome_start`, `metronome_stop`, `technique_select`, `voice_tap_recorded`, `session_completed`, `clinical_report_export`, `simulator_scenario_start`, `routine_5min_start` y `routine_5min_complete`.
+     - Actualización de `scripts/fetch_platform_metrics.cjs` para recopilar tasas de rebote, engagement y estado de indexación de GSC.
+     - Actualización de `src/app/stats/page.tsx` con soporte para Suecia (`🇸🇪`), tarjetas de salud de indexación y métricas de 30 días.
+  3. **Fase C: Cumplimiento AdSense & Salud YMYL**:
+     - Archivo oficial `public/ads.txt` configurado con `google.com, pub-2700240339792942, DIRECT, f08c47fec0942fa0`.
+     - Etiqueta meta `<meta name="google-adsense-account" content="ca-pub-2700240339792942" />` en `src/app/layout.tsx`.
+     - Actualización de directivas CSP en `public/_headers` autorizando orígenes de Google Ads y AdSense (`googlesyndication.com`, `doubleclick.net`).
+     - Creación de páginas obligatorias de **Política de Privacidad (`src/app/privacy/page.tsx`)** (Zero Trust, Web Audio API y cookies analíticas/anuncios) y **Términos de Uso (`src/app/terms/page.tsx`)** con **Descargo Médico Fonoaudiológico (Medical Disclaimer YMYL)**.
+  4. **Fase D: Nuevas Funcionalidades Clínicas y Crecimiento Orgánico**:
+     - **Páginas Estáticas por Técnica (`src/app/tecnicas/[id]/page.tsx`)**: 7 rutas SSG (`sts`, `easy_onset`, `light_contact`, `prolonged_speech`, `box_breathing`, `pull_out`, `cancellation`) con protocolo clínico detallado, preguntas frecuentes y botón directo de entrenamiento.
+     - **Simulador de Situaciones Reales (`src/components/RealWorldSimulator.tsx` / `src/lib/realWorldScenarios.ts`)**: 4 escenarios cotidianos de presión (Llamada para Cita Médica, Presentación en Equipo, Pedido en Restaurante y Entrevista de Trabajo) con respuestas graduadas y asignación de técnica recomendada.
+     - **Rutina Guiada de 5 Minutos (`src/components/QuickDailyRoutine.tsx`)**: Asistente con temporizador progresivo (1 min Respiración Diafragmática 4-4-4-4 + 2 min Easy Onset + 2 min STS) para reducir la tasa de rebote del nuevo usuario.
+     - Integración de accesos en `src/components/TechniquesCatalogHome.tsx` y enlaces a guías individuales en las tarjetas.
+  5. **Gobernanza y Suite de Pruebas**:
+     - Actualización de la hoja de ruta en `src/app/about/page.tsx`.
+     - 130 pruebas unitarias en Vitest (`27/27 suites`) y 65 escenarios BDD en Cucumber (`251 pasos`) pasando al 100%.
+     - Linter de ESLint con 0 errores y 0 advertencias.
+     - Compilación estática Next.js Turbopack (`out/`) completada con éxito generando todas las páginas HTML y recursos estáticos.
+- **Archivos creados/modificados**:
+  - `src/lib/structuredData.ts`, `src/lib/analytics.ts`, `src/lib/analytics.test.ts`
+  - `src/lib/realWorldScenarios.ts`, `src/components/RealWorldSimulator.tsx`
+  - `src/components/QuickDailyRoutine.tsx`, `src/components/clinical_features.test.tsx`
+  - `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/not-found.tsx`
+  - `src/app/layout.tsx`, `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`
+  - `src/app/legal_and_404.test.tsx`, `src/app/tecnicas/[id]/page.tsx`, `src/app/tecnicas/[id]/page.test.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`, `src/components/Dashboard.tsx`, `src/app/page.tsx`, `src/app/stats/page.tsx`, `src/app/about/page.tsx`
+  - `public/ads.txt`, `public/_headers`, `public/856757614ffc2c5582fbcb81b1b4e4ca.txt`
+  - `scripts/fetch_platform_metrics.cjs`, `scripts/submit_seo_index.cjs`
+  - `features/seo_adsense_and_clinical_features.feature`, `features/step_definitions/seo_and_clinical_features_steps.ts`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

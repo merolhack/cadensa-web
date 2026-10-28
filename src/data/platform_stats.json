@@ -1,24 +1,44 @@
 {
-  "updated_at": "2026-10-26T12:08:11.310Z",
-  "period": "Últimos 7 días",
+  "updated_at": "2026-10-28T17:42:16.529Z",
+  "period": "Últimos 30 días",
   "target_url": "https://cadensa-web.pages.dev/",
   "summary": {
-    "weekly_active_users": 9,
-    "total_page_views": 32,
+    "weekly_active_users": 21,
+    "total_page_views": 61,
     "search_impressions": 0,
-    "search_clicks": 0
+    "search_clicks": 0,
+    "avg_session_duration_sec": 222,
+    "bounce_rate": 67.6,
+    "engagement_rate": 32.4
   },
   "sources": {
     "google_analytics": {
-      "active_users": 9,
-      "sessions": 14,
-      "page_views": 32,
-      "avg_session_duration_sec": 313,
+      "active_users": 21,
+      "sessions": 37,
+      "page_views": 61,
+      "avg_session_duration_sec": 222,
+      "bounce_rate": 67.6,
+      "engagement_rate": 32.4,
       "countries": [
         {
           "country": "Mexico",
-          "users": 4,
-          "views": 17
+          "users": 9,
+          "views": 29
+        },
+        {
+          "country": "Peru",
+          "users": 3,
+          "views": 23
+        },
+        {
+          "country": "Argentina",
+          "users": 2,
+          "views": 2
+        },
+        {
+          "country": "Ecuador",
+          "users": 2,
+          "views": 2
         },
         {
           "country": "France",
@@ -26,12 +46,12 @@
           "views": 2
         },
         {
-          "country": "Peru",
+          "country": "United States",
           "users": 2,
-          "views": 12
+          "views": 2
         },
         {
-          "country": "Argentina",
+          "country": "Sweden",
           "users": 1,
           "views": 1
         }
@@ -42,24 +62,42 @@
       "impressions": 0,
       "ctr": 0,
       "avg_position": 0,
-      "top_countries": []
+      "top_countries": [],
+      "home_index_status": "Enviada e indexada"
     },
     "bing_webmaster": {
       "clicks": 0,
-      "impressions": 0
+      "impressions": 0,
+      "is_verified": true
     },
     "cloudflare": {
       "requests": 0,
       "bandwidth_mb": 0,
-      "status": "active"
+      "status": "active",
+      "ssl_active": true
     }
   },
   "global_reach": {
     "top_countries": [
       {
         "country": "Mexico",
-        "users": 4,
-        "views": 17
+        "users": 9,
+        "views": 29
+      },
+      {
+        "country": "Peru",
+        "users": 3,
+        "views": 23
+      },
+      {
+        "country": "Argentina",
+        "users": 2,
+        "views": 2
+      },
+      {
+        "country": "Ecuador",
+        "users": 2,
+        "views": 2
       },
       {
         "country": "France",
@@ -67,12 +105,12 @@
         "views": 2
       },
       {
-        "country": "Peru",
+        "country": "United States",
         "users": 2,
-        "views": 12
+        "views": 2
       },
       {
-        "country": "Argentina",
+        "country": "Sweden",
         "users": 1,
         "views": 1
       }

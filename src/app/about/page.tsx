@@ -172,6 +172,18 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Telemetría Pública Semanal (/stats):</strong> Integración automatizada vía CI/CD con GA4, Google Search Console, Bing y Cloudflare Edge.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Optimización SEO Técnico, IndexNow y Cumplimiento YMYL:</strong> Sitemap nativo (`sitemap.xml`), robots.txt, protocolo IndexNow para Bing, marcado Schema.org JSON-LD (WebApplication + MedicalWebPage), páginas legales (/privacy, /terms) con descargo fonoaudiológico y ads.txt oficial.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Páginas Estáticas por Técnica Fonoaudiológica (/tecnicas/[id]):</strong> 7 guías dedicadas con protocolo clínico detallado, preguntas frecuentes y acceso directo a la estación de práctica.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Simulador de Situaciones Reales y Rutina Guiada de 5 Minutos:</strong> Módulos para práctica en llamadas telefónicas, pedidos y entrevistas, y asistente paso a paso para reducir la fricción de entrada.</span>
+                </li>
               </ul>
             </div>
 

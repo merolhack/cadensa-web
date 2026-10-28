@@ -72,6 +72,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [evolution_v2_plan.md](roadmap/evolution_v2_plan.md) | Plan de evolución v2: 10 mejoras clínicas, banner comunitario AMTTM y optimizaciones de audio y accesibilidad. | `roadmap`, `evolution`, `community`, `features` |
 | [next_steps_plan.md](roadmap/next_steps_plan.md) | Plan de siguientes pasos para evolución clínica: ejercicios fonéticos, reportes para fonoaudiólogos y análisis vocal. | `roadmap`, `clinical`, `reporting`, `next-steps` |
 | [product_evolution.md](roadmap/product_evolution.md) | Ruta de evolución técnica del PoC actual hacia el MVP interactivo (Web Audio, silabador, rachas). | `roadmap`, `product`, `mvp`, `audio` |
+| [platform_telemetry_and_seo_plan.md](roadmap/platform_telemetry_and_seo_plan.md) | Auditoría de métricas y errores en GA4, Search Console, AdSense y Bing Webmaster Tools, con plan de remediación y nuevas funcionalidades. | `roadmap`, `analytics`, `seo`, `adsense`, `bing` |
 
 ---
 

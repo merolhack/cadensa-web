@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import { CADENSA_STRUCTURED_DATA } from "@/lib/structuredData";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,10 +15,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://cadensa-web.pages.dev"),
   title: "Cadensa — Encuentra el ritmo de tu voz",
   description:
     "Plataforma diaria que entrena tu ritmo al hablar para superar bloqueos y comunicarte con total seguridad. Basada en el habla rítmica silábica.",
   manifest: "/manifest.json",
+  alternates: {
+    canonical: "https://cadensa-web.pages.dev/",
+  },
+  openGraph: {
+    title: "Cadensa — Encuentra el ritmo de tu voz",
+    description:
+      "Gimnasio digital de fluidez del habla con 7 técnicas fonoaudiológicas basadas en evidencia (STS, Easy Onset, Van Riper y Respiración 4-4-4-4).",
+    url: "https://cadensa-web.pages.dev/",
+    siteName: "Cadensa",
+    locale: "es_MX",
+    type: "website",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -27,6 +41,7 @@ export const metadata: Metadata = {
     google: "n2GCgYUYH1CHgZTm_iYkWM-bXqGR7o-c8kXoy3jB5EQ",
     other: {
       "msvalidate.01": ["856757614FFC2C5582FBCB81B1B4E4CA"],
+      "google-adsense-account": ["ca-pub-2700240339792942"],
     },
   },
 };
@@ -52,6 +67,13 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="google-site-verification" content="n2GCgYUYH1CHgZTm_iYkWM-bXqGR7o-c8kXoy3jB5EQ" />
         <meta name="msvalidate.01" content="856757614FFC2C5582FBCB81B1B4E4CA" />
+        <meta name="google-adsense-account" content="ca-pub-2700240339792942" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(CADENSA_STRUCTURED_DATA),
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-50">
         {children}

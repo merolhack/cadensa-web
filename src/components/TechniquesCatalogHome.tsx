@@ -14,6 +14,8 @@ import { CommunityBanner } from './CommunityBanner';
 interface TechniquesCatalogHomeProps {
   onSelectTechnique: (technique: ClinicalTechnique) => void;
   onOpenVideoModal: (technique: ClinicalTechnique) => void;
+  onOpenSimulator?: () => void;
+  onOpenQuickRoutine?: () => void;
   streakDays: number;
   totalMinutes: number;
   xpPoints: number;
@@ -25,6 +27,8 @@ interface TechniquesCatalogHomeProps {
 export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onSelectTechnique,
   onOpenVideoModal,
+  onOpenSimulator,
+  onOpenQuickRoutine,
   streakDays,
   totalMinutes,
   xpPoints,
@@ -136,6 +140,26 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             <span>⚡</span>
             <span>Comenzar Práctica Guiada Directa</span>
           </button>
+
+          {onOpenQuickRoutine && (
+            <button
+              onClick={onOpenQuickRoutine}
+              className="px-5 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 font-semibold text-sm transition-all cursor-pointer flex items-center gap-2"
+            >
+              <span>⏱️</span>
+              <span>Rutina 5 Min</span>
+            </button>
+          )}
+
+          {onOpenSimulator && (
+            <button
+              onClick={onOpenSimulator}
+              className="px-5 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 font-semibold text-sm transition-all cursor-pointer flex items-center gap-2"
+            >
+              <span>🎭</span>
+              <span>Simulador Real</span>
+            </button>
+          )}
         </div>
       </section>
 
@@ -253,13 +277,22 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
 
                 {/* Botones de Acción de la Tarjeta */}
                 <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between gap-2">
+                  <Link
+                    href={`/tecnicas/${technique.id}`}
+                    className="flex-1 px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1"
+                    title={`Leer guía clínica completa de ${technique.name}`}
+                  >
+                    <span>📖</span>
+                    <span>Guía</span>
+                  </Link>
+
                   <button
                     onClick={() => onOpenVideoModal(technique)}
-                    className="flex-1 px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-cyan-300 hover:text-cyan-200 text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                    className="flex-1 px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-cyan-300 hover:text-cyan-200 text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1"
                     title={`Ver video explicativo de ${technique.shortName}`}
                   >
                     <span>🎥</span>
-                    <span>{technique.videoUrl ? 'Ver Video (HD)' : 'Ver Video'}</span>
+                    <span>Ver Video</span>
                   </button>
 
                   <button
@@ -309,6 +342,20 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
           >
             <span>📊</span>
             <span>Estadísticas de Uso</span>
+          </Link>
+          <span className="hidden sm:inline">•</span>
+          <Link
+            href="/privacy"
+            className="hover:text-emerald-400 transition-colors font-medium"
+          >
+            Privacidad
+          </Link>
+          <span className="hidden sm:inline">•</span>
+          <Link
+            href="/terms"
+            className="hover:text-emerald-400 transition-colors font-medium"
+          >
+            Términos y Aviso Clínico
           </Link>
           <span className="hidden sm:inline">•</span>
           <a

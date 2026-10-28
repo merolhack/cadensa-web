@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { evaluateUserBadges, getUserLevelTitle } from '@/lib/streaks';
+import { trackClinicalEvent } from '@/lib/analytics';
 
 interface DashboardProps {
   isOpen: boolean;
@@ -118,6 +119,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             onClick={() => {
               const summaryText = `=== INFORME CLÍNICO CADENSA ===\nFecha: ${new Date().toLocaleDateString('es-ES')}\nRacha: ${streakDays} días\nMinutos: ${totalMinutes} min\nPrecisión Rítmica: ${accuracy}%\nXP: ${xpPoints}\nNivel: ${level}\n================================`;
               navigator.clipboard?.writeText(summaryText);
+              trackClinicalEvent('clinical_report_export', { xp_earned: xpPoints });
               alert('¡Resumen clínico copiado al portapapeles!');
             }}
             className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition cursor-pointer flex items-center justify-center gap-1.5"

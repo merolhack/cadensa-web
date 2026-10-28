@@ -19,6 +19,9 @@ import { TechniqueSelector } from '@/components/TechniqueSelector';
 import { TechniqueVisualizer } from '@/components/TechniqueVisualizer';
 import { TechniquesCatalogHome } from '@/components/TechniquesCatalogHome';
 import { TechniqueVideoModal } from '@/components/TechniqueVideoModal';
+import { RealWorldSimulator } from '@/components/RealWorldSimulator';
+import { QuickDailyRoutine } from '@/components/QuickDailyRoutine';
+import { trackClinicalEvent } from '@/lib/analytics';
 import { TechniqueId, CLINICAL_TECHNIQUES, ClinicalTechnique } from '@/lib/clinicalTechniques';
 import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExercisesByCategory } from '@/lib/clinicalExercises';
 
@@ -42,6 +45,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   // Estado para el modal de video explicativo de técnicas
   const [videoModalTechnique, setVideoModalTechnique] = useState<ClinicalTechnique | null>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
+  const [isQuickRoutineOpen, setIsQuickRoutineOpen] = useState(false);
 
   const [bpm, setBpm] = useState(80);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -207,7 +212,10 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       if (!metronomeRef.current) return;
       const playing = metronomeRef.current.toggle();
       setIsPlaying(playing);
-      if (!playing) {
+      if (playing) {
+        trackClinicalEvent('metronome_start', { technique_id: activeTechnique.id, bpm });
+      } else {
+        trackClinicalEvent('metronome_stop', { technique_id: activeTechnique.id, bpm });
         setIsPulsing(false);
       }
     } else {
@@ -215,7 +223,13 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       if (metronomeRef.current && isPlaying) {
         metronomeRef.current.stop();
       }
-      setIsPlaying((prev) => !prev);
+      setIsPlaying((prev) => {
+        const next = !prev;
+        if (next) {
+          trackClinicalEvent('metronome_start', { technique_id: activeTechnique.id, bpm });
+        }
+        return next;
+      });
       setIsPulsing(false);
     }
   };
@@ -229,6 +243,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
     setIsPulsing(false);
     setActiveSyllableIndex(0);
     setSelectedTechniqueId(tech.id);
+    trackClinicalEvent('technique_select', { technique_id: tech.id });
     if (tech.recommendedCategory) {
       handleCategorySelect(tech.recommendedCategory);
     }
@@ -315,6 +330,11 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
     setVoiceModeActive(true);
     setTimeout(() => setVoiceModeActive(false), 400);
 
+    trackClinicalEvent('voice_tap_recorded', {
+      accuracy_grade: accuracy.grade,
+      technique_id: activeTechnique.id,
+    });
+
     if (accuracy.grade === 'perfect') {
       triggerHapticFeedback([40]);
     }
@@ -359,6 +379,11 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       }
 
       setSaveSuccessMsg(`¡Sesión guardada! +${earnedXp} XP ganados. Racha de ${newStreak} días.`);
+      trackClinicalEvent('session_completed', {
+        duration_seconds: duration,
+        xp_earned: earnedXp,
+        technique_id: activeTechnique.id,
+      });
       setTimeout(() => setSaveSuccessMsg(null), 4000);
     }
   };
@@ -393,6 +418,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         <TechniquesCatalogHome
           onSelectTechnique={handleSelectTechniqueFromHome}
           onOpenVideoModal={handleOpenVideoModal}
+          onOpenSimulator={() => setIsSimulatorOpen(true)}
+          onOpenQuickRoutine={() => setIsQuickRoutineOpen(true)}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -424,6 +451,39 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           isOpen={isVideoModalOpen}
           onClose={() => setIsVideoModalOpen(false)}
           onStartPractice={handleStartPracticeFromVideoModal}
+        />
+
+        {/* Modal de Simulador de Situaciones Reales */}
+        <RealWorldSimulator
+          isOpen={isSimulatorOpen}
+          onClose={() => setIsSimulatorOpen(false)}
+          onSelectPracticePhrase={(phrase, newBpm, tech) => {
+            const customEx = {
+              id: `sim-${Date.now()}`,
+              category: 'fonetica_basica' as ClinicalCategory,
+              difficulty: 'personalizado',
+              phrase,
+              bpm_recommended: newBpm,
+              created_at: new Date().toISOString(),
+              clinicalObjective: `Simulador de situación real con ${tech.shortName}`,
+              targetPhonemes: ['simulador'],
+            };
+            setCustomExercises((prev) => [customEx, ...prev]);
+            setPhraseIndex(0);
+            setActiveSyllableIndex(0);
+            handleSelectTechnique(tech);
+            handleBpmChange(newBpm);
+            setCurrentView('practice');
+          }}
+        />
+
+        {/* Modal de Rutina Guiada de 5 Minutos */}
+        <QuickDailyRoutine
+          isOpen={isQuickRoutineOpen}
+          onClose={() => setIsQuickRoutineOpen(false)}
+          onStartFullPractice={() => {
+            setCurrentView('practice');
+          }}
         />
       </>
     );
@@ -884,7 +944,21 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
           >
             <span>📊</span>
-            <span>Estadísticas de Uso e Impacto Global</span>
+            <span>Estadísticas</span>
+          </Link>
+          <span className="hidden sm:inline">•</span>
+          <Link
+            href="/privacy"
+            className="hover:text-emerald-400 transition-colors font-medium"
+          >
+            Privacidad
+          </Link>
+          <span className="hidden sm:inline">•</span>
+          <Link
+            href="/terms"
+            className="hover:text-emerald-400 transition-colors font-medium"
+          >
+            Términos
           </Link>
           <span className="hidden sm:inline">•</span>
           <span>Cadensa Web — Terapia Rítmica Silábica</span>

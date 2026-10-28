@@ -24,3 +24,4 @@ describe('Rutas Estáticas de Técnicas Clínicas (/tecnicas/[id])', () => {
     expect(metaEo.title).toContain('Inicio Vocal Suave');
   });
 });
+

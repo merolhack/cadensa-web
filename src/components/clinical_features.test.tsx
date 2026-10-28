@@ -55,3 +55,4 @@ describe('Nuevas Funcionalidades Clínicas (Fase D)', () => {
     });
   });
 });
+

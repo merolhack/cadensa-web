@@ -93,4 +93,22 @@ describe('TechniqueVideoModal Component - Unit Tests', () => {
     expect(videoEl).toBeInTheDocument();
     expect(videoEl).toHaveAttribute('src', stsTechnique.videoUrl);
   });
+
+  it('permite reportar falla o duda en el video mediante onReportIssue o modal integrado', () => {
+    const onReportIssue = vi.fn();
+    render(
+      <TechniqueVideoModal
+        technique={technique}
+        isOpen={true}
+        onClose={vi.fn()}
+        onStartPractice={vi.fn()}
+        onReportIssue={onReportIssue}
+      />
+    );
+
+    const reportBtn = screen.getByRole('button', { name: /reportar falla o duda en este video/i });
+    expect(reportBtn).toBeInTheDocument();
+    fireEvent.click(reportBtn);
+    expect(onReportIssue).toHaveBeenCalledWith(technique);
+  });
 });

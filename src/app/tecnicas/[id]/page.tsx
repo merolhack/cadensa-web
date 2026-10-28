@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { CLINICAL_TECHNIQUES, TECHNIQUE_FAMILIES, TechniqueId } from '@/lib/clinicalTechniques';
+import { TechniqueFeedbackButton } from '@/components/TechniqueFeedbackButton';
 
 export const dynamic = 'force-static';
 
@@ -200,13 +201,16 @@ export default async function TechniqueDetailPage({ params }: PageProps) {
               Inicia una sesión de 3 a 5 minutos en el gimnasio digital con visualizador en tiempo real y lectura silábica adaptada.
             </p>
           </div>
-          <Link
-            href={`/?view=practice`}
-            className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2"
-          >
-            <span>{technique.actionButton.icon}</span>
-            <span>Iniciar Práctica</span>
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <TechniqueFeedbackButton techniqueId={technique.id} techniqueName={technique.shortName} />
+            <Link
+              href={`/?view=practice`}
+              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2"
+            >
+              <span>{technique.actionButton.icon}</span>
+              <span>Iniciar Práctica</span>
+            </Link>
+          </div>
         </div>
 
         {/* Footer */}
@@ -223,3 +227,4 @@ export default async function TechniqueDetailPage({ params }: PageProps) {
     </main>
   );
 }
+

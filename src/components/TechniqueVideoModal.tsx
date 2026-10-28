@@ -3,12 +3,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { ClinicalTechnique } from '@/lib/clinicalTechniques';
+import { FeedbackModal } from '@/components/FeedbackModal';
 
 interface TechniqueVideoModalProps {
   technique: ClinicalTechnique | null;
   isOpen: boolean;
   onClose: () => void;
   onStartPractice: (technique: ClinicalTechnique) => void;
+  onReportIssue?: (technique: ClinicalTechnique) => void;
 }
 
 export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
@@ -16,9 +18,11 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
   isOpen,
   onClose,
   onStartPractice,
+  onReportIssue,
 }) => {
   // Estado declarativo: rastrea qué técnica está reproduciéndose activamente
   const [playingTechniqueId, setPlayingTechniqueId] = useState<string | null>(null);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const isPlayingVideo = Boolean(isOpen && technique && playingTechniqueId === technique.id);
@@ -196,25 +200,50 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
         </div>
 
         {/* Acciones del Modal */}
-        <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-zinc-800">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-zinc-800">
           <button
-            onClick={handleClose}
-            className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs transition-colors cursor-pointer"
-          >
-            Cerrar
-          </button>
-          <button
+            type="button"
             onClick={() => {
-              onStartPractice(technique);
-              handleClose();
+              if (onReportIssue && technique) {
+                onReportIssue(technique);
+              } else {
+                setIsFeedbackOpen(true);
+              }
             }}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 font-bold text-xs shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all cursor-pointer flex items-center gap-1.5"
+            className="text-xs text-zinc-400 hover:text-emerald-400 transition-colors flex items-center gap-1.5 cursor-pointer py-1"
           >
-            <span>🚀</span>
-            <span>Comenzar Práctica de {technique.shortName}</span>
+            <span>💬</span>
+            <span>Reportar falla o duda en este video</span>
           </button>
+
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+            <button
+              onClick={handleClose}
+              className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs transition-colors cursor-pointer"
+            >
+              Cerrar
+            </button>
+            <button
+              onClick={() => {
+                onStartPractice(technique);
+                handleClose();
+              }}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 font-bold text-xs shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <span>🚀</span>
+              <span>Comenzar Práctica de {technique.shortName}</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Modal de Feedback Inyectado para Reportes Contextuales */}
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+        defaultCategory="video_issue"
+        defaultTechniqueId={technique.id}
+      />
     </div>
   );
 };

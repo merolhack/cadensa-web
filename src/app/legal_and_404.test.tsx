@@ -27,3 +27,4 @@ describe('Páginas Legales y Error 404 (Fase A y C)', () => {
     expect(screen.getByRole('link', { name: /ir al catálogo de técnicas/i })).toHaveAttribute('href', '/');
   });
 });
+

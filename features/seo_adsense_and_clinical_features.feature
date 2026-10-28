@@ -19,3 +19,4 @@ Característica: Cumplimiento de SEO Técnico, AdSense YMYL y Nuevas Funcionalid
     Dado que el usuario inicia la rutina guiada diaria
     Entonces debe comenzar con el bloque de respiración diafragmática 4-4-4-4
     Y debe permitir el avance hacia el Inicio Vocal Suave y el Habla Rítmica Silábica
+

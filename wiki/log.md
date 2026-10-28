@@ -679,3 +679,47 @@
   - `features/seo_adsense_and_clinical_features.feature`, `features/step_definitions/seo_and_clinical_features_steps.ts`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-28] — Implementación del Sistema de Feedback Comunitario y Calidad Clínica (Zero-Leak RLS)
+- **Tipo de Operación**: `FEATURE` / `DATABASE` / `SECURITY` / `TESTS`
+- **Descripción**:
+  1. **Migración Supabase PostgreSQL (`supabase/migrations/20261028180000_feedback_reports.sql`)**:
+     - Creación de tabla `public.feedback_reports` con tipado estricto, checks de categorías (`video_issue`, `technique_issue`, `suggestion`, `other`), longitud de mensaje (10 a 1,000 caract.), regex de email opcional y metadatos JSONB.
+     - Implementación de políticas Row Level Security (Zero-Leak / Blind-Drop):
+       - `INSERT` permitido para `anon` y `authenticated` con validación estricta de identidad contra suplantación (`auth.uid() = user_id`).
+       - `SELECT` restringido confidencialmente (`auth.uid() = user_id` para usuarios autenticados, denegado por omisión a clientes anónimos).
+     - Aplicación desatendida y verificación exitosa vía PostgREST con `scripts/migrate_supabase.cjs`.
+  2. **Servicio Clínico en Cliente (`src/lib/feedbackService.ts`)**:
+     - Validación de longitud y formato de correo.
+     - Detección de trampa anti-spam invisible (Honeypot) con éxito simulado para neutralizar bots.
+     - Control de cuota (Rate Limiting) de hasta 3 envíos por hora en `localStorage`.
+     - Resiliencia Offline-First: almacenamiento automático en cola local (`cadensa_offline_feedback`) en caso de desconexión o fallo temporal de red.
+     - Emisión de telemetría GA4 `trackClinicalEvent('feedback_submitted', ...)`.
+  3. **Componentes de Interfaz**:
+     - `src/components/FeedbackModal.tsx`: Modal accesible WCAG 2.1 AA con selector de categoría, técnica relacionada, contador de caracteres y mensajes de confirmación.
+     - Integración en `src/components/TechniqueVideoModal.tsx`: botón directo "💬 Reportar falla o duda en este video" con técnica y categoría preseleccionadas.
+     - `src/components/TechniqueFeedbackButton.tsx`: Botón cliente insertado en las guías individuales SSG (`src/app/tecnicas/[id]/page.tsx`).
+     - Botón accesible en el footer global de `src/app/page.tsx`.
+  4. **Sincronización de Gobernanza y Hoja de Ruta**:
+     - Actualización mandatoria de `src/app/about/page.tsx` reflejando el nuevo canal de feedback y calidad clínica como hito completado.
+     - Creación de `wiki/concepts/feedback_and_quality_reports.md` y actualización de `wiki/index.md`.
+  5. **Batería de Pruebas**:
+     - 143 pruebas unitarias Vitest en 30 suites pasando al 100%.
+     - 69 escenarios BDD en Cucumber (`266 pasos`) en español pasando al 100%.
+     - ESLint y TypeCheck (`next build`) con 0 errores y 0 advertencias.
+- **Archivos creados/modificados**:
+  - `supabase/migrations/20261028180000_feedback_reports.sql`
+  - `scripts/migrate_supabase.cjs`
+  - `src/types/supabase.ts`
+  - `src/lib/feedbackService.ts`, `src/lib/feedbackService.test.ts`
+  - `src/lib/analytics.ts`
+  - `src/components/FeedbackModal.tsx`, `src/components/FeedbackModal.test.tsx`
+  - `src/components/TechniqueVideoModal.tsx`, `src/components/TechniqueVideoModal.test.tsx`
+  - `src/components/TechniqueFeedbackButton.tsx`, `src/components/TechniqueFeedbackButton.test.tsx`
+  - `src/app/page.tsx`, `src/app/tecnicas/[id]/page.tsx`, `src/app/about/page.tsx`
+  - `features/feedback_reporting.feature`, `features/step_definitions/feedback_steps.ts`
+  - `wiki/concepts/feedback_and_quality_reports.md`, `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+

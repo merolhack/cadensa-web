@@ -19,7 +19,8 @@ export type ClinicalEventName =
   | 'clinical_report_export'
   | 'simulator_scenario_start'
   | 'routine_5min_start'
-  | 'routine_5min_complete';
+  | 'routine_5min_complete'
+  | 'feedback_submitted';
 
 export interface ClinicalEventParams {
   technique_id?: string;
@@ -53,3 +54,4 @@ export function trackClinicalEvent(eventName: ClinicalEventName, params: Clinica
     console.debug('Telemetry error:', err);
   }
 }
+

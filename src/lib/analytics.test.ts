@@ -41,3 +41,4 @@ describe('analytics.ts - Telemetría Clínica GA4', () => {
     }).not.toThrow();
   });
 });
+

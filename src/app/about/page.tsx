@@ -184,6 +184,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Simulador de Situaciones Reales y Rutina Guiada de 5 Minutos:</strong> Módulos para práctica en llamadas telefónicas, pedidos y entrevistas, y asistente paso a paso para reducir la fricción de entrada.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Canal de Feedback Comunitario y Calidad Clínica (Zero-Leak RLS):</strong> Reporte directo de fallas en videos o dudas en técnicas para visitantes y usuarios registrados, con protección anti-spam honeypot, rate limiting, soporte offline y almacenamiento confidencial en Supabase.</span>
+                </li>
               </ul>
             </div>
 

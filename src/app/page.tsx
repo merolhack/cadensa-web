@@ -21,6 +21,8 @@ import { TechniquesCatalogHome } from '@/components/TechniquesCatalogHome';
 import { TechniqueVideoModal } from '@/components/TechniqueVideoModal';
 import { RealWorldSimulator } from '@/components/RealWorldSimulator';
 import { QuickDailyRoutine } from '@/components/QuickDailyRoutine';
+import { FeedbackModal } from '@/components/FeedbackModal';
+import { FeedbackCategory } from '@/lib/feedbackService';
 import { trackClinicalEvent } from '@/lib/analytics';
 import { TechniqueId, CLINICAL_TECHNIQUES, ClinicalTechnique } from '@/lib/clinicalTechniques';
 import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExercisesByCategory } from '@/lib/clinicalExercises';
@@ -47,6 +49,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const [isQuickRoutineOpen, setIsQuickRoutineOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [feedbackCategory, setFeedbackCategory] = useState<FeedbackCategory>('other');
+  const [feedbackTechniqueId, setFeedbackTechniqueId] = useState<string | null>(null);
 
   const [bpm, setBpm] = useState(80);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -961,6 +966,19 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             Términos
           </Link>
           <span className="hidden sm:inline">•</span>
+          <button
+            type="button"
+            onClick={() => {
+              setFeedbackCategory('other');
+              setFeedbackTechniqueId(null);
+              setIsFeedbackOpen(true);
+            }}
+            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium cursor-pointer"
+          >
+            <span>💬</span>
+            <span>Comentarios y Reportes</span>
+          </button>
+          <span className="hidden sm:inline">•</span>
           <span>Cadensa Web — Terapia Rítmica Silábica</span>
         </div>
         <p className="text-[11px] text-zinc-600">Next.js 16 • Supabase • Cloudflare Pages</p>
@@ -995,6 +1013,14 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         isOpen={isVideoModalOpen}
         onClose={() => setIsVideoModalOpen(false)}
         onStartPractice={handleStartPracticeFromVideoModal}
+      />
+
+      {/* Modal de Feedback Comunitario y Calidad Clínica */}
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+        defaultCategory={feedbackCategory}
+        defaultTechniqueId={feedbackTechniqueId}
       />
     </main>
   );

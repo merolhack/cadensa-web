@@ -48,6 +48,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [box_breathing.md](concepts/box_breathing.md) | Respiración Cuadrada Diafragmática (4-4-4-4): estimulación del nervio vago y prevención del habla sin reserva aérea. | `clinical`, `breathing`, `autonomic-nervous-system` |
 | [pull_out_technique.md](concepts/pull_out_technique.md) | Desactivación Activa en Bloqueo (Pull-Out de Van Riper): 3 etapas para congelar la fuerza, aflojar y deslizar. | `clinical`, `pull-out`, `van-riper`, `stuttering-modification` |
 | [cancellation_technique.md](concepts/cancellation_technique.md) | Cancelación Post-Bloqueo de Van Riper: pausa reflexiva de 3s para cortar el reflejo de escape y reintentar con inicio suave. | `clinical`, `cancellation`, `van-riper`, `post-block` |
+| [feedback_and_quality_reports.md](concepts/feedback_and_quality_reports.md) | Canal de retroalimentación comunitaria y reporte de errores en videos y técnicas con patrón Zero-Leak RLS. | `feedback`, `quality`, `clinical-telemetry`, `zero-trust`, `rls` |
 | [zero_trust_rls.md](concepts/zero_trust_rls.md) | Seguridad delegada a PostgreSQL: por qué el cliente es untrusted y cómo opera Row Level Security. | `security`, `postgres`, `rls`, `zero-trust` |
 | [static_spa_paradigm.md](concepts/static_spa_paradigm.md) | Justificación técnica de `output: 'export'`, eliminación de servidores Node.js y restricciones. | `jamstack`, `spa`, `performance`, `edge` |
 

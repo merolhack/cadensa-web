@@ -151,6 +151,42 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback_reports: {
+        Row: {
+          id: string
+          user_id: string | null
+          category: string
+          technique_id: string | null
+          message: string
+          contact_email: string | null
+          metadata: Json
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          category: string
+          technique_id?: string | null
+          message: string
+          contact_email?: string | null
+          metadata?: Json
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          category?: string
+          technique_id?: string | null
+          message?: string
+          contact_email?: string | null
+          metadata?: Json
+          status?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

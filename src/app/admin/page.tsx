@@ -9,9 +9,15 @@ import {
   updateFeedbackReportStatus,
   fetchAdminUsersList,
   fetchAdminSummary,
+  fetchAdminExercises,
+  createAdminExercise,
+  deleteAdminExercise,
+  generateFeedbackCSV,
+  generateUsersCSV,
   AdminFeedbackReport,
   AdminUserRow,
   AdminSummaryMetrics,
+  AdminExerciseItem,
 } from '@/lib/adminService';
 import { AuthModal } from '@/components/AuthModal';
 
@@ -20,8 +26,8 @@ export default function AdminDashboardPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Pestaña activa: 'feedback' | 'users' | 'metrics' | 'clinical'
-  const [activeTab, setActiveTab] = useState<'feedback' | 'users' | 'metrics' | 'clinical'>('feedback');
+  // Pestaña activa: 'feedback' | 'users' | 'cms' | 'metrics' | 'clinical'
+  const [activeTab, setActiveTab] = useState<'feedback' | 'users' | 'cms' | 'metrics' | 'clinical'>('feedback');
 
   // Datos del dashboard
   const [summary, setSummary] = useState<AdminSummaryMetrics>({
@@ -33,6 +39,7 @@ export default function AdminDashboardPage() {
   });
   const [reports, setReports] = useState<AdminFeedbackReport[]>([]);
   const [users, setUsers] = useState<AdminUserRow[]>([]);
+  const [exercises, setExercises] = useState<AdminExerciseItem[]>([]);
   const [loadingData, setLoadingData] = useState(false);
 
   // Filtros de feedback
@@ -40,17 +47,26 @@ export default function AdminDashboardPage() {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [actionSuccessMsg, setActionSuccessMsg] = useState<string | null>(null);
 
+  // Formulario CMS Ejercicios
+  const [newPhrase, setNewPhrase] = useState('');
+  const [newCategory, setNewCategory] = useState('fonetica_basica');
+  const [newDifficulty, setNewDifficulty] = useState('facil');
+  const [newBpm, setNewBpm] = useState(80);
+  const [isSubmittingExercise, setIsSubmittingExercise] = useState(false);
+
   const refreshData = useCallback(async () => {
     setLoadingData(true);
-    const [summaryRes, reportsRes, usersRes] = await Promise.all([
+    const [summaryRes, reportsRes, usersRes, exercisesRes] = await Promise.all([
       fetchAdminSummary(),
       fetchAdminFeedbackReports({ category: filterCategory, status: filterStatus }),
       fetchAdminUsersList(),
+      fetchAdminExercises(),
     ]);
 
     setSummary(summaryRes);
     setReports(reportsRes);
     setUsers(usersRes);
+    setExercises(exercisesRes);
     setLoadingData(false);
   }, [filterCategory, filterStatus]);
 
@@ -65,15 +81,17 @@ export default function AdminDashboardPage() {
 
       if (allowed) {
         setLoadingData(true);
-        const [summaryRes, reportsRes, usersRes] = await Promise.all([
+        const [summaryRes, reportsRes, usersRes, exercisesRes] = await Promise.all([
           fetchAdminSummary(),
           fetchAdminFeedbackReports({ category: filterCategory, status: filterStatus }),
           fetchAdminUsersList(),
+          fetchAdminExercises(),
         ]);
         if (!isMounted) return;
         setSummary(summaryRes);
         setReports(reportsRes);
         setUsers(usersRes);
+        setExercises(exercisesRes);
         setLoadingData(false);
       }
     }
@@ -95,6 +113,60 @@ export default function AdminDashboardPage() {
       setTimeout(() => setActionSuccessMsg(null), 3500);
       refreshData();
     }
+  };
+
+  const handleCreateExercise = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPhrase.trim()) return;
+
+    setIsSubmittingExercise(true);
+    const res = await createAdminExercise({
+      phrase: newPhrase.trim(),
+      category: newCategory,
+      difficulty: newDifficulty,
+      bpm_recommended: newBpm,
+    });
+    setIsSubmittingExercise(false);
+
+    if (res.success) {
+      setNewPhrase('');
+      setActionSuccessMsg('Ejercicio clínico añadido a la base de datos.');
+      setTimeout(() => setActionSuccessMsg(null), 3500);
+      refreshData();
+    }
+  };
+
+  const handleDeleteExercise = async (id: string) => {
+    if (window.confirm('¿Deseas eliminar este ejercicio clínico de la base de datos?')) {
+      const res = await deleteAdminExercise(id);
+      if (res.success) {
+        setActionSuccessMsg('Ejercicio clínico eliminado.');
+        setTimeout(() => setActionSuccessMsg(null), 3500);
+        refreshData();
+      }
+    }
+  };
+
+  const downloadCSV = (filename: string, content: string) => {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportFeedbackCSV = () => {
+    const csv = generateFeedbackCSV(reports);
+    downloadCSV(`cadensa_feedback_${new Date().toISOString().slice(0, 10)}.csv`, csv);
+  };
+
+  const handleExportUsersCSV = () => {
+    const csv = generateUsersCSV(users);
+    downloadCSV(`cadensa_usuarios_${new Date().toISOString().slice(0, 10)}.csv`, csv);
   };
 
   if (checkingAuth) {
@@ -174,7 +246,7 @@ export default function AdminDashboardPage() {
               <span>Panel de Control y Gobierno Clínico</span>
             </h1>
             <p className="text-xs text-zinc-400">
-              Monitoreo unificado de telemetría de búsqueda, calidad terapéutica, moderación de feedback y directorio de usuarios.
+              Monitoreo unificado de telemetría de búsqueda, calidad terapéutica, moderación de feedback, CMS de ejercicios y directorio de usuarios.
             </p>
           </div>
 
@@ -264,6 +336,18 @@ export default function AdminDashboardPage() {
           </button>
 
           <button
+            onClick={() => setActiveTab('cms')}
+            className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === 'cms'
+                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+            }`}
+          >
+            <span>📝</span>
+            <span>Editor de Ejercicios CMS ({exercises.length})</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('metrics')}
             className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === 'metrics'
@@ -291,7 +375,7 @@ export default function AdminDashboardPage() {
         {/* TAB 1: BANDEJA DE FEEDBACK */}
         {activeTab === 'feedback' && (
           <section className="space-y-4 animate-fade-in">
-            {/* Barra de Filtros */}
+            {/* Barra de Filtros y Exportación */}
             <div className="p-4 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-2">
@@ -327,8 +411,18 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div className="text-[11px] text-zinc-500 font-mono">
-                Mostrando {reports.length} reportes
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleExportFeedbackCSV}
+                  disabled={reports.length === 0}
+                  className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-emerald-300 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>📥</span>
+                  <span>Exportar CSV</span>
+                </button>
+                <span className="text-[11px] text-zinc-500 font-mono">
+                  {reports.length} reportes
+                </span>
               </div>
             </div>
 
@@ -428,6 +522,18 @@ export default function AdminDashboardPage() {
         {/* TAB 2: DIRECTORIO DE USUARIOS */}
         {activeTab === 'users' && (
           <section className="space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-zinc-400">Pacientes y usuarios con perfil registrado:</span>
+              <button
+                onClick={handleExportUsersCSV}
+                disabled={users.length === 0}
+                className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-cyan-300 border border-cyan-500/30 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <span>📥</span>
+                <span>Exportar Directorio (CSV)</span>
+              </button>
+            </div>
+
             <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-900/60">
               <table className="w-full text-left text-xs">
                 <thead className="bg-zinc-950/80 text-zinc-400 uppercase text-[10px] font-mono border-b border-zinc-800">
@@ -474,7 +580,141 @@ export default function AdminDashboardPage() {
           </section>
         )}
 
-        {/* TAB 3: TRÁFICO Y MOTORES DE BÚSQUEDA */}
+        {/* TAB 3: EDITOR DE EJERCICIOS CMS */}
+        {activeTab === 'cms' && (
+          <section className="space-y-5 animate-fade-in">
+            {/* Formulario para nuevo ejercicio */}
+            <form
+              onSubmit={handleCreateExercise}
+              className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-4"
+            >
+              <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+                <h3 className="text-xs sm:text-sm font-bold text-zinc-100 flex items-center gap-2">
+                  <span>➕</span>
+                  <span>Publicar Nuevo Ejercicio Clínico en Vivo (Supabase)</span>
+                </h3>
+                <span className="text-[10px] text-zinc-500 font-mono">Sin despliegues de código</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                <div className="space-y-1 sm:col-span-2">
+                  <label htmlFor="cms-phrase" className="text-zinc-400 font-semibold">Frase u Oración:</label>
+                  <input
+                    id="cms-phrase"
+                    type="text"
+                    required
+                    value={newPhrase}
+                    onChange={(e) => setNewPhrase(e.target.value)}
+                    placeholder="Ej. Caminar despacio por el parque en silencio"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-700 text-zinc-100 focus:outline-none focus:border-emerald-400"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="cms-category" className="text-zinc-400 font-semibold">Categoría:</label>
+                  <select
+                    id="cms-category"
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-700 text-zinc-200"
+                  >
+                    <option value="fonetica_basica">Fonética Básica</option>
+                    <option value="diadococinesia">Diadococinesia</option>
+                    <option value="vocales">Vocales Abiertas</option>
+                    <option value="frases_complejas">Polisílabos Complejos</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="cms-difficulty" className="text-zinc-400 font-semibold">Dificultad:</label>
+                  <select
+                    id="cms-difficulty"
+                    value={newDifficulty}
+                    onChange={(e) => setNewDifficulty(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-700 text-zinc-200"
+                  >
+                    <option value="facil">Fácil</option>
+                    <option value="media">Media</option>
+                    <option value="dificil">Difícil</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="cms-bpm" className="text-zinc-400 font-semibold">BPM Recomendado:</label>
+                  <input
+                    id="cms-bpm"
+                    type="number"
+                    min="50"
+                    max="160"
+                    value={newBpm}
+                    onChange={(e) => setNewBpm(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-700 text-emerald-400 font-mono font-bold"
+                  />
+                </div>
+
+                <div className="flex items-end sm:col-span-1 md:col-span-3">
+                  <button
+                    type="submit"
+                    disabled={isSubmittingExercise || !newPhrase.trim()}
+                    className="w-full sm:w-auto px-6 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 disabled:opacity-40 text-zinc-950 font-bold text-xs transition-all cursor-pointer shadow-md"
+                  >
+                    {isSubmittingExercise ? 'Guardando...' : 'Guardar Ejercicio en Base de Datos'}
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            {/* Listado de ejercicios en vivo */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs text-zinc-400">
+                <span className="font-semibold text-zinc-300">Ejercicios Clínicos Activos ({exercises.length})</span>
+                <span className="text-[10px] text-zinc-500">Lectura pública / Edición Zero Trust RLS</span>
+              </div>
+
+              {exercises.length === 0 ? (
+                <div className="p-6 text-center rounded-2xl bg-zinc-900/40 border border-zinc-800 text-xs text-zinc-500">
+                  No se encontraron ejercicios en la base de datos remota.
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                  {exercises.map((ex) => (
+                    <div
+                      key={ex.id}
+                      className="p-3.5 rounded-xl bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 transition-colors flex items-center justify-between gap-3 text-xs"
+                    >
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <p className="text-zinc-100 font-medium text-xs sm:text-sm break-words">
+                          &ldquo;{ex.phrase}&rdquo;
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2 text-[10px] text-zinc-400 font-mono">
+                          <span className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 uppercase">
+                            {ex.category}
+                          </span>
+                          <span>•</span>
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold">
+                            {ex.bpm_recommended} BPM
+                          </span>
+                          <span>•</span>
+                          <span className="text-zinc-500 capitalize">{ex.difficulty}</span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => handleDeleteExercise(ex.id)}
+                        className="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-rose-950/40 text-zinc-400 hover:text-rose-400 border border-zinc-700 transition-colors cursor-pointer text-xs"
+                        title="Eliminar de la base de datos"
+                      >
+                        🗑️ Eliminar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* TAB 4: TRÁFICO Y MOTORES DE BÚSQUEDA */}
         {activeTab === 'metrics' && (
           <section className="space-y-6 animate-fade-in">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -518,7 +758,7 @@ export default function AdminDashboardPage() {
           </section>
         )}
 
-        {/* TAB 4: DIAGNÓSTICO CLÍNICO Y CALIDAD OPERATIVA */}
+        {/* TAB 5: DIAGNÓSTICO CLÍNICO Y CALIDAD OPERATIVA */}
         {activeTab === 'clinical' && (
           <section className="space-y-4 animate-fade-in">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -543,7 +783,7 @@ export default function AdminDashboardPage() {
                 <p className="text-xs text-zinc-300 leading-relaxed">
                   Procesamiento Zero Trust en Web Audio API. Las muestras vocales de latencia se calculan localmente y jamás se transmiten a servidores externos.
                 </p>
-                <div className="text-[11px] text-zinc-500 font-mono">Latencia estimada: &le; 15 ms</div>
+                <div className="text-[11px] text-zinc-500 font-mono">Latencia estimada: ≤ 15 ms</div>
               </div>
             </div>
           </section>

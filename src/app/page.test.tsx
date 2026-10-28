@@ -152,4 +152,17 @@ describe('Home Page - Unit Tests', () => {
 
     vi.useRealTimers();
   });
+
+  it('permite abrir el modal de Mis Frases de Desafío y renderiza el monitor de auto-escucha en práctica', () => {
+    render(<Home initialView="practice" />);
+
+    // Verificar que el componente de auto-escucha fonoaudiológica está presente
+    expect(screen.getByText(/Auto-Escucha Fonoaudiológica/i)).toBeInTheDocument();
+
+    // Abrir modal de frases desafío
+    const openCustomPhrasesBtn = screen.getByRole('button', { name: /\+ mis frases desafío/i });
+    fireEvent.click(openCustomPhrasesBtn);
+
+    expect(screen.getByText('Mis Frases de Desafío')).toBeInTheDocument();
+  });
 });

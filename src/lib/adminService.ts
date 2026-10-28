@@ -31,6 +31,15 @@ export interface AdminUserRow {
   last_activity_date: string | null;
 }
 
+export interface AdminExerciseItem {
+  id: string;
+  category: string;
+  difficulty: string;
+  phrase: string;
+  bpm_recommended: number;
+  created_at: string;
+}
+
 export interface AdminSummaryMetrics {
   totalUsers: number;
   totalTrainingMinutes: number;
@@ -234,4 +243,109 @@ export async function fetchAdminSummary(): Promise<AdminSummaryMetrics> {
       resolvedFeedbackReports: 0,
     };
   }
+}
+
+/**
+ * Consulta la lista de ejercicios clínicos almacenados en Supabase para el CMS administrativo.
+ */
+export async function fetchAdminExercises(): Promise<AdminExerciseItem[]> {
+  return withNetworkTimeout(async () => {
+    const { data, error } = await supabase
+      .from('exercises')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error || !data) {
+      return [];
+    }
+
+    return data.map((item) => ({
+      id: item.id,
+      category: item.category,
+      difficulty: item.difficulty,
+      phrase: item.phrase,
+      bpm_recommended: item.bpm_recommended,
+      created_at: item.created_at,
+    }));
+  }, []);
+}
+
+/**
+ * Registra un nuevo ejercicio clínico en la base de datos desde el CMS.
+ */
+export async function createAdminExercise(exercise: {
+  phrase: string;
+  category: string;
+  difficulty: string;
+  bpm_recommended: number;
+}): Promise<{ success: boolean; error?: string }> {
+  return withNetworkTimeout(async () => {
+    const { error } = await supabase.from('exercises').insert({
+      phrase: exercise.phrase.trim(),
+      category: exercise.category,
+      difficulty: exercise.difficulty,
+      bpm_recommended: exercise.bpm_recommended,
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  }, { success: true });
+}
+
+/**
+ * Elimina un ejercicio clínico de la base de datos mediante su ID.
+ */
+export async function deleteAdminExercise(
+  exerciseId: string
+): Promise<{ success: boolean; error?: string }> {
+  return withNetworkTimeout(async () => {
+    const { error } = await supabase
+      .from('exercises')
+      .delete()
+      .eq('id', exerciseId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  }, { success: true });
+}
+
+/**
+ * Convierte un arreglo de reportes de calidad clínica a formato CSV estándar.
+ */
+export function generateFeedbackCSV(reports: AdminFeedbackReport[]): string {
+  const headers = ['ID', 'Fecha', 'Categoria', 'Tecnica', 'Estado', 'Email_Contacto', 'Mensaje'];
+  const rows = reports.map((r) => [
+    `"${r.id}"`,
+    `"${new Date(r.created_at).toISOString()}"`,
+    `"${r.category}"`,
+    `"${r.technique_id || 'general'}"`,
+    `"${r.status}"`,
+    `"${r.contact_email || 'anonimo'}"`,
+    `"${r.message.replace(/"/g, '""')}"`,
+  ]);
+
+  return [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
+}
+
+/**
+ * Convierte el directorio de usuarios y métricas de adherencia a formato CSV.
+ */
+export function generateUsersCSV(users: AdminUserRow[]): string {
+  const headers = ['ID', 'Username', 'Nombre_Completo', 'Racha_Actual_Dias', 'Record_Racha', 'Minutos_Totales', 'XP_Puntos', 'Ultima_Actividad'];
+  const rows = users.map((u) => [
+    `"${u.id}"`,
+    `"${u.username || 'sin_alias'}"`,
+    `"${u.full_name || 'Paciente Cadensa'}"`,
+    u.current_streak,
+    u.longest_streak,
+    u.total_minutes,
+    u.xp_points,
+    `"${u.last_activity_date || 'sin_registro'}"`,
+  ]);
+
+  return [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
 }

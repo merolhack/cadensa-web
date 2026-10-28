@@ -10,6 +10,11 @@ vi.mock('@/lib/adminService', () => ({
   updateFeedbackReportStatus: vi.fn(),
   fetchAdminUsersList: vi.fn(),
   fetchAdminSummary: vi.fn(),
+  fetchAdminExercises: vi.fn(),
+  createAdminExercise: vi.fn(),
+  deleteAdminExercise: vi.fn(),
+  generateFeedbackCSV: vi.fn(() => 'ID,Fecha,Mensaje\n1,2026-10-28,test'),
+  generateUsersCSV: vi.fn(() => 'ID,Username,Minutos\n1,lenin,120'),
 }));
 
 vi.mock('@/components/AuthModal', () => ({
@@ -20,6 +25,8 @@ vi.mock('@/components/AuthModal', () => ({
 describe('AdminDashboardPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    global.URL.createObjectURL = vi.fn(() => 'blob:mock-csv');
+    global.URL.revokeObjectURL = vi.fn();
   });
 
   it('muestra pantalla de acceso restringido cuando el usuario no cuenta con rol de administrador', async () => {
@@ -82,6 +89,16 @@ describe('AdminDashboardPage', () => {
         last_activity_date: '2026-10-28',
       },
     ]);
+    vi.mocked(adminService.fetchAdminExercises).mockResolvedValueOnce([
+      {
+        id: 'ex-1',
+        phrase: 'Oración de prueba CMS',
+        category: 'fonetica_basica',
+        difficulty: 'facil',
+        bpm_recommended: 75,
+        created_at: '2026-10-28T12:00:00Z',
+      },
+    ]);
 
     render(<AdminDashboardPage />);
 
@@ -99,6 +116,13 @@ describe('AdminDashboardPage', () => {
     expect(screen.getByText('150 min')).toBeInTheDocument();
     expect(screen.getByText(/7 días/i)).toBeInTheDocument();
 
+    // Navegar a la pestaña CMS de Ejercicios
+    const cmsTab = screen.getByRole('button', { name: /editor de ejercicios cms/i });
+    fireEvent.click(cmsTab);
+
+    expect(screen.getByText(/Publicar Nuevo Ejercicio Clínico/i)).toBeInTheDocument();
+    expect(screen.getByText(/Oración de prueba CMS/i)).toBeInTheDocument();
+
     // Navegar a la pestaña de Tráfico
     const metricsTab = screen.getByRole('button', { name: /tráfico & motores de búsqueda/i });
     fireEvent.click(metricsTab);
@@ -107,7 +131,7 @@ describe('AdminDashboardPage', () => {
     expect(screen.getByText(/bing webmaster & indexnow/i)).toBeInTheDocument();
   });
 
-  it('permite actualizar el estado de un reporte de feedback', async () => {
+  it('permite actualizar el estado de un reporte de feedback y exportar CSV', async () => {
     vi.mocked(adminService.checkIsAdmin).mockResolvedValue(true);
     vi.mocked(adminService.fetchAdminSummary).mockResolvedValue({
       totalUsers: 1,
@@ -130,6 +154,7 @@ describe('AdminDashboardPage', () => {
       },
     ]);
     vi.mocked(adminService.fetchAdminUsersList).mockResolvedValue([]);
+    vi.mocked(adminService.fetchAdminExercises).mockResolvedValue([]);
     vi.mocked(adminService.updateFeedbackReportStatus).mockResolvedValueOnce({
       success: true,
     });
@@ -144,6 +169,47 @@ describe('AdminDashboardPage', () => {
         'rep-99',
         'resolved'
       );
+    });
+
+    const exportCsvBtn = screen.getByRole('button', { name: /exportar csv/i });
+    fireEvent.click(exportCsvBtn);
+    expect(adminService.generateFeedbackCSV).toHaveBeenCalled();
+  });
+
+  it('permite crear un nuevo ejercicio clínico desde el CMS', async () => {
+    vi.mocked(adminService.checkIsAdmin).mockResolvedValue(true);
+    vi.mocked(adminService.fetchAdminSummary).mockResolvedValue({
+      totalUsers: 1,
+      totalTrainingMinutes: 10,
+      totalFeedbackReports: 0,
+      pendingFeedbackReports: 0,
+      resolvedFeedbackReports: 0,
+    });
+    vi.mocked(adminService.fetchAdminFeedbackReports).mockResolvedValue([]);
+    vi.mocked(adminService.fetchAdminUsersList).mockResolvedValue([]);
+    vi.mocked(adminService.fetchAdminExercises).mockResolvedValue([]);
+    vi.mocked(adminService.createAdminExercise).mockResolvedValueOnce({
+      success: true,
+    });
+
+    render(<AdminDashboardPage />);
+
+    const cmsTab = await screen.findByRole('button', { name: /editor de ejercicios cms/i });
+    fireEvent.click(cmsTab);
+
+    const inputPhrase = screen.getByLabelText(/Frase u Oración:/i);
+    fireEvent.change(inputPhrase, { target: { value: 'Respiración diafragmática fluida' } });
+
+    const submitBtn = screen.getByRole('button', { name: /Guardar Ejercicio en Base de Datos/i });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(adminService.createAdminExercise).toHaveBeenCalledWith({
+        phrase: 'Respiración diafragmática fluida',
+        category: 'fonetica_basica',
+        difficulty: 'facil',
+        bpm_recommended: 80,
+      });
     });
   });
 });

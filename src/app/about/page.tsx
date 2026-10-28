@@ -192,6 +192,26 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Dashboard Privado de Administración y Gobierno Clínico (/admin):</strong> Consola protegida con Zero Trust RLS para visualización unificada de métricas de GA4, Search Console, Bing Webmaster, directorio de usuarios y moderación de reportes de calidad terapéutica.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Mis Frases de Desafío (Personalización STS):</strong> Silabador fonoaudiológico interactivo para palabras temidas, almacenamiento local en el navegador (Zero Trust) y plantillas predefinidas de situaciones cotidianas.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Auto-Escucha Fonoaudiológica (Self-Monitoring Local):</strong> Grabación de voz en memoria con MediaRecorder API para evaluación propioceptiva inmediata sin subir datos a la nube.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Editor de Ejercicios en Vivo (CMS Supabase):</strong> Gestión directa desde la administración (/admin) para crear y eliminar oraciones clínicas con BPM recomendado sin requerir despliegues de código.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Exportador CSV en Administración:</strong> Descarga con 1 clic de reportes de calidad terapéutica y del directorio de usuarios con historial de adherencia.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>PWA Instalable Offline-First:</strong> Integración de manifest PWA, Service Worker y botón de instalación en pantalla de inicio para acceso móvil inmediato.</span>
+                </li>
               </ul>
             </div>
 
@@ -209,23 +229,23 @@ export default function AboutPage() {
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 1: Diadococinesia Oral y Banco Fonético Extendido:</strong> Ejercicios motores rápidos (/pa-ta-ka/), trabalenguas graduados y frases de dificultad progresiva.</span>
+                  <span><strong>Hito 1: Procesador Avanzado con Audio Worklet:</strong> Análisis espectral y formantes en hilos de baja latencia independientes de la interfaz de usuario (≤ 5 ms).</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 2: Exportación de Reportes Fonoaudiológicos:</strong> Descarga de informes clínicos (PDF/JSON) con jitter vocal en milisegundos y curvas de evolución para terapeutas.</span>
+                  <span><strong>Hito 2: Exportación de Reportes Clínicos en PDF:</strong> Descarga de informes fonoaudiológicos formales con jitter vocal en milisegundos y curvas de evolución para terapeutas.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 3: Procesador Avanzado con Audio Worklet:</strong> Análisis espectral y de formantes en hilos de baja latencia independientes de la interfaz de usuario.</span>
+                  <span><strong>Hito 3: Reconocimiento Fonético On-Device (WebAssembly):</strong> Transcripción y validación fonética local en el navegador para comparar la emisión vs la frase objetivo.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 4: Desafíos de Situaciones Reales:</strong> Simulaciones de llamadas telefónicas, discursos y entrevistas con retroalimentación rítmica en contextos de presión.</span>
+                  <span><strong>Hito 4: Sincronización Multi-Dispositivo Encriptada:</strong> Respaldo opcional en la nube de frases de desafío mediante Supabase PostgreSQL Zero Trust.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 5: PWA Nativa Offline-First:</strong> Capacidad de instalación completa en iOS y Android con sincronización en segundo plano y modo sin conexión total.</span>
+                  <span><strong>Hito 5: Diagnóstico Automático de Diadococinesia:</strong> Análisis automatizado de tasa motora (/pa-ta-ka/) y regularidad temporal en habla rápida.</span>
                 </li>
               </ul>
             </div>

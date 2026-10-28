@@ -10,6 +10,7 @@ import {
   TechniqueFamilyId,
 } from '@/lib/clinicalTechniques';
 import { CommunityBanner } from './CommunityBanner';
+import { PwaInstallButton } from './PwaInstallButton';
 
 interface TechniquesCatalogHomeProps {
   onSelectTechnique: (technique: ClinicalTechnique) => void;
@@ -66,6 +67,9 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             <span className="text-zinc-600">|</span>
             <span className="text-emerald-400 font-bold">⏱️ {totalMinutes}m</span>
           </div>
+
+          {/* Botón PWA Instalable */}
+          <PwaInstallButton />
 
           {/* Enlace a Acerca de */}
           <Link

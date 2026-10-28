@@ -5,6 +5,11 @@ import {
   updateFeedbackReportStatus,
   fetchAdminUsersList,
   fetchAdminSummary,
+  fetchAdminExercises,
+  createAdminExercise,
+  deleteAdminExercise,
+  generateFeedbackCSV,
+  generateUsersCSV,
 } from './adminService';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -158,6 +163,104 @@ describe('adminService', () => {
       const summary = await fetchAdminSummary();
       expect(summary.totalUsers).toBe(2);
       expect(summary.totalTrainingMinutes).toBe(120);
+    });
+  });
+
+  describe('CMS de Ejercicios Clínicos', () => {
+    it('fetchAdminExercises obtiene y formatea la lista de ejercicios', async () => {
+      const mockExercises = [
+        {
+          id: 'ex-1',
+          phrase: 'El sol bri-lla',
+          category: 'daily',
+          difficulty: 'facil',
+          bpm_recommended: 60,
+          created_at: '2026-10-28T10:00:00Z',
+        },
+      ];
+
+      const mockOrder = vi.fn().mockResolvedValueOnce({ data: mockExercises, error: null });
+      const mockSelect = vi.fn().mockReturnValue({ order: mockOrder });
+      vi.mocked(supabase.from).mockReturnValueOnce({ select: mockSelect } as unknown as ReturnType<typeof supabase.from>);
+
+      const result = await fetchAdminExercises();
+      expect(result).toHaveLength(1);
+      expect(result[0].phrase).toBe('El sol bri-lla');
+      expect(result[0].bpm_recommended).toBe(60);
+    });
+
+    it('createAdminExercise inserta un nuevo ejercicio clínico', async () => {
+      const mockInsert = vi.fn().mockResolvedValueOnce({ error: null });
+      vi.mocked(supabase.from).mockReturnValueOnce({ insert: mockInsert } as unknown as ReturnType<typeof supabase.from>);
+
+      const res = await createAdminExercise({
+        phrase: ' Bue-nos dí-as ',
+        category: 'social',
+        difficulty: 'media',
+        bpm_recommended: 75,
+      });
+
+      expect(res.success).toBe(true);
+      expect(mockInsert).toHaveBeenCalledWith({
+        phrase: 'Bue-nos dí-as',
+        category: 'social',
+        difficulty: 'media',
+        bpm_recommended: 75,
+      });
+    });
+
+    it('deleteAdminExercise elimina un ejercicio por su ID', async () => {
+      const mockEq = vi.fn().mockResolvedValueOnce({ error: null });
+      const mockDelete = vi.fn().mockReturnValue({ eq: mockEq });
+      vi.mocked(supabase.from).mockReturnValueOnce({ delete: mockDelete } as unknown as ReturnType<typeof supabase.from>);
+
+      const res = await deleteAdminExercise('ex-to-delete');
+      expect(res.success).toBe(true);
+      expect(mockDelete).toHaveBeenCalled();
+      expect(mockEq).toHaveBeenCalledWith('id', 'ex-to-delete');
+    });
+  });
+
+  describe('Exportación CSV', () => {
+    it('generateFeedbackCSV genera una cadena CSV estructurada', () => {
+      const csv = generateFeedbackCSV([
+        {
+          id: 'fb-101',
+          user_id: 'usr-1',
+          category: 'video_issue',
+          technique_id: 'sts',
+          message: 'Audio distorsionado con "eco"',
+          contact_email: 'contacto@dqro.mx',
+          metadata: {},
+          status: 'pending',
+          created_at: '2026-10-28T14:30:00.000Z',
+        },
+      ]);
+
+      expect(csv).toContain('ID,Fecha,Categoria,Tecnica,Estado,Email_Contacto,Mensaje');
+      expect(csv).toContain('"fb-101"');
+      expect(csv).toContain('"video_issue"');
+      expect(csv).toContain('"Audio distorsionado con ""eco"""');
+    });
+
+    it('generateUsersCSV genera una cadena CSV con métricas de adherencia', () => {
+      const csv = generateUsersCSV([
+        {
+          id: 'usr-202',
+          username: 'merolhack',
+          full_name: 'Lenin Meza',
+          current_streak: 7,
+          longest_streak: 14,
+          total_minutes: 240,
+          xp_points: 920,
+          last_activity_date: '2026-10-28',
+        },
+      ]);
+
+      expect(csv).toContain('ID,Username,Nombre_Completo,Racha_Actual_Dias,Record_Racha,Minutos_Totales,XP_Puntos,Ultima_Actividad');
+      expect(csv).toContain('"usr-202"');
+      expect(csv).toContain('"merolhack"');
+      expect(csv).toContain('7,14,240,920');
     });
   });
 });

@@ -32,6 +32,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [layout_and_responsive_standards.md](architecture/layout_and_responsive_standards.md) | Jerarquía de anchos homogéneos (max-w-5xl marco exterior, max-w-4xl contenido central, max-w-2xl componentes). | `frontend`, `layout`, `responsive`, `design-system` |
 | [supabase_audit_and_schema_state.md](architecture/supabase_audit_and_schema_state.md) | Diagnóstico de tablas en Supabase, estado 404 del schema cache, aislamiento de pruebas y guía de migración SQL. | `supabase`, `database`, `audit`, `migrations` |
 | [admin_dashboard.md](architecture/admin_dashboard.md) | Arquitectura del Dashboard Privado (/admin), modelo de roles RBAC en PostgreSQL, Zero Trust RLS y telemetría unificada. | `admin`, `security`, `rbac`, `zero-trust`, `rls` |
+| [exercises_cms_and_export.md](architecture/exercises_cms_and_export.md) | CMS ligero en Supabase sobre public.exercises, exportación CSV cliente y soporte PWA offline. | `architecture`, `cms`, `csv`, `pwa`, `rls` |
 | [about_and_roadmap_sync.md](architecture/about_and_roadmap_sync.md) | Arquitectura de la página Acerca de (/about), perfil del autor Lenin Meza y regla mandatoria de sincronización de TODO/ROADMAP. | `about`, `roadmap`, `governance`, `author` |
 | [multimedia_and_video_facade.md](architecture/multimedia_and_video_facade.md) | Reproducción de video nativo con patrón Façade, cero CLS, lazy transfer y streaming HTTP 206. | `architecture`, `multimedia`, `video`, `player`, `performance` |
 
@@ -50,6 +51,8 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [pull_out_technique.md](concepts/pull_out_technique.md) | Desactivación Activa en Bloqueo (Pull-Out de Van Riper): 3 etapas para congelar la fuerza, aflojar y deslizar. | `clinical`, `pull-out`, `van-riper`, `stuttering-modification` |
 | [cancellation_technique.md](concepts/cancellation_technique.md) | Cancelación Post-Bloqueo de Van Riper: pausa reflexiva de 3s para cortar el reflejo de escape y reintentar con inicio suave. | `clinical`, `cancellation`, `van-riper`, `post-block` |
 | [feedback_and_quality_reports.md](concepts/feedback_and_quality_reports.md) | Canal de retroalimentación comunitaria y reporte de errores en videos y técnicas con patrón Zero-Leak RLS. | `feedback`, `quality`, `clinical-telemetry`, `zero-trust`, `rls` |
+| [custom_phrases_training.md](concepts/custom_phrases_training.md) | Entrenamiento personalizado de frases de desafío, palabras temidas y silabación STS local. | `clinical`, `custom-phrases`, `sts`, `local-storage` |
+| [audio_self_monitoring.md](concepts/audio_self_monitoring.md) | Auto-escucha propioceptiva diferida con MediaRecorder API y aislamiento de audio Zero Trust. | `clinical`, `audio`, `self-monitoring`, `zero-trust` |
 | [zero_trust_rls.md](concepts/zero_trust_rls.md) | Seguridad delegada a PostgreSQL: por qué el cliente es untrusted y cómo opera Row Level Security. | `security`, `postgres`, `rls`, `zero-trust` |
 | [static_spa_paradigm.md](concepts/static_spa_paradigm.md) | Justificación técnica de `output: 'export'`, eliminación de servidores Node.js y restricciones. | `jamstack`, `spa`, `performance`, `edge` |
 

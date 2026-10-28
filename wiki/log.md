@@ -768,3 +768,50 @@
   - `wiki/architecture/admin_dashboard.md`, `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+---
+
+## [2026-10-28] — Implementación de las 5 Capacidades Estratégicas: Frases Desafío, Auto-Escucha Local, CMS de Ejercicios, Exportación CSV y PWA
+- **Tipo de Operación**: `FEATURE` / `SECURITY` / `DATABASE` / `TESTS`
+- **Descripción**:
+  1. **Frases Personalizadas de Desafío ("Mis Frases de Desafío")**:
+     - Componente interactivo `src/components/CustomPhraseTrainer.tsx` con silabador ortográfico en tiempo real (`flattenSentenceSyllables`).
+     - Almacenamiento y persistencia en `localStorage` (`cadensa_custom_phrases`) con privacidad Zero Trust.
+     - 5 plantillas fonoaudiológicas para situaciones cotidianas de alta demanda comunicativa (pedir café, llamadas telefónicas, entrevistas laborales, compras y direcciones).
+     - Pruebas unitarias completas en `src/components/CustomPhraseTrainer.test.tsx`.
+  2. **Auto-Escucha Fonoaudiológica Local (Self-Monitoring Zero Trust)**:
+     - Componente `src/components/AudioSelfMonitor.tsx` basado en `MediaRecorder API` y `navigator.mediaDevices.getUserMedia`.
+     - Grabación de voz en memoria local (`Blob`) con temporizador y reproductor auditivo diferido para autoevaluación propioceptiva y de cadencia.
+     - Aislamiento estricto: ningún byte de voz se envía a la red ni a servidores externos.
+     - Pruebas unitarias completas en `src/components/AudioSelfMonitor.test.tsx`.
+  3. **Gestor de Ejercicios Clínicos en Vivo (CMS Supabase)**:
+     - Migración `supabase/migrations/20261028210000_exercise_cms_policies.sql` habilitando políticas RLS para administradores sobre `public.exercises`.
+     - Nueva pestaña "Editor de Ejercicios CMS" en `src/app/admin/page.tsx` para consultar, añadir oraciones y eliminar ejercicios en tiempo real sin desplegar código.
+     - Funciones `fetchAdminExercises`, `createAdminExercise` y `deleteAdminExercise` en `src/lib/adminService.ts`.
+     - Pruebas unitarias en `src/lib/adminService.test.ts` y `src/app/admin/page.test.tsx`.
+  4. **Exportador CSV de Calidad y Adherencia**:
+     - Botones de exportación con 1 clic en la consola administrativa para `cadensa_feedback_YYYY-MM-DD.csv` y `cadensa_usuarios_YYYY-MM-DD.csv`.
+     - Funciones cliente `generateFeedbackCSV()` y `generateUsersCSV()` serializando campos clave de moderación y telemetría de práctica.
+  5. **PWA Instalable Offline-First**:
+     - Componente `src/components/PwaInstallButton.tsx` con escucha del evento `beforeinstallprompt` y detección de modo `standalone`.
+     - Soporte en `public/manifest.json` y `public/sw.js` para entrenamiento con metrónomo y silabador sin conexión.
+     - Pruebas unitarias en `src/components/PwaInstallButton.test.tsx`.
+  6. **Gobernanza, BDD y Sincronización Mandatoria de `/about`**:
+     - Actualización de hitos completados y nuevos pasos en `src/app/about/page.tsx`.
+     - Escenarios BDD en español `features/custom_phrases_and_cms.feature` y `features/step_definitions/custom_phrases_and_cms_steps.ts`.
+     - Ingesta en LLM Wiki: `wiki/concepts/custom_phrases_training.md`, `wiki/concepts/audio_self_monitoring.md`, `wiki/architecture/exercises_cms_and_export.md`, y actualización de `wiki/index.md`.
+     - 174 pruebas unitarias Vitest y 78 escenarios Cucumber BDD pasando al 100%.
+- **Archivos creados/modificados**:
+  - `supabase/migrations/20261028210000_exercise_cms_policies.sql`
+  - `src/components/CustomPhraseTrainer.tsx`, `src/components/CustomPhraseTrainer.test.tsx`
+  - `src/components/AudioSelfMonitor.tsx`, `src/components/AudioSelfMonitor.test.tsx`
+  - `src/components/PwaInstallButton.tsx`, `src/components/PwaInstallButton.test.tsx`
+  - `src/lib/adminService.ts`, `src/lib/adminService.test.ts`
+  - `src/app/admin/page.tsx`, `src/app/admin/page.test.tsx`
+  - `src/app/page.tsx`, `src/app/page.test.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`
+  - `src/app/about/page.tsx`, `src/app/about/page.test.tsx`
+  - `features/custom_phrases_and_cms.feature`, `features/step_definitions/custom_phrases_and_cms_steps.ts`
+  - `wiki/concepts/custom_phrases_training.md`, `wiki/concepts/audio_self_monitoring.md`
+  - `wiki/architecture/exercises_cms_and_export.md`, `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+

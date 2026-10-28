@@ -26,6 +26,9 @@ import { FeedbackCategory } from '@/lib/feedbackService';
 import { trackClinicalEvent } from '@/lib/analytics';
 import { TechniqueId, CLINICAL_TECHNIQUES, ClinicalTechnique } from '@/lib/clinicalTechniques';
 import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExercisesByCategory } from '@/lib/clinicalExercises';
+import { CustomPhraseTrainer } from '@/components/CustomPhraseTrainer';
+import { AudioSelfMonitor } from '@/components/AudioSelfMonitor';
+import { PwaInstallButton } from '@/components/PwaInstallButton';
 
 const TRAINING_PHRASES = [
   'Ca mi no des pa cio ca da ma ña na',
@@ -69,8 +72,31 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [fontScale, setFontScale] = useState<SyllableFontScale>('normal');
   const [isBreathingOpen, setIsBreathingOpen] = useState(false);
   const [isCustomPhraseOpen, setIsCustomPhraseOpen] = useState(false);
-  const [customPhraseInput, setCustomPhraseInput] = useState('');
-  const [customExercises, setCustomExercises] = useState<ClinicalExercise[]>([]);
+  const [customExercises, setCustomExercises] = useState<ClinicalExercise[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('cadensa_custom_phrases');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed.map((item: { id?: string; phrase: string; bpm?: number; createdAt?: string }) => ({
+              id: item.id || `custom-${Date.now()}`,
+              category: 'fonetica_basica' as ClinicalCategory,
+              difficulty: 'personalizado',
+              phrase: item.phrase,
+              bpm_recommended: item.bpm || 80,
+              created_at: item.createdAt || new Date().toISOString(),
+              clinicalObjective: 'Frase personalizada de desafío del paciente',
+              targetPhonemes: [],
+            }));
+          }
+        }
+      } catch {
+        // Ignorar error de lectura local
+      }
+    }
+    return [];
+  });
   const [selectedTechniqueId, setSelectedTechniqueId] = useState<TechniqueId>('sts');
 
   const activeTechnique = CLINICAL_TECHNIQUES[selectedTechniqueId] || CLINICAL_TECHNIQUES.sts;
@@ -297,28 +323,25 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
     setActiveSyllableIndex(0);
   };
 
-  const handleAddCustomPhrase = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = customPhraseInput.trim();
-    if (!trimmed) return;
-
-    const newCustomEx: ClinicalExercise = {
+  const handleSelectCustomPhrase = (phrase: string, newBpm?: number) => {
+    const customEx: ClinicalExercise = {
       id: `custom-${Date.now()}`,
-      category: 'fonetica_basica',
+      category: 'fonetica_basica' as ClinicalCategory,
       difficulty: 'personalizado',
-      phrase: trimmed,
-      bpm_recommended: bpm,
+      phrase,
+      bpm_recommended: newBpm || bpm,
       created_at: new Date().toISOString(),
       clinicalObjective: 'Entrenamiento personalizado de palabras y frases desafiantes',
       targetPhonemes: ['personalizado'],
     };
 
-    setCustomExercises((prev) => [newCustomEx, ...prev]);
+    setCustomExercises((prev) => [customEx, ...prev.filter((p) => p.phrase !== phrase)]);
     setPhraseIndex(0);
     setActiveSyllableIndex(0);
-    setCustomPhraseInput('');
-    setIsCustomPhraseOpen(false);
-    setSaveSuccessMsg('¡Frase personalizada añadida a tu entrenamiento!');
+    if (newBpm) {
+      handleBpmChange(newBpm);
+    }
+    setSaveSuccessMsg(`¡Frase "${phrase.slice(0, 25)}..." cargada para práctica!`);
     setTimeout(() => setSaveSuccessMsg(null), 3000);
   };
 
@@ -490,6 +513,17 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             setCurrentView('practice');
           }}
         />
+
+        {/* Modal de Frases Personalizadas del Paciente */}
+        <CustomPhraseTrainer
+          isOpen={isCustomPhraseOpen}
+          onClose={() => setIsCustomPhraseOpen(false)}
+          onSelectPhrase={(phrase, newBpm) => {
+            handleSelectCustomPhrase(phrase, newBpm);
+            setCurrentView('practice');
+          }}
+          currentBpm={bpm}
+        />
       </>
     );
   }
@@ -528,6 +562,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             <span>🎥</span>
             <span className="hidden sm:inline">Video</span>
           </button>
+
+          {/* Botón PWA Instalable */}
+          <PwaInstallButton />
 
           {/* Enlace a Acerca de */}
           <Link
@@ -669,10 +706,10 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             </span>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setIsCustomPhraseOpen(!isCustomPhraseOpen)}
+                onClick={() => setIsCustomPhraseOpen(true)}
                 className="text-cyan-400 hover:text-cyan-300 underline cursor-pointer"
               >
-                + Mi Frase
+                + Mis Frases Desafío
               </button>
               <button
                 onClick={nextPhrase}
@@ -692,32 +729,15 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             </span>
           </div>
 
-          {/* Formulario de Frase Propia */}
-          {isCustomPhraseOpen && (
-            <form onSubmit={handleAddCustomPhrase} className="flex gap-2 p-2 rounded-xl bg-zinc-950 border border-zinc-800">
-              <input
-                type="text"
-                required
-                value={customPhraseInput}
-                onChange={(e) => setCustomPhraseInput(e.target.value)}
-                placeholder="Escribe tu propia frase o palabra difícil..."
-                className="flex-1 px-3 py-1 text-xs rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none focus:border-emerald-400"
-              />
-              <button
-                type="submit"
-                className="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold rounded-lg text-xs cursor-pointer"
-              >
-                Silabear
-              </button>
-            </form>
-          )}
-
           <SyllableReader
             sentence={currentPhrase}
             activeSyllableIndex={activeSyllableIndex}
             isPlaying={isPlaying}
             fontScale={fontScale}
           />
+
+          {/* Módulo de Auto-Escucha Fonoaudiológica Zero Trust */}
+          <AudioSelfMonitor isPlaying={isPlaying} />
         </div>
 
         {/* BOTONES DE ACCIÓN PRINCIPAL DIFERENCIADOS POR TÉCNICA */}
@@ -1030,6 +1050,14 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         onClose={() => setIsFeedbackOpen(false)}
         defaultCategory={feedbackCategory}
         defaultTechniqueId={feedbackTechniqueId}
+      />
+
+      {/* Modal de Frases Personalizadas del Paciente */}
+      <CustomPhraseTrainer
+        isOpen={isCustomPhraseOpen}
+        onClose={() => setIsCustomPhraseOpen(false)}
+        onSelectPhrase={handleSelectCustomPhrase}
+        currentBpm={bpm}
       />
     </main>
   );

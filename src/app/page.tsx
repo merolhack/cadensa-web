@@ -29,6 +29,7 @@ import { EXPANDED_CLINICAL_CATALOG, ClinicalCategory, ClinicalExercise, getExerc
 import { CustomPhraseTrainer } from '@/components/CustomPhraseTrainer';
 import { AudioSelfMonitor } from '@/components/AudioSelfMonitor';
 import { PwaInstallButton } from '@/components/PwaInstallButton';
+import { DiadochokinesisTrainer } from '@/components/DiadochokinesisTrainer';
 
 const TRAINING_PHRASES = [
   'Ca mi no des pa cio ca da ma ña na',
@@ -52,6 +53,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const [isQuickRoutineOpen, setIsQuickRoutineOpen] = useState(false);
+  const [isDDKOpen, setIsDDKOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [feedbackCategory, setFeedbackCategory] = useState<FeedbackCategory>('other');
   const [feedbackTechniqueId, setFeedbackTechniqueId] = useState<string | null>(null);
@@ -448,6 +450,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onOpenVideoModal={handleOpenVideoModal}
           onOpenSimulator={() => setIsSimulatorOpen(true)}
           onOpenQuickRoutine={() => setIsQuickRoutineOpen(true)}
+          onOpenDDK={() => setIsDDKOpen(true)}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -524,6 +527,26 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           }}
           currentBpm={bpm}
         />
+
+        {/* Modal de Diadococinesia Oral (/pa-ta-ka/) */}
+        {isDDKOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-zinc-950/80 backdrop-blur-md animate-fade-in"
+          >
+            <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto">
+              <button
+                onClick={() => setIsDDKOpen(false)}
+                className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center text-sm cursor-pointer"
+                aria-label="Cerrar Diadococinesia"
+              >
+                ✕
+              </button>
+              <DiadochokinesisTrainer />
+            </div>
+          </div>
+        )}
       </>
     );
   }
@@ -1059,6 +1082,26 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         onSelectPhrase={handleSelectCustomPhrase}
         currentBpm={bpm}
       />
+
+      {/* Modal de Diadococinesia Oral (/pa-ta-ka/) */}
+      {isDDKOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-zinc-950/80 backdrop-blur-md animate-fade-in"
+        >
+          <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto">
+            <button
+              onClick={() => setIsDDKOpen(false)}
+              className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center text-sm cursor-pointer"
+              aria-label="Cerrar Diadococinesia"
+            >
+              ✕
+            </button>
+            <DiadochokinesisTrainer />
+          </div>
+        </div>
+      )}
     </main>
   );
 }

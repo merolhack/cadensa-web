@@ -17,6 +17,7 @@ interface TechniquesCatalogHomeProps {
   onOpenVideoModal: (technique: ClinicalTechnique) => void;
   onOpenSimulator?: () => void;
   onOpenQuickRoutine?: () => void;
+  onOpenDDK?: () => void;
   streakDays: number;
   totalMinutes: number;
   xpPoints: number;
@@ -30,6 +31,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onOpenVideoModal,
   onOpenSimulator,
   onOpenQuickRoutine,
+  onOpenDDK,
   streakDays,
   totalMinutes,
   xpPoints,
@@ -162,6 +164,16 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             >
               <span>🎭</span>
               <span>Simulador Real</span>
+            </button>
+          )}
+
+          {onOpenDDK && (
+            <button
+              onClick={onOpenDDK}
+              className="px-5 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 font-semibold text-sm transition-all cursor-pointer flex items-center gap-2"
+            >
+              <span>⚡</span>
+              <span>Prueba DDK</span>
             </button>
           )}
         </div>

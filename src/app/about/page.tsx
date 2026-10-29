@@ -212,6 +212,22 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>PWA Instalable Offline-First:</strong> Integración de manifest PWA, Service Worker y botón de instalación en pantalla de inicio para acceso móvil inmediato.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Exportación de Reportes Clínicos en PDF / Fonoaudiológicos:</strong> Descarga con un clic de informes foniátricos formales con jitter vocal en milisegundos, adherencia y tabla de sesiones recientes para terapeutas del lenguaje.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Procesador de Audio Worklet de Ultra-Baja Latencia:</strong> Análisis fonatorio y detección de energía VAD en hilos independientes de la interfaz de usuario (≤ 5 ms) con fallback a AnalyserNode.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Evaluación y Entrenamiento de Diadococinesia Oral (/pa-ta-ka/):</strong> Medición de tasa motora articulatoria (sílabas/segundo) y regularidad temporal inter-silábica en secuencias fonoaudiológicas estándar.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Sincronización Multi-Dispositivo de Frases en la Nube:</strong> Respaldo y unificación bidireccional en Supabase PostgreSQL Zero Trust RLS para usuarios autenticados con persistencia local sin conexión.</span>
+                </li>
               </ul>
             </div>
 
@@ -229,23 +245,19 @@ export default function AboutPage() {
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 1: Procesador Avanzado con Audio Worklet:</strong> Análisis espectral y formantes en hilos de baja latencia independientes de la interfaz de usuario (≤ 5 ms).</span>
+                  <span><strong>Hito 1: Reconocimiento Fonético On-Device (WebAssembly):</strong> Transcripción y validación fonética local en el navegador para comparar la emisión acústica vs la frase objetivo sin enviar audio a la red.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 2: Exportación de Reportes Clínicos en PDF:</strong> Descarga de informes fonoaudiológicos formales con jitter vocal en milisegundos y curvas de evolución para terapeutas.</span>
+                  <span><strong>Hito 2: Biofeedback Visual de Formantes F1/F2 en Tiempo Real:</strong> Espectrograma dinámico para visualizar la apertura mandibular y resonancia del tracto vocal durante la fonación.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 3: Reconocimiento Fonético On-Device (WebAssembly):</strong> Transcripción y validación fonética local en el navegador para comparar la emisión vs la frase objetivo.</span>
+                  <span><strong>Hito 3: Modo Telesalud Fonoaudiológica P2P (WebRTC):</strong> Sala cifrada de extremo a extremo para sesiones guiadas remotas con metrónomo sincronizado entre terapeuta y paciente.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 4: Sincronización Multi-Dispositivo Encriptada:</strong> Respaldo opcional en la nube de frases de desafío mediante Supabase PostgreSQL Zero Trust.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 5: Diagnóstico Automático de Diadococinesia:</strong> Análisis automatizado de tasa motora (/pa-ta-ka/) y regularidad temporal en habla rápida.</span>
+                  <span><strong>Hito 4: Módulo de Fluidez Pediátrica Gamificada:</strong> Entrenador con avatares acústicos interactivos y dinámicas de refuerzo positivo para niños con disfemia temprana.</span>
                 </li>
               </ul>
             </div>

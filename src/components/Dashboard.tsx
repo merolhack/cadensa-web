@@ -3,6 +3,7 @@
 import React from 'react';
 import { evaluateUserBadges, getUserLevelTitle } from '@/lib/streaks';
 import { trackClinicalEvent } from '@/lib/analytics';
+import { ClinicalReportExporter } from './ClinicalReportExporter';
 
 interface DashboardProps {
   isOpen: boolean;
@@ -113,19 +114,30 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* Exportación para Fonoaudiólogos / Terapeutas */}
         <div className="pt-2 border-t border-zinc-800 flex flex-col sm:flex-row gap-3 items-center justify-between">
           <span className="text-xs text-zinc-400">
-            Exporta tu progreso para compartirlo con tu terapeuta del lenguaje.
+            Exporta tu progreso formal en PDF para compartirlo con tu terapeuta del lenguaje.
           </span>
-          <button
-            onClick={() => {
-              const summaryText = `=== INFORME CLÍNICO CADENSA ===\nFecha: ${new Date().toLocaleDateString('es-ES')}\nRacha: ${streakDays} días\nMinutos: ${totalMinutes} min\nPrecisión Rítmica: ${accuracy}%\nXP: ${xpPoints}\nNivel: ${level}\n================================`;
-              navigator.clipboard?.writeText(summaryText);
-              trackClinicalEvent('clinical_report_export', { xp_earned: xpPoints });
-              alert('¡Resumen clínico copiado al portapapeles!');
-            }}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition cursor-pointer flex items-center justify-center gap-1.5"
-          >
-            📋 Copiar Informe para Terapeuta
-          </button>
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <ClinicalReportExporter
+              streak={{
+                current_streak: streakDays,
+                longest_streak: streakDays,
+                last_activity_date: new Date().toISOString().split('T')[0],
+                total_minutes: totalMinutes,
+                xp_points: xpPoints,
+              }}
+            />
+            <button
+              onClick={() => {
+                const summaryText = `=== INFORME CLÍNICO CADENSA ===\nFecha: ${new Date().toLocaleDateString('es-ES')}\nRacha: ${streakDays} días\nMinutos: ${totalMinutes} min\nPrecisión Rítmica: ${accuracy}%\nXP: ${xpPoints}\nNivel: ${level}\n================================`;
+                navigator.clipboard?.writeText(summaryText);
+                trackClinicalEvent('clinical_report_export', { xp_earned: xpPoints });
+                alert('¡Resumen clínico copiado al portapapeles!');
+              }}
+              className="w-full sm:w-auto px-3.5 py-2 rounded-xl text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              📋 Copiar
+            </button>
+          </div>
         </div>
       </div>
     </div>

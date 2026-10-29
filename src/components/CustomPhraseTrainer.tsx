@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { flattenSentenceSyllables } from '@/lib/syllables';
-
-export interface CustomPhraseItem {
-  id: string;
-  phrase: string;
-  bpm: number;
-  createdAt: string;
-  syllables: string[];
-}
+import { supabase } from '@/lib/supabaseClient';
+import {
+  CustomPhraseItem,
+  loadLocalCustomPhrases,
+  saveLocalCustomPhrases,
+  syncCustomPhrasesWithCloud,
+} from '@/lib/customPhraseService';
 
 export const PRESET_CHALLENGE_TEMPLATES = [
   {
@@ -44,18 +43,6 @@ export const PRESET_CHALLENGE_TEMPLATES = [
   },
 ];
 
-const STORAGE_KEY = 'cadensa_custom_phrases';
-
-function loadStoredPhrases(): CustomPhraseItem[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-}
-
 interface CustomPhraseTrainerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -69,16 +56,35 @@ export function CustomPhraseTrainer({
   onSelectPhrase,
   currentBpm = 80,
 }: CustomPhraseTrainerProps) {
-  const [phrases, setPhrases] = useState<CustomPhraseItem[]>(loadStoredPhrases);
+  const [phrases, setPhrases] = useState<CustomPhraseItem[]>(loadLocalCustomPhrases);
   const [inputText, setInputText] = useState('');
   const [inputBpm, setInputBpm] = useState(currentBpm);
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  // Detectar usuario autenticado para habilitar respaldo en la nube
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        setUserId(data.session.user.id);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserId(session?.user?.id ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Recargar frases al abrir el modal de forma diferida
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
-        setPhrases(loadStoredPhrases());
+        setPhrases(loadLocalCustomPhrases());
       }, 0);
       return () => clearTimeout(timer);
     }
@@ -94,32 +100,34 @@ export function CustomPhraseTrainer({
     const clean = inputText.trim();
     if (!clean) return;
 
-    const syllables = flattenSentenceSyllables(clean);
     const newItem: CustomPhraseItem = {
       id: `custom-${Date.now()}`,
       phrase: clean,
       bpm: inputBpm,
-      createdAt: new Date().toISOString(),
-      syllables,
+      category: 'personalizado',
+      created_at: new Date().toISOString(),
     };
 
     const updated = [newItem, ...phrases];
     setPhrases(updated);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    }
+    saveLocalCustomPhrases(updated);
 
     setInputText('');
     setFeedbackMsg('¡Frase guardada en tu repertorio personal!');
     setTimeout(() => setFeedbackMsg(null), 2500);
+
+    // Auto-sincronizar con Supabase si está logueado
+    if (userId) {
+      syncCustomPhrasesWithCloud(updated, userId).then(({ syncedPhrases }) => {
+        setPhrases(syncedPhrases);
+      });
+    }
   };
 
   const handleDeletePhrase = (id: string) => {
     const updated = phrases.filter((p) => p.id !== id);
     setPhrases(updated);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    }
+    saveLocalCustomPhrases(updated);
   };
 
   const handleApplyTemplate = (templatePhrase: string, bpm: number) => {
@@ -130,6 +138,29 @@ export function CustomPhraseTrainer({
   const handleTrainNow = (phrase: string, bpm: number) => {
     onSelectPhrase(phrase, bpm);
     onClose();
+  };
+
+  const handleManualSync = async () => {
+    if (!userId) {
+      setFeedbackMsg('Inicia sesión para sincronizar tus frases en la nube.');
+      setTimeout(() => setFeedbackMsg(null), 3000);
+      return;
+    }
+
+    setIsSyncing(true);
+    const { syncedPhrases, syncedWithCloud } = await syncCustomPhrasesWithCloud(
+      phrases,
+      userId
+    );
+    setIsSyncing(false);
+
+    if (syncedWithCloud) {
+      setPhrases(syncedPhrases);
+      setFeedbackMsg('☁️ ¡Frases sincronizadas con tu cuenta en la nube!');
+    } else {
+      setFeedbackMsg('No se pudo conectar con la nube. Se mantiene copia local.');
+    }
+    setTimeout(() => setFeedbackMsg(null), 3000);
   };
 
   return (
@@ -163,52 +194,62 @@ export function CustomPhraseTrainer({
         </div>
 
         {feedbackMsg && (
-          <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold text-center animate-fade-in">
-            {feedbackMsg}
+          <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+            <span>✨</span>
+            <span>{feedbackMsg}</span>
           </div>
         )}
 
-        {/* Plantillas cotidianas rápidas */}
+        {/* Plantillas Situacionales */}
         <div className="space-y-2">
-          <span className="text-xs font-medium text-zinc-400">Plantillas de Situaciones Cotidianas:</span>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span className="font-semibold text-zinc-300">Plantillas para Situaciones Reales</span>
+            <span className="text-[10px] text-zinc-500">Pulsa una para autocompletar</span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {PRESET_CHALLENGE_TEMPLATES.map((tmpl) => (
               <button
                 key={tmpl.title}
                 type="button"
                 onClick={() => handleApplyTemplate(tmpl.phrase, tmpl.suggestedBpm)}
-                className="px-2.5 py-1 text-xs rounded-xl bg-zinc-950/70 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 transition-colors cursor-pointer flex items-center gap-1"
+                className="p-2.5 rounded-xl bg-zinc-950/60 hover:bg-zinc-800/80 border border-zinc-800/80 hover:border-emerald-500/40 text-left transition-all cursor-pointer group"
               >
-                <span>💬 {tmpl.title}</span>
-                <span className="text-[10px] text-zinc-500">({tmpl.suggestedBpm} BPM)</span>
+                <div className="flex items-center justify-between text-[10px] text-zinc-500 mb-0.5">
+                  <span className="font-mono uppercase">{tmpl.category}</span>
+                  <span className="text-emerald-400 font-mono">{tmpl.suggestedBpm} BPM</span>
+                </div>
+                <div className="text-xs font-semibold text-zinc-200 group-hover:text-emerald-300 transition-colors">
+                  {tmpl.title}
+                </div>
+                <div className="text-[10px] text-zinc-400 truncate mt-0.5">&quot;{tmpl.phrase}&quot;</div>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Formulario de entrada y silabación en tiempo real */}
-        <form onSubmit={handleSavePhrase} className="space-y-3 bg-zinc-950/50 p-3.5 sm:p-4 rounded-2xl border border-zinc-800/80">
-          <div className="space-y-1.5">
-            <label htmlFor="custom-phrase-input" className="text-xs font-semibold text-zinc-300">
-              Escribe tu propia frase o palabra desafiante:
+        {/* Formulario de Nueva Frase */}
+        <form onSubmit={handleSavePhrase} className="space-y-3 bg-zinc-950/40 p-4 rounded-2xl border border-zinc-800/60">
+          <div>
+            <label htmlFor="custom-phrase-input" className="block text-xs font-semibold text-zinc-300 mb-1">
+              Escribe tu propia frase personalizada
             </label>
             <textarea
               id="custom-phrase-input"
               rows={2}
-              required
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ej. 'Quiero pedir un café con leche y azúcar por favor'"
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none focus:border-emerald-400 resize-none"
+              placeholder="Ej: Tengo una cita médica el jueves por la mañana..."
+              className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-100 placeholder:text-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500"
             />
           </div>
 
-          {/* Previsualización en vivo del silabeo */}
+          {/* Silabación interactiva previa */}
           {liveSyllables.length > 0 && (
-            <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-emerald-500/30 space-y-1">
-              <div className="flex items-center justify-between text-[11px] text-emerald-400 font-semibold">
-                <span>⚡ Silabación Fonoaudiológica ({liveSyllables.length} sílabas):</span>
-                <span>Ritmo STS</span>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                <span>Silabación Fonoaudiológica en tiempo real:</span>
+                <span className="font-mono text-emerald-400">{liveSyllables.length} sílabas métricas</span>
               </div>
               <div className="flex flex-wrap gap-1 items-center">
                 {liveSyllables.map((syl, idx) => (
@@ -261,7 +302,20 @@ export function CustomPhraseTrainer({
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span className="font-semibold text-zinc-300">Repertorio Guardado ({phrases.length})</span>
-            <span className="text-[10px] text-zinc-500">Almacenado localmente en tu dispositivo</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-zinc-500">
+                {userId ? '☁️ Sincronización en la nube lista' : '💾 Guardado local'}
+              </span>
+              <button
+                type="button"
+                onClick={handleManualSync}
+                disabled={isSyncing}
+                className="px-2 py-0.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-[10px] text-cyan-300 border border-zinc-700 transition cursor-pointer"
+                title="Sincronizar frases con tu cuenta"
+              >
+                {isSyncing ? 'Sincronizando...' : '☁️ Sincronizar'}
+              </button>
+            </div>
           </div>
 
           {phrases.length === 0 ? (
@@ -284,7 +338,7 @@ export function CustomPhraseTrainer({
                         {item.bpm} BPM
                       </span>
                       <span>•</span>
-                      <span>{item.syllables?.length || flattenSentenceSyllables(item.phrase).length} sílabas</span>
+                      <span>{flattenSentenceSyllables(item.phrase).length} sílabas</span>
                     </div>
                   </div>
 

@@ -815,3 +815,52 @@
   - `wiki/architecture/exercises_cms_and_export.md`, `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+
+## [2026-10-28 22:30] — Implementación Integral de los Frentes A hasta E (Reportes PDF, AudioWorklet, Diadococinesia DDK y Sync Cloud)
+- **Operación**: INGEST & FEATURE (Frentes Clínicos A a E)
+- **Motivación**: Ejecutar la hoja de ruta clínica y técnica acordada para llevar a Cadensa a una suite fonoaudiológica completa: reporte PDF formal con jitter vocal, procesador AudioWorklet en hilo desacoplado (<5ms), entrenador y evaluación de diadococinesia (/pa-ta-ka/), sincronización multi-dispositivo con Supabase Zero Trust RLS y cobertura rigurosa BDD/Vitest.
+- **Detalle de Cambios**:
+  1. **Frente A: Reporte Clínico en PDF e Informes Fonoaudiológicos**:
+     - Extensión de `src/lib/clinicalReport.ts` con estimación de jitter vocal inter-silábico (`vocalJitterMs`), generador de documento imprimible HTML/PDF (`generatePrintableClinicalHtml`) y descargador multiformato (`downloadClinicalReport` para PDF, TXT, JSON).
+     - Componente UI interactivo `src/components/ClinicalReportExporter.tsx` integrado en `src/components/Dashboard.tsx`.
+     - Pruebas unitarias completas en `src/lib/clinicalReport.test.ts` y `src/components/ClinicalReportExporter.test.tsx`.
+  2. **Frente B: Audio Worklet de Ultra-Baja Latencia (< 5ms)**:
+     - Módulo `src/lib/audioWorkletHelper.ts` con procesador `CadensaVADProcessor` empaquetado en Blob seguro, detección VAD y fallback automático a `AnalyserNode`.
+     - Cálculo de variabilidad y regularidad temporal inter-silábica `calculateVoiceJitter()`.
+     - Pruebas unitarias en `src/lib/audioWorkletHelper.test.ts`.
+  3. **Frente C: Evaluación y Entrenamiento de Diadococinesia Oral (/pa-ta-ka/)**:
+     - Motor clínico `src/lib/diadochokinesis.ts` con secuencias estándar (/pa-ta-ka/, /ba-da-ga/, /tra-kla-pra/, /pa-pa-pa/), cálculo de tasa articulatoria (síl/s), jitter temporal e interpretación foniátrica.
+     - Componente interactivo `src/components/DiadochokinesisTrainer.tsx` con cronómetro de 10s, medidores de cadencia y atajos de teclado.
+     - Botón de acceso en el catálogo principal `src/components/TechniquesCatalogHome.tsx` y modal en `src/app/page.tsx`.
+     - Pruebas unitarias en `src/lib/diadochokinesis.test.ts` y `src/components/DiadochokinesisTrainer.test.tsx`.
+  4. **Frente D: Sincronización Multi-Dispositivo de Frases con Supabase Cloud**:
+     - Migración `supabase/migrations/20261029050000_user_custom_phrases_sync.sql` con políticas RLS Zero Trust para `public.user_custom_phrases`.
+     - Servicio `src/lib/customPhraseService.ts` para carga, almacenamiento local y unificación bidireccional en la nube.
+     - Integración reactiva en `src/components/CustomPhraseTrainer.tsx` con botón de sincronización manual y auto-sincronización al iniciar sesión.
+     - Tipos actualizados en `src/types/supabase.ts`.
+     - Pruebas unitarias en `src/lib/customPhraseService.test.ts`.
+  5. **Frente E: BDD, Gobernanza y Sincronización Mandatoria de `/about`**:
+     - Escenarios BDD en español `features/diadochokinesis_and_cloud_sync.feature` y `features/step_definitions/diadochokinesis_and_cloud_sync_steps.ts`.
+     - Sincronización de `/about` (`src/app/about/page.tsx` y `src/app/about/page.test.tsx`) marcando los hitos completados y proyectando los siguientes lanzamientos (WebAssembly, Formantes F1/F2, Telesalud WebRTC).
+     - Documentación modular en LLM Wiki: `wiki/concepts/diadochokinesis_assessment.md`, `wiki/concepts/clinical_report_and_jitter.md`, `wiki/architecture/audio_worklet_low_latency.md`, `wiki/architecture/multi_device_cloud_sync.md` y actualización de `wiki/index.md`.
+     - Suite 100% verde: 40 archivos Vitest / 192 pruebas y 82 escenarios Cucumber BDD / 318 pasos pasando.
+     - Compilación estática Next.js 16 (`npm run build`) completada con éxito para 18 rutas.
+- **Archivos creados/modificados**:
+  - `src/lib/clinicalReport.ts`, `src/lib/clinicalReport.test.ts`
+  - `src/components/ClinicalReportExporter.tsx`, `src/components/ClinicalReportExporter.test.tsx`
+  - `src/lib/audioWorkletHelper.ts`, `src/lib/audioWorkletHelper.test.ts`
+  - `src/lib/diadochokinesis.ts`, `src/lib/diadochokinesis.test.ts`
+  - `src/components/DiadochokinesisTrainer.tsx`, `src/components/DiadochokinesisTrainer.test.tsx`
+  - `supabase/migrations/20261029050000_user_custom_phrases_sync.sql`
+  - `src/lib/customPhraseService.ts`, `src/lib/customPhraseService.test.ts`
+  - `src/types/supabase.ts`
+  - `src/components/CustomPhraseTrainer.tsx`
+  - `src/components/Dashboard.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`
+  - `src/app/page.tsx`
+  - `src/app/about/page.tsx`, `src/app/about/page.test.tsx`
+  - `features/diadochokinesis_and_cloud_sync.feature`, `features/step_definitions/diadochokinesis_and_cloud_sync_steps.ts`
+  - `wiki/concepts/diadochokinesis_assessment.md`, `wiki/concepts/clinical_report_and_jitter.md`
+  - `wiki/architecture/audio_worklet_low_latency.md`, `wiki/architecture/multi_device_cloud_sync.md`
+  - `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

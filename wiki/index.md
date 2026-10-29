@@ -1,7 +1,7 @@
 # Catálogo Maestro del LLM Wiki — Cadensa
 
 > **Índice de Contenidos y Navegación Rápida**  
-> Última actualización: 2026-10-26  
+> Última actualización: 2026-10-28  
 > Esquema de gobernanza: [SCHEMA.md](SCHEMA.md) | Bitácora de operaciones: [log.md](log.md)
 
 Este catálogo resume e indexa de forma modular todas las páginas del conocimiento persistente de Cadensa. Los agentes LLM deben consultar este índice como paso previo antes de explorar páginas individuales.
@@ -28,6 +28,8 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [containerization.md](architecture/containerization.md) | Contenedor Docker multi-stage con Node 20 Slim + Nginx Alpine y configuración de SPA. | `docker`, `containers`, `nginx` |
 | [testing.md](architecture/testing.md) | Pirámide de pruebas unitarias con Vitest y escenarios BDD con Cucumber y Gherkin. | `testing`, `vitest`, `cucumber`, `bdd` |
 | [audio_engine.md](architecture/audio_engine.md) | Motor de metrónomo de precisión Web Audio API, scheduler lookahead y sincronía visual. | `web-audio`, `metronome`, `timing` |
+| [audio_worklet_low_latency.md](architecture/audio_worklet_low_latency.md) | Procesador Audio Worklet en hilo independiente (<5ms) para detección VAD y sincronía foniátrica. | `web-audio`, `audio-worklet`, `vad`, `latency` |
+| [multi_device_cloud_sync.md](architecture/multi_device_cloud_sync.md) | Sincronización multi-dispositivo de frases de desafío con Supabase PostgreSQL Zero Trust RLS. | `supabase`, `sync`, `zero-trust`, `rls` |
 | [auth_and_data_budget.md](architecture/auth_and_data_budget.md) | Diagnóstico de GitHub Actions, flujos OAuth/Magic Link, Soft Confirmation y dimensionamiento de datos por usuario. | `auth`, `oauth`, `ci-cd`, `database-budget` |
 | [layout_and_responsive_standards.md](architecture/layout_and_responsive_standards.md) | Jerarquía de anchos homogéneos (max-w-5xl marco exterior, max-w-4xl contenido central, max-w-2xl componentes). | `frontend`, `layout`, `responsive`, `design-system` |
 | [supabase_audit_and_schema_state.md](architecture/supabase_audit_and_schema_state.md) | Diagnóstico de tablas en Supabase, estado 404 del schema cache, aislamiento de pruebas y guía de migración SQL. | `supabase`, `database`, `audit`, `migrations` |
@@ -44,6 +46,8 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 |---|---|---|
 | [clinical_techniques_overview.md](concepts/clinical_techniques_overview.md) | Compendio y taxonomía de las 7 técnicas fonoaudiológicas: Fluency Shaping, Van Riper y Regulación Autónoma. | `clinical`, `overview`, `speech-therapy`, `fluency` |
 | [syllable_timed_speech.md](concepts/syllable_timed_speech.md) | Fundamento clínico del habla rítmica silábica (STS), compensación de ganglios basales y fases de fluidez. | `clinical`, `speech-therapy`, `rhythm` |
+| [clinical_report_and_jitter.md](concepts/clinical_report_and_jitter.md) | Generador de informe fonoaudiológico formal en PDF, métrica de jitter vocal inter-silábico y niveles de adherencia. | `clinical`, `reporting`, `jitter`, `pdf-export` |
+| [diadochokinesis_assessment.md](concepts/diadochokinesis_assessment.md) | Evaluación estandarizada de diadococinesia oral (/pa-ta-ka/), tasa articulatoria (síl/s) y regularidad temporal. | `clinical`, `diadochokinesis`, `ddk`, `speech-therapy` |
 | [easy_onset.md](concepts/easy_onset.md) | Inicio Vocal Suave: descomposición en 3 pasos (suspiro, subida, fonación) y control del espasmo aductor. | `clinical`, `easy-onset`, `laryngeal-control` |
 | [light_articulatory_contact.md](concepts/light_articulatory_contact.md) | Contacto Articular Ligero: despresurización de consonantes oclusivas (/p, t, k, b, d, g/) y tacto de pluma (≤30%). | `clinical`, `light-contact`, `articulation`, `plosives` |
 | [prolonged_speech.md](concepts/prolonged_speech.md) | Habla Prolongada y Fonación Continua: ligado vocal en legato (2.2s), eliminación de cortes glóticos y escala 2×. | `clinical`, `prolonged-speech`, `legato` |

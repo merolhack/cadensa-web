@@ -129,8 +129,8 @@ Given('que el usuario autenticado tiene {int} frases locales guardadas en su dis
   }));
 });
 
-Given('existen {int} frases adicionales respaldadas en la nube en Supabase', function () {
-  // Las frases en la nube se simulan en el mock de Supabase
+Given('existen {int} frases adicionales respaldadas en la nube en Supabase', function (count: number) {
+  assert.ok(count >= 0, 'El conteo de frases debe ser positivo');
 });
 
 When('se ejecuta la sincronización multi-dispositivo', async function () {

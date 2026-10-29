@@ -864,3 +864,51 @@
   - `wiki/architecture/audio_worklet_low_latency.md`, `wiki/architecture/multi_device_cloud_sync.md`
   - `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-28] ingest | Implementación de Hitos Clínicos 1 al 4 (Validación Fonética, Formantes F1/F2, Telesalud P2P y Cadensa Kids)
+- **Detalle**:
+  1. **Hito 1: Reconocimiento Fonético On-Device (`src/lib/speechRecognitionHelper.ts` & `src/components/PhoneticRecognitionValidator.tsx`)**:
+     - Validación acústica y fonética en el cliente mediante Web Speech API y matriz de distancia Levenshtein normalizada (0 a 100%).
+     - Clasificación de precisión: Coincidencia Óptima (≥ 80%), Comprensible (60-79%) o Requiere Articulación (< 60%).
+     - Zero Trust absoluto: transcripción local en el navegador del usuario sin enviar streaming de audio a servidores de terceros.
+     - Pruebas unitarias en `src/lib/speechRecognitionHelper.test.ts` y `src/components/PhoneticRecognitionValidator.test.tsx`.
+  2. **Hito 2: Biofeedback Visual de Formantes F1/F2 en Tiempo Real (`src/lib/formantAnalyzer.ts` & `src/components/FormantBiofeedbackVisualizer.tsx`)**:
+     - Extracción espectral de picos de resonancia del tracto vocal mediante `AnalyserNode` FFT de 2048 muestras.
+     - Cuadrilátero vocálico interactivo 2D (F1 apertura mandibular vs F2 retracción lingual) con mapa foniátrico para las vocales en español /a/, /e/, /i/, /o/, /u/.
+     - Marcador en vivo y cálculo de distancia euclidiana hacia el target de vocalización con retroalimentación cromática.
+     - Pruebas unitarias en `src/lib/formantAnalyzer.test.ts` y `src/components/FormantBiofeedbackVisualizer.test.tsx`.
+  3. **Hito 3: Modo Telesalud Fonoaudiológica P2P (`src/lib/telehealthP2P.ts` & `src/components/TelehealthRoom.tsx`)**:
+     - Conexión punto a punto mediante WebRTC DataChannel sin relay centralizado de audio ni almacenamiento de datos clínicos.
+     - Intercambio de señalización por oferta/respuesta SDP codificada en Base64 para máxima compatibilidad y privacidad.
+     - Sincronización instantánea de metrónomo clínico (BPM, estado de reproducción y técnica activa) entre el especialista fonoaudiólogo y el paciente en remoto.
+     - Pruebas unitarias en `src/lib/telehealthP2P.test.ts` y `src/components/TelehealthRoom.test.tsx`.
+  4. **Hito 4: Módulo de Fluidez Pediátrica Gamificada (`src/lib/pediatricFluency.ts` & `src/components/PediatricFluencyTrainer.tsx`)**:
+     - Entrenador lúdico "Cadensa Kids" para niños con disfemia del desarrollo y dificultades de fluidez temprana.
+     - Metáforas de fluidez validadas por fonoaudiología: Tortuga Zen (inicio suave y ritmo constante), Pajarito Melódico (entonación fluida) y Rana Saltarina (pausas estratégicas).
+     - Sistema de recompensas en estrellas y barra de energía lúdica con refuerzo positivo continuo sin penalizaciones punitivas.
+     - Pruebas unitarias en `src/lib/pediatricFluency.test.ts` y `src/components/PediatricFluencyTrainer.test.tsx`.
+  5. **Integración UI, BDD y Sincronización Mandatoria de `/about`**:
+     - Integración en `src/components/TechniquesCatalogHome.tsx` y `src/app/page.tsx` con modales interactivos y acceso directo.
+     - Escenarios BDD en español `features/clinical_milestones_1_to_4.feature` y `features/step_definitions/clinical_milestones_1_to_4_steps.ts`.
+     - Actualización de `/about` (`src/app/about/page.tsx` y `src/app/about/page.test.tsx`) y `wiki/roadmap/next_steps_plan.md` reflejando los 4 hitos completados y la proyección de las próximas innovaciones (DAF/FAF, HL7/FHIR, WebGPU ONNX, WebXR).
+     - Documentación modular en LLM Wiki: `wiki/concepts/phonetic_recognition_on_device.md`, `wiki/concepts/formant_acoustics_biofeedback.md`, `wiki/architecture/telehealth_p2p_webrtc.md`, `wiki/concepts/pediatric_fluency_gamification.md` y actualización de `wiki/index.md`.
+     - Suite 100% verde: 44 archivos Vitest / 209 pruebas y 86 escenarios Cucumber BDD / 333 pasos pasando.
+- **Archivos creados/modificados**:
+  - `src/lib/speechRecognitionHelper.ts`, `src/lib/speechRecognitionHelper.test.ts`
+  - `src/components/PhoneticRecognitionValidator.tsx`, `src/components/PhoneticRecognitionValidator.test.tsx`
+  - `src/lib/formantAnalyzer.ts`, `src/lib/formantAnalyzer.test.ts`
+  - `src/components/FormantBiofeedbackVisualizer.tsx`, `src/components/FormantBiofeedbackVisualizer.test.tsx`
+  - `src/lib/telehealthP2P.ts`, `src/lib/telehealthP2P.test.ts`
+  - `src/components/TelehealthRoom.tsx`, `src/components/TelehealthRoom.test.tsx`
+  - `src/lib/pediatricFluency.ts`, `src/lib/pediatricFluency.test.ts`
+  - `src/components/PediatricFluencyTrainer.tsx`, `src/components/PediatricFluencyTrainer.test.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`, `src/app/page.tsx`
+  - `src/app/about/page.tsx`, `src/app/about/page.test.tsx`
+  - `features/clinical_milestones_1_to_4.feature`, `features/step_definitions/clinical_milestones_1_to_4_steps.ts`
+  - `wiki/concepts/phonetic_recognition_on_device.md`, `wiki/concepts/formant_acoustics_biofeedback.md`
+  - `wiki/architecture/telehealth_p2p_webrtc.md`, `wiki/concepts/pediatric_fluency_gamification.md`
+  - `wiki/roadmap/next_steps_plan.md`, `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

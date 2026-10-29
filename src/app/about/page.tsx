@@ -228,6 +228,22 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Sincronización Multi-Dispositivo de Frases en la Nube:</strong> Respaldo y unificación bidireccional en Supabase PostgreSQL Zero Trust RLS para usuarios autenticados con persistencia local sin conexión.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Reconocimiento Fonético On-Device Zero Trust:</strong> Validación fonemática en el navegador comparando la emisión acústica del paciente contra la frase objetivo y detectando omisiones o variaciones silábicas.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Biofeedback Visual de Formantes F1 y F2 en Tiempo Real:</strong> Gráfico 2D del cuadrilátero vocálico que mapea apertura mandibular (F1) y posición lingual (F2) para descompresión motora durante la fonación.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Telesalud Fonoaudiológica P2P (WebRTC E2EE):</strong> Salas clínicas cifradas de extremo a extremo con metrónomo sincronizado maestro-esclavo y monitoreo de precisión remota sin latencia de servidores.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Cadensa Kids • Módulo de Fluidez Pediátrica Gamificada:</strong> Dinámicas fonoaudiológicas para niños (4 a 10 años) con avatares animales (Tortuga Zen, Cadensín el Castor, Colibrí Cantor), cuentos rítmicos y sistema de estrellas.</span>
+                </li>
               </ul>
             </div>
 
@@ -245,19 +261,19 @@ export default function AboutPage() {
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 1: Reconocimiento Fonético On-Device (WebAssembly):</strong> Transcripción y validación fonética local en el navegador para comparar la emisión acústica vs la frase objetivo sin enviar audio a la red.</span>
+                  <span><strong>Hito 1: Estimulación Auditiva Dicótica y Ruido Blanco Adaptativo (DAF/FAF):</strong> Frecuencias alteradas y retardo dinámico para eludir el bloqueo vocal con estimulación binaural.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 2: Biofeedback Visual de Formantes F1/F2 en Tiempo Real:</strong> Espectrograma dinámico para visualizar la apertura mandibular y resonancia del tracto vocal durante la fonación.</span>
+                  <span><strong>Hito 2: Interoperabilidad Médica HL7 / FHIR:</strong> Exportación estructurada de expedientes fonoaudiológicos para integración con software clínico hospitalario.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 3: Modo Telesalud Fonoaudiológica P2P (WebRTC):</strong> Sala cifrada de extremo a extremo para sesiones guiadas remotas con metrónomo sincronizado entre terapeuta y paciente.</span>
+                  <span><strong>Hito 3: Inferencia de Tensión Muscular con ONNX Runtime Web:</strong> Redes neuronales acústicas ejecutadas en WebGPU para alertar sobre hiperaducción laríngea previa al habla.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 4: Módulo de Fluidez Pediátrica Gamificada:</strong> Entrenador con avatares acústicos interactivos y dinámicas de refuerzo positivo para niños con disfemia temprana.</span>
+                  <span><strong>Hito 4: Desensibilización Fóbica en Realidad Virtual WebXR:</strong> Escenarios 3D interactivos en el navegador para exposición gradual ante auditorios virtuales.</span>
                 </li>
               </ul>
             </div>

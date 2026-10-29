@@ -1,0 +1,36 @@
+import { describe, it, expect } from 'vitest';
+import {
+  PEDIATRIC_AVATARS,
+  PEDIATRIC_CHALLENGES,
+  calculatePediatricReward,
+} from './pediatricFluency';
+
+describe('pediatricFluency engine', () => {
+  it('debe contener los 3 avatares fonoaudiológicos infantiles', () => {
+    expect(PEDIATRIC_AVATARS.tortuga).toBeDefined();
+    expect(PEDIATRIC_AVATARS.castor).toBeDefined();
+    expect(PEDIATRIC_AVATARS.colibri).toBeDefined();
+    expect(PEDIATRIC_AVATARS.tortuga.recommendedBpm).toBe(60);
+  });
+
+  it('debe tener frases infantiles con contextos lúdicos', () => {
+    expect(PEDIATRIC_CHALLENGES.length).toBeGreaterThanOrEqual(3);
+    expect(PEDIATRIC_CHALLENGES[0].phrase).toContain('miel');
+  });
+
+  it('debe calcular recompensas de 3 estrellas para alta precisión', () => {
+    const reward = calculatePediatricReward(90);
+    expect(reward.stars).toBe(3);
+    expect(reward.magicPoints).toBe(30);
+    expect(reward.cheerMessage).toContain('¡Increíble!');
+  });
+
+  it('debe otorgar 2 o 1 estrella de forma motivacional ante precisiones moderadas', () => {
+    const reward2 = calculatePediatricReward(70);
+    expect(reward2.stars).toBe(2);
+
+    const reward1 = calculatePediatricReward(50);
+    expect(reward1.stars).toBe(1);
+    expect(reward1.cheerMessage).toContain('Tortuga Zen');
+  });
+});

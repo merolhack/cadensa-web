@@ -30,6 +30,10 @@ import { CustomPhraseTrainer } from '@/components/CustomPhraseTrainer';
 import { AudioSelfMonitor } from '@/components/AudioSelfMonitor';
 import { PwaInstallButton } from '@/components/PwaInstallButton';
 import { DiadochokinesisTrainer } from '@/components/DiadochokinesisTrainer';
+import { FormantBiofeedbackVisualizer } from '@/components/FormantBiofeedbackVisualizer';
+import { TelehealthRoom } from '@/components/TelehealthRoom';
+import { PediatricFluencyTrainer } from '@/components/PediatricFluencyTrainer';
+import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionValidator';
 
 const TRAINING_PHRASES = [
   'Ca mi no des pa cio ca da ma ña na',
@@ -54,6 +58,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const [isQuickRoutineOpen, setIsQuickRoutineOpen] = useState(false);
   const [isDDKOpen, setIsDDKOpen] = useState(false);
+  const [isFormantsOpen, setIsFormantsOpen] = useState(false);
+  const [isTelehealthOpen, setIsTelehealthOpen] = useState(false);
+  const [isKidsOpen, setIsKidsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [feedbackCategory, setFeedbackCategory] = useState<FeedbackCategory>('other');
   const [feedbackTechniqueId, setFeedbackTechniqueId] = useState<string | null>(null);
@@ -451,6 +458,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onOpenSimulator={() => setIsSimulatorOpen(true)}
           onOpenQuickRoutine={() => setIsQuickRoutineOpen(true)}
           onOpenDDK={() => setIsDDKOpen(true)}
+          onOpenFormants={() => setIsFormantsOpen(true)}
+          onOpenTelehealth={() => setIsTelehealthOpen(true)}
+          onOpenKids={() => setIsKidsOpen(true)}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -544,6 +554,66 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
                 ✕
               </button>
               <DiadochokinesisTrainer />
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Biofeedback de Formantes F1/F2 */}
+        {isFormantsOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-zinc-950/80 backdrop-blur-md animate-fade-in"
+          >
+            <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto">
+              <button
+                onClick={() => setIsFormantsOpen(false)}
+                className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center text-sm cursor-pointer"
+                aria-label="Cerrar Formantes"
+              >
+                ✕
+              </button>
+              <FormantBiofeedbackVisualizer />
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Telesalud P2P */}
+        {isTelehealthOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-zinc-950/80 backdrop-blur-md animate-fade-in"
+          >
+            <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto">
+              <button
+                onClick={() => setIsTelehealthOpen(false)}
+                className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center text-sm cursor-pointer"
+                aria-label="Cerrar Telesalud"
+              >
+                ✕
+              </button>
+              <TelehealthRoom />
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Cadensa Kids (Fluidez Pediátrica) */}
+        {isKidsOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-zinc-950/80 backdrop-blur-md animate-fade-in"
+          >
+            <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto">
+              <button
+                onClick={() => setIsKidsOpen(false)}
+                className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center text-sm cursor-pointer"
+                aria-label="Cerrar Cadensa Kids"
+              >
+                ✕
+              </button>
+              <PediatricFluencyTrainer />
             </div>
           </div>
         )}
@@ -761,6 +831,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
 
           {/* Módulo de Auto-Escucha Fonoaudiológica Zero Trust */}
           <AudioSelfMonitor isPlaying={isPlaying} />
+
+          {/* Validador Fonético On-Device Zero Trust */}
+          <PhoneticRecognitionValidator targetPhrase={currentPhrase} />
         </div>
 
         {/* BOTONES DE ACCIÓN PRINCIPAL DIFERENCIADOS POR TÉCNICA */}

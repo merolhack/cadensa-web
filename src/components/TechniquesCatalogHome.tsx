@@ -18,6 +18,9 @@ interface TechniquesCatalogHomeProps {
   onOpenSimulator?: () => void;
   onOpenQuickRoutine?: () => void;
   onOpenDDK?: () => void;
+  onOpenFormants?: () => void;
+  onOpenTelehealth?: () => void;
+  onOpenKids?: () => void;
   streakDays: number;
   totalMinutes: number;
   xpPoints: number;
@@ -32,6 +35,9 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onOpenSimulator,
   onOpenQuickRoutine,
   onOpenDDK,
+  onOpenFormants,
+  onOpenTelehealth,
+  onOpenKids,
   streakDays,
   totalMinutes,
   xpPoints,
@@ -170,10 +176,40 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
           {onOpenDDK && (
             <button
               onClick={onOpenDDK}
-              className="px-5 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 font-semibold text-sm transition-all cursor-pointer flex items-center gap-2"
+              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5"
             >
               <span>⚡</span>
               <span>Prueba DDK</span>
+            </button>
+          )}
+
+          {onOpenFormants && (
+            <button
+              onClick={onOpenFormants}
+              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <span>📊</span>
+              <span>Formantes F1/F2</span>
+            </button>
+          )}
+
+          {onOpenTelehealth && (
+            <button
+              onClick={onOpenTelehealth}
+              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-indigo-500/40 text-indigo-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <span>📡</span>
+              <span>Telesalud P2P</span>
+            </button>
+          )}
+
+          {onOpenKids && (
+            <button
+              onClick={onOpenKids}
+              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-900/60 to-pink-900/60 hover:from-purple-900/80 hover:to-pink-900/80 border border-purple-500/40 text-amber-300 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+            >
+              <span>✨</span>
+              <span>Cadensa Kids</span>
             </button>
           )}
         </div>

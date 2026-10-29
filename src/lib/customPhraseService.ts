@@ -8,6 +8,14 @@ export interface CustomPhraseItem {
   created_at?: string;
 }
 
+interface CloudCustomPhraseRow {
+  id: string;
+  phrase: string;
+  bpm_recommended: number | null;
+  category: string | null;
+  created_at: string;
+}
+
 const STORAGE_KEY = 'cadensa_custom_phrases';
 
 /**
@@ -64,7 +72,9 @@ export async function syncCustomPhrasesWithCloud(
       return { syncedPhrases: localPhrases, syncedWithCloud: false };
     }
 
-    const cloudPhrases: CustomPhraseItem[] = (cloudData || []).map((row: any) => ({
+    const cloudPhrases: CustomPhraseItem[] = (
+      (cloudData as unknown as CloudCustomPhraseRow[]) || []
+    ).map((row) => ({
       id: row.id,
       phrase: row.phrase,
       bpm: row.bpm_recommended || 80,
@@ -93,7 +103,7 @@ export async function syncCustomPhrasesWithCloud(
         .select('id, phrase, bpm_recommended, category, created_at');
 
       if (!insertError && inserted) {
-        inserted.forEach((row: any) => {
+        (inserted as unknown as CloudCustomPhraseRow[]).forEach((row) => {
           cloudPhrases.push({
             id: row.id,
             phrase: row.phrase,

@@ -1,5 +1,6 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import assert from 'node:assert';
+import { supabase } from '../../src/lib/supabaseClient';
 import {
   evaluateDDKTrial,
   DDKSequenceType,
@@ -128,7 +129,7 @@ Given('que el usuario autenticado tiene {int} frases locales guardadas en su dis
   }));
 });
 
-Given('existen {int} frases adicionales respaldadas en la nube en Supabase', function (count: number) {
+Given('existen {int} frases adicionales respaldadas en la nube en Supabase', function () {
   // Las frases en la nube se simulan en el mock de Supabase
 });
 
@@ -176,7 +177,7 @@ When('se ejecuta la sincronización multi-dispositivo', async function () {
   syncResult = await syncCustomPhrasesWithCloud(
     localPhrasesList,
     'mock-user-bdd',
-    mockSupabase as any
+    mockSupabase as unknown as typeof supabase
   );
 });
 

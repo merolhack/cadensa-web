@@ -61,12 +61,12 @@ export function DiadochokinesisTrainer() {
     };
   }, [isActive, handleEnd]);
 
-  const handleRegisterSyllable = () => {
+  const handleRegisterSyllable = useCallback(() => {
     if (!isActive) return;
     const now = performance.now();
     setSyllableTimestamps((prev) => [...prev, now]);
     setActiveSyllableIndex((prev) => (prev + 1) % sequenceInfo.syllables.length);
-  };
+  }, [isActive, sequenceInfo.syllables.length]);
 
   // Atajo de teclado (Barra espaciadora o Enter durante la prueba)
   useEffect(() => {
@@ -78,7 +78,7 @@ export function DiadochokinesisTrainer() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isActive]);
+  }, [isActive, handleRegisterSyllable]);
 
   const currentRate = syllableTimestamps.length > 0 && timeLeft < 10
     ? (syllableTimestamps.length / (10 - timeLeft)).toFixed(1)

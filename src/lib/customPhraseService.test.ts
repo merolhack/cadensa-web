@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { supabase } from './supabaseClient';
 import {
   loadLocalCustomPhrases,
   saveLocalCustomPhrases,
@@ -74,7 +75,7 @@ describe('customPhraseService', () => {
     const result = await syncCustomPhrasesWithCloud(
       localPhrases,
       'user-uuid-123',
-      mockClient as any
+      mockClient as unknown as typeof supabase
     );
 
     expect(result.syncedWithCloud).toBe(true);

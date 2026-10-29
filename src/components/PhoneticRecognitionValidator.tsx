@@ -17,6 +17,10 @@ export function PhoneticRecognitionValidator({
 }: PhoneticRecognitionValidatorProps) {
   const [spokenInput, setSpokenInput] = useState('');
   const [result, setResult] = useState<PhoneticMatchResult | null>(null);
+  const [hasSpeechApi] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+  });
 
   const handleValidate = (textToValidate: string) => {
     const evaluation = evaluatePhoneticMatch(targetPhrase, textToValidate);
@@ -34,10 +38,23 @@ export function PhoneticRecognitionValidator({
             <span className="text-[10px] text-zinc-400">Verifica la fidelidad acústica en tu navegador</span>
           </div>
         </div>
-        <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 font-mono text-[10px]">
-          Zero Trust
-        </span>
+        <div className="flex items-center gap-1.5">
+          {!hasSpeechApi && (
+            <span className="px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-[10px]">
+              Modo Acústico Firefox
+            </span>
+          )}
+          <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 font-mono text-[10px]">
+            Zero Trust
+          </span>
+        </div>
       </div>
+
+      {!hasSpeechApi && (
+        <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-[11px] text-amber-200">
+          🦊 <strong>Nota de compatibilidad:</strong> En este navegador (ej. Firefox) puedes practicar el ritmo y entonación con el metrónomo y análisis de formantes F1/F2, o evaluar la frase transcribiendo lo articulado.
+        </div>
+      )}
 
       <div className="space-y-1 bg-zinc-950/60 p-3 rounded-xl border border-zinc-800/80">
         <span className="text-[10px] uppercase font-mono text-zinc-500 block">Frase Objetivo</span>

@@ -1,62 +1,129 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   PEDIATRIC_AVATARS,
   PEDIATRIC_CHALLENGES,
   calculatePediatricReward,
+  playKidsSyllableTone,
+  playKidsFanfare,
 } from '../lib/pediatricFluency';
 
 export function PediatricFluencyTrainer() {
   const [selectedAvatarKey, setSelectedAvatarKey] = useState<'tortuga' | 'castor' | 'colibri'>('tortuga');
   const [challengeIndex, setChallengeIndex] = useState(0);
   const [totalStars, setTotalStars] = useState(12);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [activeSyllableIndex, setActiveSyllableIndex] = useState<number>(-1);
   const [sessionReward, setSessionReward] = useState<{ stars: number; cheerMessage: string } | null>(null);
 
   const avatar = PEDIATRIC_AVATARS[selectedAvatarKey];
   const challenge = PEDIATRIC_CHALLENGES[challengeIndex];
   const syllables = challenge.phrase.split(' ');
 
-  const handleSimulatePractice = () => {
-    const reward = calculatePediatricReward(92);
-    setSessionReward(reward);
-    setTotalStars((prev) => prev + reward.stars);
-  };
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleNextChallenge = () => {
+  const stopPractice = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    setIsPlaying(false);
+  }, []);
+
+  const handleNextChallenge = useCallback(() => {
+    stopPractice();
+    setActiveSyllableIndex(-1);
     setSessionReward(null);
     setChallengeIndex((prev) => (prev + 1) % PEDIATRIC_CHALLENGES.length);
-  };
+  }, [stopPractice]);
+
+  const handlePrevChallenge = useCallback(() => {
+    stopPractice();
+    setActiveSyllableIndex(-1);
+    setSessionReward(null);
+    setChallengeIndex((prev) => (prev - 1 + PEDIATRIC_CHALLENGES.length) % PEDIATRIC_CHALLENGES.length);
+  }, [stopPractice]);
+
+  const handleStartPractice = useCallback(() => {
+    stopPractice();
+    setSessionReward(null);
+    setActiveSyllableIndex(0);
+    setIsPlaying(true);
+
+    // Calcular intervalo por sílaba a partir del BPM del avatar (ej. 60 BPM = 1000ms)
+    const intervalMs = Math.round((60 / avatar.recommendedBpm) * 1000);
+
+    // Reproducir primer sonido
+    playKidsSyllableTone(0);
+
+    let currentIndex = 0;
+    timerRef.current = setInterval(() => {
+      currentIndex += 1;
+      if (currentIndex < syllables.length) {
+        setActiveSyllableIndex(currentIndex);
+        playKidsSyllableTone(currentIndex);
+      } else {
+        // Fin de la frase completa
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+        setIsPlaying(false);
+        setActiveSyllableIndex(syllables.length);
+        playKidsFanfare();
+        const reward = calculatePediatricReward(95);
+        setSessionReward(reward);
+        setTotalStars((prev) => prev + reward.stars);
+      }
+    }, intervalMs);
+  }, [avatar.recommendedBpm, stopPractice, syllables.length]);
+
+  // Limpiar temporizador al desmontar
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
+  const progressPercent = activeSyllableIndex <= 0
+    ? 0
+    : Math.min(100, Math.round((activeSyllableIndex / syllables.length) * 100));
 
   return (
-    <div className="w-full rounded-3xl bg-gradient-to-br from-indigo-950/80 via-zinc-950 to-purple-950/70 border border-purple-500/30 p-6 shadow-2xl space-y-5 text-zinc-100">
+    <div className="w-full rounded-3xl bg-gradient-to-br from-indigo-950/80 via-zinc-950 to-purple-950/70 border border-purple-500/30 p-6 shadow-2xl space-y-6 text-zinc-100">
       {/* Encabezado Infantil */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-800/40 pb-4">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 font-bold text-xs mb-1">
             <span>✨ Cadensa Kids • Fluidez y Diversión</span>
           </div>
-          <h3 className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-300 to-purple-300 flex items-center gap-2">
+          <h3 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-300 to-purple-300 flex items-center gap-2">
             <span>Aventura del Habla Suave</span>
           </h3>
           <p className="text-xs text-zinc-300 mt-0.5">
-            Entrenamiento lúdico para niños: ritmo sin prisa y sin apretar la garganta.
+            Entrenamiento lúdico interactivo para niños: ritmo sin prisa y sin apretar la garganta.
           </p>
         </div>
 
         {/* Marcador de Estrellas Ganadas */}
-        <div className="flex items-center gap-2 bg-zinc-900/80 px-4 py-2 rounded-2xl border border-amber-400/40 shadow-inner">
-          <span className="text-2xl">⭐</span>
+        <div className="flex items-center gap-2.5 bg-zinc-900/90 px-4 py-2.5 rounded-2xl border border-amber-400/50 shadow-inner">
+          <span className="text-3xl animate-bounce">⭐</span>
           <div>
-            <span className="text-[10px] text-zinc-400 block font-bold uppercase">Estrellas</span>
-            <span className="text-lg font-black text-amber-300">{totalStars}</span>
+            <span className="text-[10px] text-zinc-400 block font-bold uppercase tracking-wider">Cofre de Estrellas</span>
+            <span className="text-xl font-black text-amber-300">{totalStars}</span>
           </div>
         </div>
       </div>
 
       {/* Selector de Amigos / Avatares */}
-      <div className="space-y-2">
-        <span className="text-xs font-bold text-purple-200 block">Elige a tu compañero de aventura:</span>
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-bold text-purple-200">Elige a tu compañero de aventura:</span>
+          <span className="text-[11px] text-zinc-400 font-medium">Tempo adaptado al ritmo infantil</span>
+        </div>
         <div className="grid grid-cols-3 gap-2.5">
           {(Object.keys(PEDIATRIC_AVATARS) as Array<'tortuga' | 'castor' | 'colibri'>).map((key) => {
             const av = PEDIATRIC_AVATARS[key];
@@ -66,70 +133,162 @@ export function PediatricFluencyTrainer() {
                 key={key}
                 type="button"
                 onClick={() => {
+                  stopPractice();
                   setSelectedAvatarKey(key);
                   setSessionReward(null);
+                  setActiveSyllableIndex(-1);
                 }}
                 className={`p-3 rounded-2xl border text-center transition-all cursor-pointer transform hover:scale-102 ${
                   isSelected
-                    ? 'bg-purple-900/50 border-amber-400 text-amber-200 shadow-lg shadow-purple-500/20'
-                    : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-purple-900/60 border-amber-400 text-amber-200 shadow-lg shadow-purple-500/25 ring-2 ring-amber-400/30'
+                    : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
                 }`}
               >
                 <div className="text-3xl mb-1">{av.icon}</div>
                 <div className="font-bold text-xs text-zinc-100">{av.name}</div>
-                <div className="text-[10px] text-amber-300/80 font-mono mt-0.5">{av.recommendedBpm} BPM</div>
+                <div className="text-[10px] text-amber-300/90 font-mono font-semibold mt-0.5">{av.recommendedBpm} BPM</div>
               </button>
             );
           })}
         </div>
-        <p className="text-xs text-purple-200 italic bg-purple-950/40 p-2.5 rounded-xl border border-purple-800/40">
-          💡 <strong>Consejo de {avatar.name}:</strong> &quot;{avatar.motto}&quot;
+        <p className="text-xs text-purple-200 italic bg-purple-950/50 p-3 rounded-xl border border-purple-800/40 flex items-center gap-2">
+          <span className="text-base">💡</span>
+          <span><strong>Consejo de {avatar.name}:</strong> &quot;{avatar.motto}&quot;</span>
         </p>
       </div>
 
       {/* Tarjeta del Desafío Infantil */}
-      <div className="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-center space-y-4">
-        <span className="text-xs font-semibold text-zinc-400 block">{challenge.funContext}</span>
-
-        {/* Sílabas estilo bloques infantiles */}
-        <div className="flex flex-wrap items-center justify-center gap-2 py-2">
-          {syllables.map((syl, idx) => (
-            <div
-              key={idx}
-              className="px-4 py-3 rounded-2xl bg-gradient-to-t from-zinc-800 to-zinc-700 border border-zinc-600/80 text-amber-300 font-extrabold text-lg sm:text-xl font-mono shadow-md uppercase tracking-wider"
-            >
-              {syl}
-            </div>
-          ))}
-        </div>
-
-        {/* Acciones de práctica */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+      <div className="p-6 rounded-2xl bg-zinc-900/90 border border-purple-500/20 text-center space-y-5">
+        {/* Encabezado y Navegador de Cuentos */}
+        <div className="flex items-center justify-between gap-2 border-b border-zinc-800/80 pb-3">
           <button
             type="button"
-            onClick={handleSimulatePractice}
-            className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 via-pink-500 to-purple-500 hover:from-amber-300 hover:to-purple-400 text-zinc-950 font-black text-sm shadow-xl transition transform active:scale-95 cursor-pointer"
+            onClick={handlePrevChallenge}
+            className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold transition cursor-pointer"
+            title="Cuento anterior"
           >
-            🎮 ¡Pronunciar como {avatar.name}!
+            ◀ Anterior
           </button>
+          <div>
+            <span className="text-xs font-black text-amber-300 block">{challenge.funContext}</span>
+            <span className="text-[10px] text-zinc-400 font-semibold">
+              Cuento {challengeIndex + 1} de {PEDIATRIC_CHALLENGES.length} • {challenge.syllablesCount} sílabas
+            </span>
+          </div>
           <button
             type="button"
             onClick={handleNextChallenge}
-            className="px-4 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs border border-zinc-700 transition cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold transition cursor-pointer"
+            title="Siguiente cuento"
           >
-            Siguiente Cuento ➡️
+            Siguiente ▶
+          </button>
+        </div>
+
+        {/* Camino de la Aventura (Barra de progreso lúdica) */}
+        <div className="relative w-full bg-zinc-950/80 h-6 rounded-full border border-zinc-800 p-0.5 overflow-hidden flex items-center">
+          <div
+            className="h-full bg-gradient-to-r from-amber-400 via-pink-500 to-purple-500 rounded-full transition-all duration-300"
+            style={{ width: `${progressPercent}%` }}
+          />
+          <div className="absolute inset-0 flex items-center justify-between px-3 text-xs font-black pointer-events-none">
+            <span className="flex items-center gap-1">
+              <span>{avatar.icon}</span>
+              <span className="text-[10px] text-zinc-300 hidden sm:inline">Camino del ritmo</span>
+            </span>
+            <span className="text-lg">{challenge.goalEmoji}</span>
+          </div>
+        </div>
+
+        {/* Sílabas animadas en tiempo real */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 py-4 min-h-[110px]">
+          {syllables.map((syl, idx) => {
+            const isActive = activeSyllableIndex === idx;
+            const isCompleted = activeSyllableIndex > idx;
+
+            return (
+              <div
+                key={`${challenge.id}-${idx}`}
+                onClick={() => {
+                  playKidsSyllableTone(idx);
+                  setActiveSyllableIndex(idx);
+                }}
+                className={`relative px-4 py-3.5 rounded-2xl font-extrabold text-lg sm:text-xl font-mono shadow-md uppercase tracking-wider transition-all duration-200 cursor-pointer select-none ${
+                  isActive
+                    ? 'scale-125 z-20 bg-gradient-to-t from-amber-400 to-amber-200 text-zinc-950 ring-4 ring-amber-300 shadow-2xl shadow-amber-400/50 -translate-y-1'
+                    : isCompleted
+                    ? 'bg-emerald-950/70 border border-emerald-500/80 text-emerald-300 scale-98'
+                    : 'bg-zinc-800/90 border border-zinc-700 text-zinc-300 hover:border-zinc-500'
+                }`}
+              >
+                {/* Ícono flotante del avatar en la sílaba activa */}
+                {isActive && (
+                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-2xl animate-bounce">
+                    {avatar.icon}
+                  </span>
+                )}
+                {/* Marca de completado */}
+                {isCompleted && (
+                  <span className="absolute -top-2 -right-2 text-xs bg-emerald-500 text-zinc-950 rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                    ✓
+                  </span>
+                )}
+                <span>{syl}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Botones de acción infantil */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          {!isPlaying ? (
+            <button
+              type="button"
+              onClick={handleStartPractice}
+              className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-pink-500 to-purple-500 hover:from-amber-300 hover:to-purple-400 text-zinc-950 font-black text-sm sm:text-base shadow-xl shadow-purple-900/40 transition transform active:scale-95 cursor-pointer flex items-center gap-2"
+            >
+              <span>🎮</span>
+              <span>¡Pronunciar como {avatar.name}!</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={stopPractice}
+              className="px-7 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black text-sm sm:text-base shadow-xl transition transform active:scale-95 cursor-pointer flex items-center gap-2"
+            >
+              <span>⏸️</span>
+              <span>Pausar Aventura</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={handleNextChallenge}
+            className="px-5 py-3.5 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs sm:text-sm border border-zinc-700 transition cursor-pointer flex items-center gap-2"
+          >
+            <span>Siguiente Cuento</span>
+            <span>➡️</span>
           </button>
         </div>
       </div>
 
-      {/* Celebración de Recompensa */}
+      {/* Celebración de Recompensa con estrellas y fanfarria */}
       {sessionReward && (
-        <div className="p-4 rounded-2xl bg-amber-950/50 border border-amber-400/50 text-center space-y-2 animate-in fade-in duration-200">
-          <div className="text-3xl">{'⭐'.repeat(sessionReward.stars)}</div>
-          <h4 className="text-base font-extrabold text-amber-300">{sessionReward.cheerMessage}</h4>
-          <span className="text-xs text-amber-200/80 block">
-            ¡Ganaste +{sessionReward.stars} estrellas para tu cofre mágico!
+        <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-purple-950/70 to-pink-950/70 border border-amber-400/60 text-center space-y-2.5 animate-in fade-in zoom-in-95 duration-300 shadow-2xl">
+          <div className="text-4xl animate-pulse">{'⭐'.repeat(sessionReward.stars)}</div>
+          <h4 className="text-lg font-black text-amber-300">{sessionReward.cheerMessage}</h4>
+          <span className="text-xs text-amber-200/90 font-medium block">
+            ¡Ganaste +{sessionReward.stars} estrellas para tu cofre mágico! 🏆
           </span>
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={handleNextChallenge}
+              className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-zinc-950 font-extrabold text-xs transition cursor-pointer"
+            >
+              ¡Jugar el siguiente cuento! 🌟
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -26,3 +26,4 @@ Característica: Hitos Clínicos Avanzados: Validador Fonético, Biofeedback de 
     Dado que un niño selecciona al avatar "Tortuga Zen" para hablar despacito
     Cuando completa un desafío infantil de habla suave con 90% de precisión rítmica
     Entonces recibe 3 estrellas y un mensaje de felicitación positivo
+

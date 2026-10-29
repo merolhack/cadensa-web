@@ -32,3 +32,4 @@ describe('PhoneticRecognitionValidator Component', () => {
     expect(onValidation.mock.calls[0][0].isAccurate).toBe(true);
   });
 });
+

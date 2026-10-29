@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:bdd": "tsx ./node_modules/.bin/cucumber-js",
+    "test:e2e": "playwright test",
     "test:all": "npm run test && npm run test:bdd",
     "db:migrate": "node scripts/migrate_supabase.cjs",
     "metrics:update": "node scripts/fetch_platform_metrics.cjs",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.9.0",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6.9.1",

@@ -28,3 +28,4 @@ El tratamiento de la tartamudez en niños de 4 a 10 años requiere un marco peda
    - 🐦 **Colibrí Cantor (75 BPM)**: Fonación suave sin compresión laríngea.
 3. **Refuerzo Positivo Inmediato**:
    - Recompensas con estrellas mágicas (1 a 3) y retroalimentación verbal alentadora para incentivar el hábito diario sin frustración.
+

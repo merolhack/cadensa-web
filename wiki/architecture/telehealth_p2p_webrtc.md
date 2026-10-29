@@ -33,3 +33,4 @@ El motor en `src/lib/telehealthP2P.ts` estructura paquetes binarios o JSON míni
 * `BEAT_PULSE`: Marca temporal del pulso maestro (`bpm`, `beatIndex`).
 * `ACCURACY_FEEDBACK`: Envío reactivo del desfase temporal en milisegundos (`score`, `diffMs`) desde el paciente para monitoreo en vivo en la pantalla del clínico.
 * `PING` / `PONG`: Medición continua de latencia de red (RTT).
+

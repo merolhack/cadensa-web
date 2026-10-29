@@ -36,3 +36,4 @@ El componente `src/components/FormantBiofeedbackVisualizer.tsx` grafica en dos d
 - Eje X invertido: F2 (anterior a posterior).
 - Eje Y invertido: F1 (cerrada a abierta).
 - Proporciona retroalimentación propioceptiva instantánea para afianzar *Contactos Articulatorios Suaves* y fonación sin esfuerzo.
+

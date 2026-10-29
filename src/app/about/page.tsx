@@ -242,7 +242,23 @@ export default function AboutPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 font-bold">✓</span>
-                  <span><strong>Cadensa Kids • Módulo de Fluidez Pediátrica Gamificada:</strong> Dinámicas fonoaudiológicas para niños (4 a 10 años) con avatares animales (Tortuga Zen, Cadensín el Castor, Colibrí Cantor), cuentos rítmicos y sistema de estrellas.</span>
+                  <span><strong>Cadensa Kids • Módulo de Fluidez Pediátrica Gamificada Interactiva:</strong> Dinámicas fonoaudiológicas para niños (4 a 10 años) con avatares animales (Tortuga Zen, Cadensín el Castor, Colibrí Cantor), animación silábica paso a paso, marimba pentatónica en tiempo real, rotación de 6 cuentos infantiles y cofre de estrellas.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Matriz y Banner de Compatibilidad Cross-Browser:</strong> Diagnóstico de compatibilidad en vivo para Google Chrome, Microsoft Edge, Opera, Apple Safari y Mozilla Firefox, con degradación elegante a modo acústico VAD ante ausencia de Web Speech.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Desbloqueo Universal de Audio y Ergonomía Safari / iOS:</strong> Inicialización de AudioContext en el primer toque táctil o de puntero, compatibilidad con safe-areas y viewport dinámico (100dvh) en iOS WebKit.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Medidor de Voz en Vivo VU Meter (Zero Trust):</strong> Retroalimentación visual instantánea de captura fónica sin latencia en la estación de práctica con confirmación de procesamiento local.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Infraestructura de Pruebas Multi-Motor con Playwright:</strong> Validación automatizada E2E sobre Chromium, Gecko (Firefox) y WebKit (Safari Desktop y Mobile).</span>
                 </li>
               </ul>
             </div>

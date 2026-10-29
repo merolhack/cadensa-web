@@ -115,3 +115,4 @@ Then('recibe {int} estrellas y un mensaje de felicitación positivo', function (
   assert.strictEqual(rewardResult.stars, expectedStars);
   assert.ok(rewardResult.cheerMessage.length > 0);
 });
+

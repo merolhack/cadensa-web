@@ -43,14 +43,24 @@
    - Intercambio de señalización por oferta/respuesta SDP codificada en Base64 para máxima compatibilidad y privacidad.
    - Sincronización instantánea de metrónomo clínico (BPM, estado de reproducción y técnica activa) entre el especialista fonoaudiólogo y el paciente en remoto.
 
-9. **Hito 4: Módulo de Fluidez Pediátrica Gamificada (`src/lib/pediatricFluency.ts` & `src/components/PediatricFluencyTrainer.tsx`)**: ✅
-   - Entrenador lúdico "Cadensa Kids" para niños con disfemia del desarrollo y dificultades de fluidez temprana.
-   - Metáforas de fluidez validadas por fonoaudiología: Tortuga Zen (inicio suave y ritmo constante), Pajarito Melódico (entonación fluida) y Rana Saltarína (pausas estratégicas).
-   - Sistema de recompensas en estrellas y barra de energía lúdica con refuerzo positivo continuo sin penalizaciones punitivas.
+9. **Cadensa Kids Interactiva y Gamificación Pediátrica (`src/lib/pediatricFluency.ts` & `src/components/PediatricFluencyTrainer.tsx`)**: ✅
+   - Entrenador lúdico para niños con disfemia temprana: 6 cuentos con contextos amigables, metas emoji y camino de aventura animado.
+   - Resaltado y animación silábica paso a paso sincronizada al tempo de los avatares (Tortuga Zen 60 BPM, Cadensín el Castor 70 BPM, Colibrí Cantor 75 BPM).
+   - Síntesis de sonido suave de marimba pentatónica con Web Audio API y fanfarria triunfal al completar la frase.
 
-10. **Suite de Pruebas Unitarias y BDD**: ✅
-    - 44 archivos Vitest / 209 pruebas unitarias pasando al 100%.
-    - 86 escenarios Cucumber BDD / 333 pasos en español pasando al 100%.
+10. **Infraestructura Cross-Browser y Banner de Compatibilidad (`src/components/BrowserCompatibilityBanner.tsx` & `playwright.config.ts`)**: ✅
+    - Matriz de diagnóstico en tiempo real para Google Chrome, Microsoft Edge, Opera, Apple Safari y Mozilla Firefox.
+    - Desbloqueo universal de AudioContext para Safari/iOS (`audioUnlock.ts`), soporte de safe areas y viewport dinámico (100dvh).
+    - Degradación transparente en Firefox hacia modo foniátrico acústico por VAD en ausencia de Web Speech.
+    - Configuración multi-motor de Playwright para pruebas E2E en Chromium, Gecko y WebKit.
+
+11. **Medidor de Voz en Vivo VU Meter Zero Trust (`src/components/LiveAudioVUMeter.tsx`)**: ✅
+    - Retroalimentación fonoaudiológica instantánea de captura vocal en la estación de práctica sin latencia.
+
+12. **Suite de Pruebas Unitarias, BDD y Docker**: ✅
+    - 51 archivos Vitest / 228 pruebas unitarias aprobadas al 100%.
+    - 90 escenarios Cucumber BDD / 349 pasos en español aprobados al 100%.
+    - Contenedor Docker multi-stage verificado y operativo localmente (paridad 100% con Cloudflare Pages).
 
 ---
 

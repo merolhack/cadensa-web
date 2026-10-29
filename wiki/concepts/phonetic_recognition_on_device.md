@@ -35,3 +35,4 @@ La función `evaluatePhoneticMatch` normaliza el texto (eliminando diacríticos 
   - `≥ 90%`: Articulación fonética óptima y nítida.
   - `70% - 89%`: Comprensible con variaciones menores en puntos de articulación.
   - `< 70%`: Omisiones o bloqueos prolongados que requieren ralentizar el metrónomo.
+

@@ -56,3 +56,4 @@ describe('speechRecognitionHelper', () => {
     expect(typeof isSpeechRecognitionSupported()).toBe('boolean');
   });
 });
+

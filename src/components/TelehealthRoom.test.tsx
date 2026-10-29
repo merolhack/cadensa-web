@@ -28,3 +28,4 @@ describe('TelehealthRoom Component', () => {
     expect(screen.getByText(/Pulso transmitido a paciente/i)).toBeInTheDocument();
   });
 });
+

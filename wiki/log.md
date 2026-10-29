@@ -912,3 +912,49 @@
   - `wiki/architecture/telehealth_p2p_webrtc.md`, `wiki/concepts/pediatric_fluency_gamification.md`
   - `wiki/roadmap/next_steps_plan.md`, `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-29] ingest | Cadensa Kids interactiva, infraestructura cross-browser (Playwright, Docker, Safari/Firefox) y métricas SEO
+- **Detalle**:
+  1. **Cadensa Kids Interactiva y Gamificación Pediátrica**:
+     - Animación interactiva en tiempo real sobre las letras/sílabas de cada cuento, con resaltado visual (`scale-125`, brillo neón, huellita del avatar y checks de progreso).
+     - Síntesis de sonido suave de marimba pentatónica (C5, D5, E5, G5, A5) con Web Audio API sincronizada al tempo de los avatares (Tortuga Zen 60 BPM, Cadensín el Castor 70 BPM, Colibrí Cantor 75 BPM).
+     - Repertorio expandido a 6 cuentos infantiles fonéticamente balanceados con metas temáticas (`goalEmoji`) y barra de camino animada.
+     - Fanfarria de victoria y sistema de cofre de estrellas mágicas sin penalizaciones punitivas.
+     - Pruebas unitarias en `src/components/PediatricFluencyTrainer.test.tsx` y `src/lib/pediatricFluency.test.ts`.
+  2. **Arquitectura y Banner de Compatibilidad Multi-Navegador**:
+     - Componente `src/components/BrowserCompatibilityBanner.tsx` con detección en vivo de Chrome, Edge, Opera, Safari y Firefox.
+     - Modal informativo con la matriz técnica de soporte fonoaudiológico.
+     - Módulo `src/lib/audioUnlock.ts` para desbloqueo universal de AudioContext en Safari/iOS en el primer toque.
+     - Soporte CSS `100dvh` y `env(safe-area-inset-*)` para WebKit y dispositivos móviles.
+     - Degradación elegante en `PhoneticRecognitionValidator.tsx` ante navegadores sin Web Speech API (Firefox).
+     - Indicador de voz en vivo Zero Trust `src/components/LiveAudioVUMeter.tsx`.
+     - Pruebas unitarias en `BrowserCompatibilityBanner.test.tsx`, `audioUnlock.test.ts` y `LiveAudioVUMeter.test.tsx`.
+  3. **Infraestructura de Pruebas Multi-Motor Playwright**:
+     - Configuración `playwright.config.ts` y suite E2E `e2e/cross_browser_compatibility.spec.ts` para Chromium, Firefox, WebKit y Mobile Safari con emulación de streams de audio.
+  4. **Verificación en Contenedor Docker Local**:
+     - Compilación exitosa de la imagen multi-stage `cadensa-web:local` (`node:20-slim` + `nginx:alpine`).
+     - Verificación HTTP 200 OK en contenedor local con paridad idéntica al entorno remoto.
+  5. **Métricas de GA4, Search Console y Bing + Plan Aplicado**:
+     - Extracción automatizada con `scripts/fetch_platform_metrics.cjs`: 22 usuarios activos, 83 vistas, 400s duración media por sesión en GA4; verificación en GSC y Bing.
+     - Enriquecimiento de Schema.org en `src/lib/structuredData.ts` con `MedicalCondition` infantil y `EducationalOccupationalProgram`.
+     - Disparo exitoso de IndexNow (HTTP 202) hacia Bing Webmaster Tools con `scripts/submit_seo_index.cjs`.
+  6. **BDD y Sincronización Mandatoria de `/about`**:
+     - Escenarios BDD en español `features/kids_practice_and_cross_browser.feature` y definiciones en `features/step_definitions/kids_practice_and_cross_browser_steps.ts`.
+     - Página `/about` actualizada con las nuevas capacidades y suite pasando al 100%.
+     - Suite global: 51 archivos Vitest / 228 pruebas y 90 escenarios Cucumber BDD / 349 pasos pasando al 100%.
+- **Archivos creados/modificados**:
+  - `src/lib/pediatricFluency.ts`, `src/lib/pediatricFluency.test.ts`
+  - `src/components/PediatricFluencyTrainer.tsx`, `src/components/PediatricFluencyTrainer.test.tsx`
+  - `src/components/BrowserCompatibilityBanner.tsx`, `src/components/BrowserCompatibilityBanner.test.tsx`
+  - `src/lib/audioUnlock.ts`, `src/lib/audioUnlock.test.ts`
+  - `src/components/LiveAudioVUMeter.tsx`, `src/components/LiveAudioVUMeter.test.tsx`
+  - `src/components/PhoneticRecognitionValidator.tsx`
+  - `src/lib/structuredData.ts`
+  - `src/app/page.tsx`, `src/app/about/page.tsx`
+  - `playwright.config.ts`, `e2e/cross_browser_compatibility.spec.ts`
+  - `features/kids_practice_and_cross_browser.feature`, `features/step_definitions/kids_practice_and_cross_browser_steps.ts`
+  - `wiki/architecture/cross_browser_compatibility.md`, `wiki/roadmap/next_steps_plan.md`, `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

@@ -25,3 +25,4 @@ describe('FormantBiofeedbackVisualizer Component', () => {
     expect(screen.getByText(/Cerrada • Anterior/i)).toBeInTheDocument();
   });
 });
+

@@ -158,3 +158,4 @@ export function isSpeechRecognitionSupported(): boolean {
     (window as unknown as { webkitSpeechRecognition?: unknown }).webkitSpeechRecognition
   );
 }
+

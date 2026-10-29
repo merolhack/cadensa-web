@@ -34,6 +34,9 @@ import { FormantBiofeedbackVisualizer } from '@/components/FormantBiofeedbackVis
 import { TelehealthRoom } from '@/components/TelehealthRoom';
 import { PediatricFluencyTrainer } from '@/components/PediatricFluencyTrainer';
 import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionValidator';
+import { BrowserCompatibilityBanner } from '@/components/BrowserCompatibilityBanner';
+import { LiveAudioVUMeter } from '@/components/LiveAudioVUMeter';
+import { setupAudioContextUnlock } from '@/lib/audioUnlock';
 
 const TRAINING_PHRASES = [
   'Ca mi no des pa cio ca da ma ña na',
@@ -172,6 +175,14 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
     return () => {
       authListener.subscription.unsubscribe();
     };
+  }, []);
+
+  // Desbloqueo universal de AudioContext para Safari / iOS en el primer gesto de usuario
+  useEffect(() => {
+    const cleanup = setupAudioContextUnlock(() => {
+      return (metronomeRef.current as unknown as { audioCtx?: AudioContext })?.audioCtx || null;
+    });
+    return () => cleanup();
   }, []);
 
   // Contador de duración de la sesión activa
@@ -452,6 +463,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   if (currentView === 'home') {
     return (
       <>
+        <BrowserCompatibilityBanner />
         <TechniquesCatalogHome
           onSelectTechnique={handleSelectTechniqueFromHome}
           onOpenVideoModal={handleOpenVideoModal}
@@ -624,6 +636,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   // 2. Vista de Estación de Entrenamiento Activo (Práctica)
   return (
     <main className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-50 selection:bg-emerald-500 selection:text-zinc-950 animate-fade-in">
+      <div className="w-full max-w-5xl mb-2">
+        <BrowserCompatibilityBanner />
+      </div>
       {/* Barra de Navegación Superior Homogénea (max-w-5xl) */}
       <nav className="w-full max-w-5xl flex items-center justify-between py-1.5 sm:py-2 border-b border-zinc-900 mb-2">
         <div className="flex items-center gap-2">
@@ -643,6 +658,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-mono">
             v0.4.0
           </span>
+          <LiveAudioVUMeter isActive={isPlaying} />
         </div>
 
         <div className="flex items-center gap-2">

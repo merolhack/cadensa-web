@@ -39,3 +39,4 @@ El componente `AudioSelfMonitor` (`src/components/AudioSelfMonitor.tsx`) aprovec
 
 > [!IMPORTANT]
 > **Aislamiento en Memoria:** Ningún byte de voz o audio grabado por el paciente es transmitido a Supabase, Cloudflare ni a ningún servicio de telemetría de terceros. Todo el ciclo de vida del audio reside exclusivamente en la memoria RAM del navegador.
+

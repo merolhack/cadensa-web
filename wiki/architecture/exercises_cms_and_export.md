@@ -55,3 +55,4 @@ Para facilitar la adopción móvil diaria:
   - Captura el evento `beforeinstallprompt` del navegador.
   - Detecta si la aplicación ya se ejecuta en modo `standalone`.
   - Muestra un botón ergonómico *"📲 Instalar App"* en la barra de navegación para añadir Cadensa a la pantalla de inicio con 1 clic.
+

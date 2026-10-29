@@ -13,7 +13,7 @@ const ROUTINE_STEPS = [
   {
     title: 'Paso 1: Respiración Diafragmática (4-4-4-4)',
     duration: 60,
-    badge: '1 Minuto • Calma Vagal',
+    badge: '1 Minuto • Relajación y Calma',
     description: 'Inhala en 4s inflando el abdomen, sostén 4s, exhala en 4s y pausa 4s para desactivar la tensión laríngea.',
     actionText: 'Comenzar Respiración',
     icon: '🌬️',

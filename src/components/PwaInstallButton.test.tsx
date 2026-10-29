@@ -85,3 +85,4 @@ describe('PwaInstallButton', () => {
     expect(screen.getByText(/App Instalada/i)).toBeInTheDocument();
   });
 });
+

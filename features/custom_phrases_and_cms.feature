@@ -33,3 +33,4 @@ Característica: Frases Personalizadas, Auto-Escucha, CMS y Exportación CSV
     Dado que un usuario ingresa a Cadensa desde un navegador compatible
     Cuando la plataforma ofrece la instalación como Progressive Web App
     Entonces el botón de instalación debe estar accesible en la interfaz
+

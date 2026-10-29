@@ -325,7 +325,7 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
       stop: 'Detener Respiración Guiada',
       icon: '🌬️',
     },
-    exerciseGoal: 'Calma diafragmática y regulación vagal previa a la fonación',
+    exerciseGoal: 'Calma diafragmática y alivio de tensión previa a la fonación',
     recommendedCategory: 'todas',
   },
 

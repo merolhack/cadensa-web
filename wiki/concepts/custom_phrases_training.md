@@ -47,3 +47,4 @@ Para reducir la fricción inicial, la plataforma provee plantillas basadas en es
   ]
   ```
 - **Confidencialidad:** Las oraciones íntimas o desafiantes del paciente nunca se transmiten a la red ni quedan registradas en bases de datos públicas, garantizando total privacidad terapéutica.
+

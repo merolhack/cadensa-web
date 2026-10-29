@@ -958,3 +958,27 @@
   - `features/kids_practice_and_cross_browser.feature`, `features/step_definitions/kids_practice_and_cross_browser_steps.ts`
   - `wiki/architecture/cross_browser_compatibility.md`, `wiki/roadmap/next_steps_plan.md`, `wiki/index.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-29] refactor | Armonización de anchos de footer y reubicación de aviso de compatibilidad al pie de página
+- **Detalle**:
+  1. **Reubicación de Compatibilidad de Navegadores al Pie de Página**:
+     - Se retiró la barra superior flotante para evitar distracciones clínicas y optimizar el espacio inicial en dispositivos móviles.
+     - Se integró `BrowserCompatibilityBanner` de manera discreta y compacta en el footer de `TechniquesCatalogHome.tsx` y en el footer de la estación de práctica `src/app/page.tsx`, manteniendo el acceso al modal técnico completo.
+  2. **Consistencia de Anchos Homogéneos (1024px / max-w-5xl)**:
+     - En la página principal (`TechniquesCatalogHome`), se armonizaron la tarjeta de neuroplasticidad ("¿Por qué Cadensa se enfoca en sesiones de 3 a 5 minutos diarios?"), el `CommunityBanner` y el `footer` a `w-full max-w-5xl`, alineando los bordes perimetrales con la parrilla superior de 3 columnas y la cabecera.
+     - En la estación de práctica (`src/app/page.tsx`), se unificó el footer a `w-full max-w-4xl` (896px) para guardar simetría exacta con la consola central de entrenamiento y las tarjetas clínicas.
+     - Se actualizó `wiki/architecture/layout_and_responsive_standards.md`.
+  3. **Verificación de Pruebas**:
+     - 51 archivos Vitest / 228 pruebas unitarias aprobadas al 100%.
+     - 90 escenarios Cucumber BDD / 349 pasos en español aprobados al 100%.
+     - Compilación estática Next.js Turbopack (`npm run build`) exitosa para las 18 rutas.
+- **Archivos modificados**:
+  - `src/components/BrowserCompatibilityBanner.tsx`, `src/components/BrowserCompatibilityBanner.test.tsx`
+  - `src/components/CommunityBanner.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`
+  - `src/app/page.tsx`
+  - `wiki/architecture/layout_and_responsive_standards.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

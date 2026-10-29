@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-interface BrowserInfo {
+export interface BrowserInfo {
   name: string;
   icon: string;
   status: 'optimal' | 'compatible' | 'standard';
@@ -11,7 +11,7 @@ interface BrowserInfo {
   notes: string;
 }
 
-function detectBrowserInfo(): BrowserInfo {
+export function detectBrowserInfo(): BrowserInfo {
   if (typeof window === 'undefined') {
     return {
       name: 'Navegador Web Estándar',
@@ -88,43 +88,29 @@ function detectBrowserInfo(): BrowserInfo {
 export function BrowserCompatibilityBanner() {
   const [browserInfo] = useState<BrowserInfo>(() => detectBrowserInfo());
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
-
-  if (isDismissed) return null;
 
   return (
     <>
-      {/* Píldora de estado de compatibilidad */}
-      <div className="w-full bg-zinc-950/90 border-b border-zinc-800/80 px-4 py-1.5 text-xs text-zinc-300 flex items-center justify-between gap-2 z-30">
-        <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
-          <span className="text-sm">{browserInfo.icon}</span>
-          <span className="font-semibold text-zinc-200">{browserInfo.name}:</span>
-          <span className={`px-2 py-0.5 rounded-full border text-[11px] font-bold ${browserInfo.badgeColor}`}>
+      {/* Aviso discreto integrado en el pie de página para no quitar atención clínica */}
+      <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-2 text-[11px] text-zinc-500 border-t border-zinc-900/60 mt-3 select-none">
+        <span className="flex items-center gap-1.5">
+          <span>{browserInfo.icon}</span>
+          <span className="text-zinc-400 font-medium">{browserInfo.name}:</span>
+          <span className={`px-2 py-0.2 rounded-full border text-[10px] font-semibold ${browserInfo.badgeColor}`}>
             {browserInfo.badgeText}
           </span>
-          <span className="hidden md:inline text-zinc-400 text-[11px] truncate">{browserInfo.notes}</span>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="text-cyan-400 hover:text-cyan-300 underline font-semibold text-[11px] cursor-pointer"
-          >
-            Ver matriz de navegadores
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsDismissed(true)}
-            className="text-zinc-500 hover:text-zinc-300 text-sm px-1 cursor-pointer"
-            title="Cerrar aviso"
-          >
-            ×
-          </button>
-        </div>
+        </span>
+        <span className="hidden sm:inline text-zinc-600">•</span>
+        <button
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          className="text-zinc-400 hover:text-cyan-400 transition-colors underline cursor-pointer font-medium"
+        >
+          Ver matriz técnica de navegadores
+        </button>
       </div>
 
-      {/* Modal con la Matriz de Compatibilidad Cross-Browser */}
+      {/* Modal accesible con la Matriz de Compatibilidad Cross-Browser */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="w-full max-w-lg rounded-3xl bg-zinc-900 border border-zinc-800 p-6 shadow-2xl text-zinc-100 space-y-4">

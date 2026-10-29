@@ -463,7 +463,6 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   if (currentView === 'home') {
     return (
       <>
-        <BrowserCompatibilityBanner />
         <TechniquesCatalogHome
           onSelectTechnique={handleSelectTechniqueFromHome}
           onOpenVideoModal={handleOpenVideoModal}
@@ -636,9 +635,6 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   // 2. Vista de Estación de Entrenamiento Activo (Práctica)
   return (
     <main className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-50 selection:bg-emerald-500 selection:text-zinc-950 animate-fade-in">
-      <div className="w-full max-w-5xl mb-2">
-        <BrowserCompatibilityBanner />
-      </div>
       {/* Barra de Navegación Superior Homogénea (max-w-5xl) */}
       <nav className="w-full max-w-5xl flex items-center justify-between py-1.5 sm:py-2 border-b border-zinc-900 mb-2">
         <div className="flex items-center gap-2">
@@ -1065,8 +1061,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       {/* Banner Comunitario Oficial AMTTM */}
       <CommunityBanner />
 
-      {/* Footer Homogéneo (max-w-5xl) */}
-      <footer className="w-full max-w-5xl text-center pt-6 pb-3 border-t border-zinc-900 text-xs text-zinc-500 space-y-2">
+      {/* Footer Homogéneo y Simétrico (max-w-4xl) */}
+      <footer className="w-full max-w-4xl text-center pt-6 pb-6 border-t border-zinc-900 text-xs text-zinc-500 space-y-3">
         <div className="flex flex-wrap items-center justify-center gap-3 text-zinc-400">
           <Link
             href="/about"
@@ -1108,7 +1104,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium cursor-pointer"
           >
             <span>💬</span>
-            <span>Comentarios y Reportes</span>
+            <span>Comentarios</span>
           </button>
           <span className="hidden sm:inline">•</span>
           <Link
@@ -1122,6 +1118,10 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           <span className="hidden sm:inline">•</span>
           <span>Cadensa Web — Terapia Rítmica Silábica</span>
         </div>
+
+        {/* Aviso discreto de compatibilidad para personas técnicas */}
+        <BrowserCompatibilityBanner />
+
         <p className="text-[11px] text-zinc-600">Next.js 16 • Supabase • Cloudflare Pages</p>
       </footer>
 

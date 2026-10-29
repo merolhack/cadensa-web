@@ -35,3 +35,4 @@ La infraestructura E2E definida en `playwright.config.ts` valida la aplicación 
 - `edge`: Microsoft Edge con canal dedicado.
 
 Los tests utilizan flags de emulación de dispositivos multimedia (`--use-fake-device-for-media-stream` y `--use-fake-ui-for-media-stream`) para ejecutar pruebas de audio y VAD sin requerir micrófonos físicos en los entornos de integración continua.
+

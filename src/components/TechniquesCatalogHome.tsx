@@ -11,6 +11,7 @@ import {
 } from '@/lib/clinicalTechniques';
 import { CommunityBanner } from './CommunityBanner';
 import { PwaInstallButton } from './PwaInstallButton';
+import { BrowserCompatibilityBanner } from './BrowserCompatibilityBanner';
 
 interface TechniquesCatalogHomeProps {
   onSelectTechnique: (technique: ClinicalTechnique) => void;
@@ -361,8 +362,8 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
         </div>
       </section>
 
-      {/* 5. Sección de Metodología y AMTTM */}
-      <section className="max-w-4xl w-full my-6 p-5 sm:p-6 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 space-y-3 text-left">
+      {/* 5. Sección de Metodología y AMTTM (Homogénea en max-w-5xl) */}
+      <section className="max-w-5xl w-full my-6 p-5 sm:p-6 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 space-y-3 text-left">
         <h3 className="text-base sm:text-lg font-bold text-zinc-100 flex items-center gap-2">
           <span>🧠</span>
           <span>¿Por qué Cadensa se enfoca en sesiones de 3 a 5 minutos diarios?</span>
@@ -372,13 +373,13 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
         </p>
       </section>
 
-      {/* 6. Banner Oficial AMTTM */}
-      <div className="max-w-4xl w-full my-2">
-        <CommunityBanner />
+      {/* 6. Banner Oficial AMTTM (Homogéneo en max-w-5xl) */}
+      <div className="max-w-5xl w-full my-2">
+        <CommunityBanner className="max-w-5xl" />
       </div>
 
-      {/* 7. Footer */}
-      <footer className="max-w-5xl w-full pt-6 pb-2 border-t border-zinc-900 text-center text-xs text-zinc-400 space-y-2">
+      {/* 7. Footer Homogéneo (max-w-5xl) */}
+      <footer className="max-w-5xl w-full pt-6 pb-6 border-t border-zinc-900 text-center text-xs text-zinc-400 space-y-3">
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-zinc-400">
           <Link
             href="/about"
@@ -419,7 +420,13 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             Asociación Mexicana de la Tartamudez (Facebook)
           </a>
         </div>
-        <p>© 2026 Cadensa — Plataforma de Fluidez del Habla. Diseñado con enfoque en fonoaudiología clínica y accesibilidad.</p>
+
+        {/* Aviso no intrusivo de compatibilidad al fondo de todo para perfil técnico */}
+        <BrowserCompatibilityBanner />
+
+        <p className="text-zinc-500 text-[11px] pt-1">
+          © 2026 Cadensa — Plataforma de Fluidez del Habla. Diseñado con enfoque en fonoaudiología clínica y accesibilidad.
+        </p>
       </footer>
     </div>
   );

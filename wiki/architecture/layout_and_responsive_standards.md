@@ -70,8 +70,12 @@ Para resolver la disparidad, se estableció una jerarquía clara de 3 niveles de
 | Componente | Clase Tailwind | Ancho Máximo en Píxeles | Propósito Visual |
 | :--- | :--- | :---: | :--- |
 | **Barra de Navegación** (Home y Práctica) | `w-full max-w-5xl` | 1024px | Marco superior simétrico sin saltos al navegar. |
-| **Pie de Página** (Home y Práctica) | `w-full max-w-5xl` | 1024px | Cierre visual alineado con el borde superior. |
+| **Pie de Página** (Home) | `w-full max-w-5xl` | 1024px | Cierre visual alineado simétricamente con el catálogo y la cabecera. |
+| **Pie de Página** (Práctica) | `w-full max-w-4xl` | 896px | Cierre visual simétrico con la consola de práctica y tarjetas clínicas. |
 | **Parrilla de Catálogo** (`TechniquesCatalogHome`) | `w-full max-w-5xl` | 1024px | Permite 3 columnas de tarjetas (`grid-cols-1 md:grid-cols-3`) con respiro visual. |
+| **Sección Informativa Neuroplasticidad** (Home) | `w-full max-w-5xl` | 1024px | Se alinea con los márgenes exteriores de las tarjetas superiores. |
+| **Banner Comunitario AMTTM** (Home / Práctica) | `w-full max-w-5xl` / `max-w-4xl` | 1024px / 896px | Alineación simétrica según la vista activa. |
+| **Aviso de Compatibilidad de Navegadores** (`BrowserCompatibilityBanner`) | En Footer | Compacto | Ubicado discretamente al pie de página para perfil técnico sin estorbar la práctica clínica. |
 | **Estudio de Entrenamiento** (`page.tsx`) | `w-full max-w-4xl` | 896px | Espacio amplio para metrónomo, slider de tempo y botones. |
 | **Tarjetas de Neurobiología** (3 cards) | `w-full max-w-4xl` | 896px | Se alinea con el estudio superior y da ~280px por columna. |
 | **Acordeón FAQ y Guía** (`FaqAndMethodology`) | `w-full max-w-4xl` | 896px | Legibilidad óptima sin renglones excesivamente largos. |

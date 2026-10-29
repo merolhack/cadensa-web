@@ -77,4 +77,26 @@ describe('TechniquesCatalogHome Component - Unit Tests', () => {
 
     expect(onSelectTechnique).toHaveBeenCalledWith(CLINICAL_TECHNIQUES.sts);
   });
+
+  it('debe invocar onOpenDAF y onOpenCertificates al hacer clic en sus respectivos botones', () => {
+    const onOpenDAF = vi.fn();
+    const onOpenCertificates = vi.fn();
+    render(
+      <TechniquesCatalogHome
+        {...defaultProps}
+        onOpenDAF={onOpenDAF}
+        onOpenCertificates={onOpenCertificates}
+      />
+    );
+
+    const dafBtn = screen.getByRole('button', { name: /feedback auditivo alterado daf y faf/i });
+    expect(dafBtn).toBeInTheDocument();
+    fireEvent.click(dafBtn);
+    expect(onOpenDAF).toHaveBeenCalledTimes(1);
+
+    const certBtn = screen.getByRole('button', { name: /diplomas de mérito y fluidez/i });
+    expect(certBtn).toBeInTheDocument();
+    fireEvent.click(certBtn);
+    expect(onOpenCertificates).toHaveBeenCalledTimes(1);
+  });
 });

@@ -22,6 +22,8 @@ interface TechniquesCatalogHomeProps {
   onOpenFormants?: () => void;
   onOpenTelehealth?: () => void;
   onOpenKids?: () => void;
+  onOpenDAF?: () => void;
+  onOpenCertificates?: () => void;
   streakDays: number;
   totalMinutes: number;
   xpPoints: number;
@@ -39,6 +41,8 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onOpenFormants,
   onOpenTelehealth,
   onOpenKids,
+  onOpenDAF,
+  onOpenCertificates,
   streakDays,
   totalMinutes,
   xpPoints,
@@ -207,10 +211,32 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
           {onOpenKids && (
             <button
               onClick={onOpenKids}
-              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-900/60 to-pink-900/60 hover:from-purple-900/80 hover:to-pink-900/80 border border-purple-500/40 text-amber-300 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-900/60 to-pink-900/60 hover:from-purple-900/80 hover:to-pink-900/80 border border-purple-500/40 text-amber-300 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
             >
               <span>✨</span>
               <span>Cadensa Kids</span>
+            </button>
+          )}
+
+          {onOpenDAF && (
+            <button
+              onClick={onOpenDAF}
+              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-teal-900/60 to-cyan-900/60 hover:from-teal-900/80 hover:to-cyan-900/80 border border-teal-500/40 text-teal-200 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
+              aria-label="Abrir Feedback Auditivo Alterado DAF y FAF"
+            >
+              <span>🎧</span>
+              <span>Feedback DAF/FAF</span>
+            </button>
+          )}
+
+          {onOpenCertificates && (
+            <button
+              onClick={onOpenCertificates}
+              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
+              aria-label="Abrir Diplomas de Mérito y Fluidez"
+            >
+              <span>🏆</span>
+              <span>Diplomas</span>
             </button>
           )}
         </div>

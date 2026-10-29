@@ -217,3 +217,47 @@ export function playKidsFanfare(): void {
     // Falla silenciosa
   }
 }
+
+/**
+ * Síntesis de sonido de aplauso motivacional para el Modo Dúo (Familia / Fonoaudiólogo).
+ */
+export function playKidsApplauseSound(): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    if (!sharedKidsAudioCtx || sharedKidsAudioCtx.state === 'closed') {
+      sharedKidsAudioCtx = new AudioContextClass();
+    }
+    if (sharedKidsAudioCtx.state === 'suspended') {
+      sharedKidsAudioCtx.resume().catch(() => {});
+    }
+
+    const now = sharedKidsAudioCtx.currentTime;
+    const claps = [0, 0.08, 0.16];
+
+    claps.forEach((offset) => {
+      const clapTime = now + offset;
+      const osc = sharedKidsAudioCtx!.createOscillator();
+      const gain = sharedKidsAudioCtx!.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320 + Math.random() * 80, clapTime);
+
+      gain.gain.setValueAtTime(0.001, clapTime);
+      gain.gain.exponentialRampToValueAtTime(0.2, clapTime + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, clapTime + 0.07);
+
+      osc.connect(gain);
+      gain.connect(sharedKidsAudioCtx!.destination);
+
+      osc.start(clapTime);
+      osc.stop(clapTime + 0.08);
+    });
+  } catch {
+    // Falla silenciosa
+  }
+}
+

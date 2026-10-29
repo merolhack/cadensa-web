@@ -7,6 +7,7 @@ import {
   calculatePediatricReward,
   playKidsSyllableTone,
   playKidsFanfare,
+  playKidsApplauseSound,
 } from '../lib/pediatricFluency';
 
 export function PediatricFluencyTrainer() {
@@ -16,6 +17,17 @@ export function PediatricFluencyTrainer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeSyllableIndex, setActiveSyllableIndex] = useState<number>(-1);
   const [sessionReward, setSessionReward] = useState<{ stars: number; cheerMessage: string } | null>(null);
+  const [isDuoMode, setIsDuoMode] = useState(false);
+  const [duoSparkle, setDuoSparkle] = useState<string | null>(null);
+
+  const handleTriggerApplause = useCallback(() => {
+    playKidsApplauseSound();
+    setTotalStars((prev) => prev + 1);
+    setDuoSparkle('👏 ¡Bravo! +1 Estrella de acompañamiento');
+    setTimeout(() => {
+      setDuoSparkle(null);
+    }, 2000);
+  }, []);
 
   const avatar = PEDIATRIC_AVATARS[selectedAvatarKey];
   const challenge = PEDIATRIC_CHALLENGES[challengeIndex];
@@ -108,12 +120,29 @@ export function PediatricFluencyTrainer() {
           </p>
         </div>
 
-        {/* Marcador de Estrellas Ganadas */}
-        <div className="flex items-center gap-2.5 bg-zinc-900/90 px-4 py-2.5 rounded-2xl border border-amber-400/50 shadow-inner">
-          <span className="text-3xl animate-bounce">⭐</span>
-          <div>
-            <span className="text-[10px] text-zinc-400 block font-bold uppercase tracking-wider">Cofre de Estrellas</span>
-            <span className="text-xl font-black text-amber-300">{totalStars}</span>
+        {/* Marcador de Estrellas Ganadas y Conmutador de Modo Dúo */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setIsDuoMode((prev) => !prev)}
+            className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              isDuoMode
+                ? 'bg-pink-900/60 border-pink-400 text-pink-200 shadow-md shadow-pink-500/20'
+                : 'bg-zinc-900/80 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+            }`}
+            title="Activar acompañamiento conjunto padre/madre o terapeuta"
+          >
+            <span>👥</span>
+            <span>Modo Dúo</span>
+            <span className={`w-2 h-2 rounded-full ${isDuoMode ? 'bg-pink-400 animate-ping' : 'bg-zinc-600'}`} />
+          </button>
+
+          <div className="flex items-center gap-2.5 bg-zinc-900/90 px-4 py-2 rounded-2xl border border-amber-400/50 shadow-inner">
+            <span className="text-2xl animate-bounce">⭐</span>
+            <div>
+              <span className="text-[10px] text-zinc-400 block font-bold uppercase tracking-wider">Cofre de Estrellas</span>
+              <span className="text-lg font-black text-amber-300">{totalStars}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -261,6 +290,18 @@ export function PediatricFluencyTrainer() {
             </button>
           )}
 
+          {/* Botón exclusivo de Modo Dúo (Padre / Terapeuta) */}
+          {isDuoMode && (
+            <button
+              type="button"
+              onClick={handleTriggerApplause}
+              className="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-pink-900/30 transition transform active:scale-95 cursor-pointer flex items-center gap-1.5"
+            >
+              <span>👏</span>
+              <span>¡Aplauso Motivador! (+1 ⭐)</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={handleNextChallenge}
@@ -270,6 +311,13 @@ export function PediatricFluencyTrainer() {
             <span>➡️</span>
           </button>
         </div>
+
+        {/* Notificación de Chispa en Modo Dúo */}
+        {duoSparkle && (
+          <div className="text-xs font-bold text-pink-300 bg-pink-950/60 border border-pink-500/40 py-2 px-4 rounded-xl animate-bounce mx-auto max-w-xs">
+            {duoSparkle}
+          </div>
+        )}
       </div>
 
       {/* Celebración de Recompensa con estrellas y fanfarria */}

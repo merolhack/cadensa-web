@@ -982,3 +982,40 @@
   - `src/app/page.tsx`
   - `wiki/architecture/layout_and_responsive_standards.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-29] feature | Feedback Auditivo Alterado (DAF/FAF), Interoperabilidad HL7 FHIR R4, Diplomas de Mérito y Modo Dúo Pediátrico
+- **Detalle**:
+  1. **Motor de Retroalimentación Auditiva Alterada DAF / FAF (`src/lib/alteredAuditoryFeedback.ts` & `src/components/AlteredAuditoryTrainer.tsx`)**:
+     - Implementación de `AlteredAuditoryProcessor` con Web Audio API: DelayNode de 50 ms a 200 ms, BiquadFilter paramétrico para Frequency-Altered Feedback (±4 semitonos) y GainNode de seguridad acústica (≤0.8).
+     - Inducción neurobiológica del efecto coro para desinhibir los ganglios basales y suprimir bloqueos tónicos.
+     - Presets clínicos calibrados (DAF Suave 50ms, DAF Estándar 80ms, Efecto Coro 75ms / -1 semitono) y advertencia obligatoria de auriculares contra acople.
+  2. **Cadensa Kids 2.0 y Modo Dúo con Aplauso Motivador (`src/lib/pediatricFluency.ts` & `src/components/PediatricFluencyTrainer.tsx`)**:
+     - Modalidad colaborativa para acompañantes y fonoaudiólogos con síntesis de aplauso acústico y acumulación de estrellas.
+  3. **Diplomas Fonoaudiológicos de Mérito y Refuerzo Positivo (`src/lib/fluencyCertificate.ts` & `src/components/FluencyCertificateModal.tsx`)**:
+     - Generación de diplomas clínicos apaisados para impresión y guardado PDF (Iniciador Valiente, Guardián del Ritmo, Maestro de la Calma).
+  4. **Interoperabilidad Hospitalaria HL7 FHIR R4 (`src/lib/fhirExport.ts` & `src/components/ClinicalReportExporter.tsx`)**:
+     - Recurso `DiagnosticReport` con codificación estándar LOINC (`77150-1`, `89066-5`, `77151-9`, `55411-3`) y SNOMED-CT (`289190003`) con exportación local JSON Zero Trust.
+  5. **Auditoría de Seguridad y Cumplimiento Zero Trust (`src/lib/securityAudit.test.ts`)**:
+     - Verificación estricta de headers HTTP en `public/_headers` (anti-clickjacking, CSP, Permissions-Policy de micrófono exclusivo self y cámara deshabilitada) y protección de secretos.
+  6. **Cobertura de Pruebas y BDD**:
+     - 57 archivos Vitest / 252 pruebas unitarias aprobadas al 100%.
+     - 95 escenarios Cucumber BDD / 369 pasos en español aprobados al 100%.
+- **Archivos creados/modificados**:
+  - `src/lib/alteredAuditoryFeedback.ts`, `src/lib/alteredAuditoryFeedback.test.ts`
+  - `src/components/AlteredAuditoryTrainer.tsx`, `src/components/AlteredAuditoryTrainer.test.tsx`
+  - `src/lib/pediatricFluency.ts`, `src/lib/pediatricFluency.test.ts`
+  - `src/components/PediatricFluencyTrainer.tsx`, `src/components/PediatricFluencyTrainer.test.tsx`
+  - `src/lib/fluencyCertificate.ts`, `src/lib/fluencyCertificate.test.ts`
+  - `src/components/FluencyCertificateModal.tsx`, `src/components/FluencyCertificateModal.test.tsx`
+  - `src/lib/fhirExport.ts`, `src/lib/fhirExport.test.ts`
+  - `src/components/ClinicalReportExporter.tsx`, `src/components/ClinicalReportExporter.test.tsx`
+  - `src/lib/securityAudit.test.ts`
+  - `src/components/TechniquesCatalogHome.tsx`, `src/components/TechniquesCatalogHome.test.tsx`
+  - `src/app/page.tsx`
+  - `features/daf_faf_and_clinical_interoperability.feature`, `features/step_definitions/daf_faf_and_clinical_interoperability_steps.ts`
+  - `wiki/concepts/altered_auditory_feedback_daf_faf.md`, `wiki/architecture/hl7_fhir_interoperability.md`, `wiki/concepts/clinical_certificates_and_positive_reinforcement.md`
+  - `wiki/index.md`, `wiki/roadmap/next_steps_plan.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

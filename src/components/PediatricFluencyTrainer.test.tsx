@@ -75,4 +75,22 @@ describe('PediatricFluencyTrainer Component', () => {
     expect(screen.getByText(/Construyamos el ritmo con cada sílaba/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /¡pronunciar como cadensín el castor!/i })).toBeInTheDocument();
   });
+
+  it('permite activar el Modo Dúo y disparar aplauso motivador sumando estrellas', () => {
+    render(<PediatricFluencyTrainer />);
+
+    const duoToggle = screen.getByRole('button', { name: /modo dúo/i });
+    act(() => {
+      fireEvent.click(duoToggle);
+    });
+
+    const applauseBtn = screen.getByRole('button', { name: /¡aplauso motivador!/i });
+    expect(applauseBtn).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(applauseBtn);
+    });
+
+    expect(screen.getByText(/¡Bravo! \+1 Estrella/i)).toBeInTheDocument();
+  });
 });

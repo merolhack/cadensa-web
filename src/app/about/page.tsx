@@ -260,6 +260,26 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Infraestructura de Pruebas Multi-Motor con Playwright:</strong> Validación automatizada E2E sobre Chromium, Gecko (Firefox) y WebKit (Safari Desktop y Mobile).</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Feedback Auditivo Alterado en Tiempo Real (DAF / FAF):</strong> Delayed Auditory Feedback (50 a 200 ms) y Frequency-Altered Feedback (±4 semitonos) con Web Audio API para inducir el efecto coro neuroacústico, desinhibir los ganglios basales y romper bloqueos articulatorios involuntarios.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Cadensa Kids 2.0 y Modo Dúo Pediátrico:</strong> Dinámica colaborativa para padres y fonoaudiólogos con síntesis de aplauso motivador acústico, cofre mágico y acumulación dinámica de estrellas.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Diplomas Fonoaudiológicos y Certificados de Mérito:</strong> Generación e impresión apaisada (PDF) de reconocimientos clínicos (Iniciador Valiente, Guardián del Ritmo, Maestro de la Calma) para refuerzo positivo y reducción de la frustración vocal.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Interoperabilidad Hospitalaria HL7 FHIR R4:</strong> Exportación de fichas foniátricas compatibles con expedientes clínicos electrónicos (EHR / HIS) bajo el perfil DiagnosticReport y códigos internacionales LOINC (77150-1) y SNOMED-CT (289190003).</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Auditoría de Seguridad y Cumplimiento Zero Trust:</strong> Blindaje de cabeceras HTTP (HSTS, CSP, Permissions-Policy con micrófono exclusivo self y cámara bloqueada) y verificación estricta de aislamiento de secretos.</span>
+                </li>
               </ul>
             </div>
 
@@ -277,19 +297,15 @@ export default function AboutPage() {
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 1: Estimulación Auditiva Dicótica y Ruido Blanco Adaptativo (DAF/FAF):</strong> Frecuencias alteradas y retardo dinámico para eludir el bloqueo vocal con estimulación binaural.</span>
+                  <span><strong>Hito 1: Inferencia Acústica On-Device con ONNX Runtime Web &amp; WebGPU:</strong> Redes neuronales convolucionales ultraligeras ejecutadas en GPU local para alertar sobre hiperaducción laríngea y espasmos tónicos previos a la fonación.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 2: Interoperabilidad Médica HL7 / FHIR:</strong> Exportación estructurada de expedientes fonoaudiológicos para integración con software clínico hospitalario.</span>
+                  <span><strong>Hito 2: Desensibilización Fóbica en Realidad Virtual WebXR:</strong> Escenarios 3D interactivos en el navegador para exposición gradual ante entrevistas laborales y presentaciones públicas con biofeedback de ritmo.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 3: Inferencia de Tensión Muscular con ONNX Runtime Web:</strong> Redes neuronales acústicas ejecutadas en WebGPU para alertar sobre hiperaducción laríngea previa al habla.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 4: Desensibilización Fóbica en Realidad Virtual WebXR:</strong> Escenarios 3D interactivos en el navegador para exposición gradual ante auditorios virtuales.</span>
+                  <span><strong>Hito 3: Mapeo Fonético Transversal Multilingüe:</strong> Calibración fonoaudiológica para variaciones dialectales y acentuales hispanohablantes regionales.</span>
                 </li>
               </ul>
             </div>

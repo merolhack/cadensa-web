@@ -5,6 +5,7 @@ import {
   calculatePediatricReward,
   playKidsSyllableTone,
   playKidsFanfare,
+  playKidsApplauseSound,
 } from './pediatricFluency';
 
 describe('pediatricFluency engine', () => {
@@ -44,5 +45,6 @@ describe('pediatricFluency engine', () => {
     expect(() => playKidsSyllableTone(0)).not.toThrow();
     expect(() => playKidsSyllableTone(3)).not.toThrow();
     expect(() => playKidsFanfare()).not.toThrow();
+    expect(() => playKidsApplauseSound()).not.toThrow();
   });
 });

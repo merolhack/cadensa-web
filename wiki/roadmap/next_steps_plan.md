@@ -57,20 +57,35 @@
 11. **Medidor de Voz en Vivo VU Meter Zero Trust (`src/components/LiveAudioVUMeter.tsx`)**: ✅
     - Retroalimentación fonoaudiológica instantánea de captura vocal en la estación de práctica sin latencia.
 
-12. **Suite de Pruebas Unitarias, BDD y Docker**: ✅
-    - 51 archivos Vitest / 228 pruebas unitarias aprobadas al 100%.
-    - 90 escenarios Cucumber BDD / 349 pasos en español aprobados al 100%.
-    - Contenedor Docker multi-stage verificado y operativo localmente (paridad 100% con Cloudflare Pages).
+12. **Motor de Alteración Auditiva en Tiempo Real (DAF / FAF) (`src/lib/alteredAuditoryFeedback.ts` & `src/components/AlteredAuditoryTrainer.tsx`)**: ✅
+    - Delayed Auditory Feedback (retardo de 50ms a 200ms) y Frequency-Altered Feedback (desplazamiento tonal de -4 a +4 semitonos).
+    - Inducción neurobiológica del "efecto coro" para reducir espasmos y bloqueos motores involuntarios sin latencia ni fuga de datos.
+    - Presets clínicos calibrados (DAF Suave 50ms, DAF Clínico 80ms, Efecto Coro 75ms / -1 semitono) y advertencia obligatoria de auriculares.
+
+13. **Cadensa Kids 2.0 y Modo Dúo Pediátrico (`src/lib/pediatricFluency.ts` & `src/components/PediatricFluencyTrainer.tsx`)**: ✅
+    - Modo Dúo interactivo para padres y fonoaudiólogos con botón de aplauso motivador y síntesis de aplauso acústico.
+    - Refuerzo positivo contingente con acumulación dinámica de estrellas para el cofre mágico infantil.
+
+14. **Diplomas Fonoaudiológicos y Certificados de Mérito (`src/lib/fluencyCertificate.ts` & `src/components/FluencyCertificateModal.tsx`)**: ✅
+    - Catálogo de 3 diplomas clínicos (Iniciador Valiente, Guardián del Ritmo, Maestro de la Calma) generados en HTML apaisado para impresión o guardado PDF.
+    - Personalización de nombre de paciente, fecha en español y sello de Cadensa Digital Clinic.
+
+15. **Interoperabilidad Hospitalaria HL7 FHIR R4 (`src/lib/fhirExport.ts` & `src/components/ClinicalReportExporter.tsx`)**: ✅
+    - Serialización de informes fonoaudiológicos como recursos FHIR R4 `DiagnosticReport` válidos.
+    - Observaciones con terminología estandarizada LOINC (77150-1, 89066-5, 77151-9, 55411-3) y clasificación clínica SNOMED-CT (289190003).
+
+16. **Auditoría de Seguridad, Zero Trust y Cobertura de Pruebas**: ✅
+    - 57 archivos Vitest / 252 pruebas unitarias aprobadas al 100%.
+    - 95 escenarios Cucumber BDD / 369 pasos en español aprobados al 100%.
+    - Suite de auditoría de seguridad (`securityAudit.test.ts`) verificando cabeceras HTTP (HSTS, CSP, Permissions-Policy) y protección de secretos en Git.
 
 ---
 
 ## 2. Próximos Lanzamientos en la Hoja de Ruta Activa
 
-1. **Motor de Alteración Auditiva en Tiempo Real (DAF / FAF)**:
-   - Implementación de Delayed Auditory Feedback (50-200ms) y Frequency Altered Feedback (± 0.5 a 1 octava) en Audio Worklet para inducción neuroacústica de fluidez inmediata.
-2. **Interoperabilidad Clínica HL7 / FHIR**:
-   - Exportación de fichas foniátricas compatibles con estándares hospitalarios de salud electrónica (EHR) y perfiles fonoaudiológicos FHIR `DiagnosticReport`.
-3. **Modelos Acústicos On-Device con WebGPU y ONNX Runtime**:
-   - Detección precisa de bloqueos tónicos, prolongaciones y repeticiones involuntarias mediante micro-redes neuronales convolucionales ejecutadas localmente en GPU.
-4. **Entornos de Exposición Social WebXR**:
+1. **Modelos Acústicos On-Device con WebGPU y ONNX Runtime**:
+   - Detección precisa de bloqueos tónicos, prolongaciones y repeticiones involuntarias mediante micro-redes neuronales convolucionales ejecutadas localmente en GPU del cliente.
+2. **Entornos de Exposición Social WebXR**:
    - Simulaciones de realidad virtual e inmersiva ligera en el navegador (entrevistas de trabajo, presentaciones en público, llamadas telefónicas) con biofeedback de ritmo.
+3. **Mapeo Fonético Transversal Multilingüe**:
+   - Soporte fonoaudiológico especializado para variaciones fonéticas en lenguas romances y acentos hispanohablantes regionales.

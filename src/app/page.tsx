@@ -33,6 +33,8 @@ import { DiadochokinesisTrainer } from '@/components/DiadochokinesisTrainer';
 import { FormantBiofeedbackVisualizer } from '@/components/FormantBiofeedbackVisualizer';
 import { TelehealthRoom } from '@/components/TelehealthRoom';
 import { PediatricFluencyTrainer } from '@/components/PediatricFluencyTrainer';
+import { AlteredAuditoryTrainer } from '@/components/AlteredAuditoryTrainer';
+import { FluencyCertificateModal } from '@/components/FluencyCertificateModal';
 import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionValidator';
 import { BrowserCompatibilityBanner } from '@/components/BrowserCompatibilityBanner';
 import { LiveAudioVUMeter } from '@/components/LiveAudioVUMeter';
@@ -64,6 +66,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [isFormantsOpen, setIsFormantsOpen] = useState(false);
   const [isTelehealthOpen, setIsTelehealthOpen] = useState(false);
   const [isKidsOpen, setIsKidsOpen] = useState(false);
+  const [isDafOpen, setIsDafOpen] = useState(false);
+  const [isCertificatesOpen, setIsCertificatesOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [feedbackCategory, setFeedbackCategory] = useState<FeedbackCategory>('other');
   const [feedbackTechniqueId, setFeedbackTechniqueId] = useState<string | null>(null);
@@ -472,6 +476,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onOpenFormants={() => setIsFormantsOpen(true)}
           onOpenTelehealth={() => setIsTelehealthOpen(true)}
           onOpenKids={() => setIsKidsOpen(true)}
+          onOpenDAF={() => setIsDafOpen(true)}
+          onOpenCertificates={() => setIsCertificatesOpen(true)}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -628,6 +634,32 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             </div>
           </div>
         )}
+
+        {/* Modal de Feedback Auditivo Alterado (DAF / FAF) */}
+        {isDafOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-zinc-950/80 backdrop-blur-md animate-fade-in"
+          >
+            <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto">
+              <button
+                onClick={() => setIsDafOpen(false)}
+                className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center text-sm cursor-pointer"
+                aria-label="Cerrar Feedback DAF/FAF"
+              >
+                ✕
+              </button>
+              <AlteredAuditoryTrainer />
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Diplomas y Certificados Clínicos */}
+        <FluencyCertificateModal
+          isOpen={isCertificatesOpen}
+          onClose={() => setIsCertificatesOpen(false)}
+        />
       </>
     );
   }

@@ -8,6 +8,7 @@ import {
   downloadClinicalReport,
   computeClinicalMetrics,
 } from '../lib/clinicalReport';
+import { downloadFhirReportJson } from '../lib/fhirExport';
 
 interface ClinicalReportExporterProps {
   sessions?: CompletedSession[];
@@ -29,7 +30,7 @@ export function ClinicalReportExporter({
   const [isOpen, setIsOpen] = useState(false);
   const [patientIdent, setPatientIdent] = useState(patientId);
   const [clinicianNotes, setClinicianNotes] = useState('');
-  const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'txt' | 'json'>('pdf');
+  const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'txt' | 'json' | 'fhir'>('pdf');
   const [isExporting, setIsExporting] = useState(false);
   const [exportSuccess, setExportSuccess] = useState(false);
 
@@ -47,7 +48,13 @@ export function ClinicalReportExporter({
         clinicianNotes.trim() || undefined
       );
 
-      const success = downloadClinicalReport(report, selectedFormat);
+      let success = false;
+      if (selectedFormat === 'fhir') {
+        success = downloadFhirReportJson(report);
+      } else {
+        success = downloadClinicalReport(report, selectedFormat);
+      }
+
       if (success) {
         setExportSuccess(true);
         setTimeout(() => setExportSuccess(false), 3000);
@@ -147,35 +154,35 @@ export function ClinicalReportExporter({
 
               <div>
                 <span className="block text-zinc-300 font-semibold mb-1.5">Formato de Exportación</span>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <button
                     type="button"
                     onClick={() => setSelectedFormat('pdf')}
-                    className={`px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                    className={`px-2.5 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
                       selectedFormat === 'pdf'
                         ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300'
                         : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     <span>🖨️</span>
-                    <span>PDF Imprimible</span>
+                    <span>PDF</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedFormat('txt')}
-                    className={`px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                    className={`px-2.5 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
                       selectedFormat === 'txt'
                         ? 'bg-cyan-500/20 border-cyan-500 text-cyan-300'
                         : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     <span>📝</span>
-                    <span>Texto Plano</span>
+                    <span>Texto</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedFormat('json')}
-                    className={`px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                    className={`px-2.5 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
                       selectedFormat === 'json'
                         ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300'
                         : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
@@ -183,6 +190,18 @@ export function ClinicalReportExporter({
                   >
                     <span>⚙️</span>
                     <span>JSON Raw</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedFormat('fhir')}
+                    className={`px-2.5 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                      selectedFormat === 'fhir'
+                        ? 'bg-purple-500/20 border-purple-500 text-purple-300 ring-1 ring-purple-500'
+                        : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                    }`}
+                  >
+                    <span>🏥</span>
+                    <span>HL7 FHIR</span>
                   </button>
                 </div>
               </div>

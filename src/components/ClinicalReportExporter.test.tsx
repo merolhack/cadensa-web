@@ -25,8 +25,12 @@ describe('ClinicalReportExporter Component', () => {
     render(<ClinicalReportExporter />);
     fireEvent.click(screen.getByRole('button', { name: /exportar informe clínico/i }));
 
-    const txtButton = screen.getByRole('button', { name: /texto plano/i });
+    const txtButton = screen.getByRole('button', { name: /texto/i });
     fireEvent.click(txtButton);
+
+    const fhirButton = screen.getByRole('button', { name: /hl7 fhir/i });
+    fireEvent.click(fhirButton);
+    expect(fhirButton.className).toContain('ring-purple-500');
 
     const closeBtn = screen.getByLabelText('Cerrar modal');
     fireEvent.click(closeBtn);

@@ -40,6 +40,8 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [hl7_fhir_interoperability.md](architecture/hl7_fhir_interoperability.md) | Interoperabilidad fonoaudiológica bajo estándar internacional HL7 FHIR R4 (DiagnosticReport, LOINC 77150-1, SNOMED-CT). | `fhir`, `interoperability`, `loinc`, `snomed-ct`, `ehr` |
 | [about_and_roadmap_sync.md](architecture/about_and_roadmap_sync.md) | Arquitectura de la página Acerca de (/about), perfil del autor Lenin Meza y regla mandatoria de sincronización de TODO/ROADMAP. | `about`, `roadmap`, `governance`, `author` |
 | [multimedia_and_video_facade.md](architecture/multimedia_and_video_facade.md) | Reproducción de video nativo con patrón Façade, cero CLS, lazy transfer y streaming HTTP 206. | `architecture`, `multimedia`, `video`, `player`, `performance` |
+| [google_oauth_live_validation.md](architecture/google_oauth_live_validation.md) | Validación en vivo sin mocks de Google OAuth 2.0 (GCP cadensa-web-dev), 302 Handshake y adopción de sesiones huérfanas. | `architecture`, `auth`, `google-oauth`, `zero-trust`, `e2e` |
+| [client_error_telemetry_and_observability.md](architecture/client_error_telemetry_and_observability.md) | Arquitectura híbrida de observabilidad de cliente y telemetría de errores (GA4 exception + Supabase Zero Trust RLS). | `architecture`, `observability`, `telemetry`, `errors`, `ga4`, `supabase` |
 
 ---
 

@@ -43,3 +43,4 @@ describe('AlteredAuditoryTrainer Component', () => {
     expect(toggleBtn).toBeInTheDocument();
   });
 });
+

@@ -13,6 +13,7 @@ vi.mock('@/lib/adminService', () => ({
   fetchAdminExercises: vi.fn(),
   createAdminExercise: vi.fn(),
   deleteAdminExercise: vi.fn(),
+  fetchAdminClientErrors: vi.fn().mockResolvedValue([]),
   generateFeedbackCSV: vi.fn(() => 'ID,Fecha,Mensaje\n1,2026-10-28,test'),
   generateUsersCSV: vi.fn(() => 'ID,Username,Minutos\n1,lenin,120'),
 }));
@@ -211,5 +212,41 @@ describe('AdminDashboardPage', () => {
         bpm_recommended: 80,
       });
     });
+  });
+
+  it('permite consultar la pestaña de observabilidad y errores JS de clientes', async () => {
+    vi.mocked(adminService.checkIsAdmin).mockResolvedValue(true);
+    vi.mocked(adminService.fetchAdminSummary).mockResolvedValue({
+      totalUsers: 1,
+      totalTrainingMinutes: 20,
+      totalFeedbackReports: 0,
+      pendingFeedbackReports: 0,
+      resolvedFeedbackReports: 0,
+    });
+    vi.mocked(adminService.fetchAdminFeedbackReports).mockResolvedValue([]);
+    vi.mocked(adminService.fetchAdminUsersList).mockResolvedValue([]);
+    vi.mocked(adminService.fetchAdminExercises).mockResolvedValue([]);
+    vi.mocked(adminService.fetchAdminClientErrors).mockResolvedValue([
+      {
+        id: 'err-test-1',
+        user_id: null,
+        event_name: 'button_click_error',
+        error_message: 'Falla al procesar metrónomo',
+        component: 'AudioMetronome',
+        stack_trace: null,
+        url: 'http://localhost:3000',
+        user_agent: 'Mozilla/5.0',
+        created_at: new Date().toISOString(),
+      },
+    ]);
+
+    render(<AdminDashboardPage />);
+
+    const errorsTab = await screen.findByRole('button', { name: /observabilidad & errores js/i });
+    expect(errorsTab).toBeInTheDocument();
+    fireEvent.click(errorsTab);
+
+    expect(await screen.findByText('Falla al procesar metrónomo')).toBeInTheDocument();
+    expect(screen.getByText('AudioMetronome')).toBeInTheDocument();
   });
 });

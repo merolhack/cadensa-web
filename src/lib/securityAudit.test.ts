@@ -57,3 +57,4 @@ describe('Security & Zero Trust Compliance Audit', () => {
     expect(content).toMatch(/\.env(\.local)?/);
   });
 });
+

@@ -178,3 +178,4 @@ export function openPrintableCertificate(cert: FluencyCertificate, patientName: 
     }, 400);
   }
 }
+

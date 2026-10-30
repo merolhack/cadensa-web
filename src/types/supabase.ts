@@ -268,6 +268,45 @@ export type Database = {
         }
         Relationships: []
       }
+      client_telemetry_errors: {
+        Row: {
+          id: string
+          user_id: string | null
+          event_name: string
+          error_message: string
+          stack_trace: string | null
+          component: string | null
+          url: string | null
+          user_agent: string | null
+          metadata: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          event_name?: string
+          error_message: string
+          stack_trace?: string | null
+          component?: string | null
+          url?: string | null
+          user_agent?: string | null
+          metadata?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          event_name?: string
+          error_message?: string
+          stack_trace?: string | null
+          component?: string | null
+          url?: string | null
+          user_agent?: string | null
+          metadata?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

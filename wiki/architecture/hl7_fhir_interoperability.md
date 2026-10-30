@@ -27,3 +27,4 @@ El recurso exportado cumple con el perfil FHIR:
 
 ## 4. Exportación Segura en el Cliente
 La generación del archivo JSON (`application/fhir+json`) se ejecuta mediante un `Blob` instanciado en el navegador, preservando la confidencialidad del paciente bajo el modelo Zero Trust.
+

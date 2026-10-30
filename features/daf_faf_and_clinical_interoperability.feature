@@ -33,3 +33,4 @@ Característica: Feedback Auditivo DAF-FAF, Interoperabilidad HL7 FHIR y Diploma
     Cuando se evalúan las cabeceras HTTP y políticas de permisos del navegador
     Entonces el acceso al micrófono se restringe exclusivamente al origen self y la cámara queda deshabilitada
     Y las claves secretas de base de datos se mantienen inaccesibles desde el frontend
+

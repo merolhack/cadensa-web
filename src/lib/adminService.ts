@@ -331,6 +331,36 @@ export function generateFeedbackCSV(reports: AdminFeedbackReport[]): string {
   return [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
 }
 
+export interface AdminClientErrorRow {
+  id: string;
+  user_id: string | null;
+  event_name: string;
+  error_message: string;
+  stack_trace: string | null;
+  component: string | null;
+  url: string | null;
+  user_agent: string | null;
+  created_at: string;
+}
+
+/**
+ * Consulta la lista de errores de telemetría de clientes reportados en Supabase.
+ */
+export async function fetchAdminClientErrors(limit = 50): Promise<AdminClientErrorRow[]> {
+  return withNetworkTimeout(async () => {
+    const { data, error } = await supabase
+      .from('client_telemetry_errors')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error || !data) {
+      return [];
+    }
+    return data as AdminClientErrorRow[];
+  }, []);
+}
+
 /**
  * Convierte el directorio de usuarios y métricas de adherencia a formato CSV.
  */

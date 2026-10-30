@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { AudioMetronome, TimeSignature, SoundPreset } from '@/lib/audioMetronome';
 import { flattenSentenceSyllables } from '@/lib/syllables';
 import { evaluateRhythmicAccuracy, AccuracyResult, triggerHapticFeedback } from '@/lib/voiceDetection';
-import { recordTrainingSession, evaluateDailyStreak } from '@/lib/trainingService';
+import { recordTrainingSession, evaluateDailyStreak, claimLocalSessions } from '@/lib/trainingService';
 import { calculateSessionXP } from '@/lib/streaks';
 import { supabase } from '@/lib/supabaseClient';
 import { MetronomeVisual } from '@/components/MetronomeVisual';
@@ -39,6 +39,7 @@ import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionVa
 import { BrowserCompatibilityBanner } from '@/components/BrowserCompatibilityBanner';
 import { LiveAudioVUMeter } from '@/components/LiveAudioVUMeter';
 import { setupAudioContextUnlock } from '@/lib/audioUnlock';
+import { initGlobalErrorTracking } from '@/lib/errorTracker';
 
 const TRAINING_PHRASES = [
   'Ca mi no des pa cio ca da ma ña na',
@@ -121,6 +122,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(() => {
     return typeof window !== 'undefined' ? localStorage.getItem('cadensa_user_email') : null;
   });
+  const [currentUserId, setCurrentUserId] = useState<string | null>(() => {
+    return typeof window !== 'undefined' ? localStorage.getItem('cadensa_user_id') : null;
+  });
   const [streakDays, setStreakDays] = useState<number>(() => {
     return typeof window !== 'undefined' ? Number(localStorage.getItem('cadensa_streak_days') || '1') : 1;
   });
@@ -167,11 +171,23 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
 
   // Sincronizar estado de sesión en tiempo real desde Supabase Auth
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user?.email) {
-        setCurrentUserEmail(session.user.email);
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const email = session.user.email || null;
+        const uid = session.user.id;
+        setCurrentUserEmail(email);
+        setCurrentUserId(uid);
         if (typeof window !== 'undefined') {
-          localStorage.setItem('cadensa_user_email', session.user.email);
+          if (email) localStorage.setItem('cadensa_user_email', email);
+          localStorage.setItem('cadensa_user_id', uid);
+        }
+        await claimLocalSessions(uid);
+      } else {
+        setCurrentUserEmail(null);
+        setCurrentUserId(null);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('cadensa_user_email');
+          localStorage.removeItem('cadensa_user_id');
         }
       }
     });
@@ -186,6 +202,12 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
     const cleanup = setupAudioContextUnlock(() => {
       return (metronomeRef.current as unknown as { audioCtx?: AudioContext })?.audioCtx || null;
     });
+    return () => cleanup();
+  }, []);
+
+  // Observabilidad y telemetría global de errores en runtime (GA4 + Supabase)
+  useEffect(() => {
+    const cleanup = initGlobalErrorTracking();
     return () => cleanup();
   }, []);
 
@@ -411,7 +433,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         accuracyScore: score,
         exercisePhrase: currentPhrase,
       },
-      currentUserEmail || undefined
+      currentUserId || undefined
     );
 
     if (result.success) {
@@ -440,10 +462,23 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
     }
   };
 
-  const handleAuthSuccess = (email: string) => {
+  const handleAuthSuccess = async (email: string) => {
     setCurrentUserEmail(email);
     if (typeof window !== 'undefined') {
       localStorage.setItem('cadensa_user_email', email);
+    }
+    try {
+      const { data } = await supabase.auth.getSession();
+      if (data.session?.user) {
+        const uid = data.session.user.id;
+        setCurrentUserId(uid);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('cadensa_user_id', uid);
+        }
+        await claimLocalSessions(uid);
+      }
+    } catch {
+      // Ignorar error si no hay conexión
     }
   };
 
@@ -454,8 +489,10 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       // Ignorar error si no hay conexión
     }
     setCurrentUserEmail(null);
+    setCurrentUserId(null);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('cadensa_user_email');
+      localStorage.removeItem('cadensa_user_id');
     }
     setSaveSuccessMsg('Has cerrado sesión. Continuando en modo local.');
     setTimeout(() => setSaveSuccessMsg(null), 3000);

@@ -280,6 +280,14 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Auditoría de Seguridad y Cumplimiento Zero Trust:</strong> Blindaje de cabeceras HTTP (HSTS, CSP, Permissions-Policy con micrófono exclusivo self y cámara bloqueada) y verificación estricta de aislamiento de secretos.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Autenticación Federada Google OAuth 2.0 y Adopción de Sesiones Locales:</strong> Inicio de sesión en 1 clic sin contraseñas para minimizar la ansiedad de registro en personas con disfemia, con adopción automática de sesiones y rachas locales huérfanas en Supabase PostgreSQL Zero Trust RLS.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Observabilidad Híbrida de Cliente y Telemetría Forense de Errores:</strong> Despachador dual GA4 (evento exception) + Supabase Zero Trust RLS inmune a adblockers, captura global de errores de runtime y panel de auditoría forense en /admin.</span>
+                </li>
               </ul>
             </div>
 

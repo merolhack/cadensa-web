@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {
   evaluateDailyStreak,
   recordTrainingSession,
+  claimLocalSessions,
   getExerciseCatalog,
   FALLBACK_EXERCISES,
 } from './trainingService';
@@ -67,6 +68,53 @@ describe('TrainingService - Unit Tests', () => {
       expect(stored.length).toBe(1);
       expect(stored[0].bpm).toBe(80);
       expect(stored[0].syllableCount).toBe(15);
+    });
+  });
+
+  describe('claimLocalSessions', () => {
+    it('no debe hacer nada si userId está vacío o es local_guest', async () => {
+      const res1 = await claimLocalSessions('');
+      expect(res1.claimedCount).toBe(0);
+      expect(res1.success).toBe(true);
+
+      const res2 = await claimLocalSessions('local_guest');
+      expect(res2.claimedCount).toBe(0);
+      expect(res2.success).toBe(true);
+    });
+
+    it('adopta sesiones locales huérfanas y las asocia al userId autenticado', async () => {
+      const guestSessions = [
+        {
+          id: 's1',
+          bpm: 75,
+          durationSeconds: 60,
+          syllableCount: 10,
+          accuracyScore: 90,
+          userId: 'local_guest',
+        },
+        {
+          id: 's2',
+          bpm: 80,
+          durationSeconds: 120,
+          syllableCount: 20,
+          accuracyScore: 95,
+        },
+      ];
+      localStorage.setItem('cadensa_sessions', JSON.stringify(guestSessions));
+
+      const mockClient = {
+        from: () => ({
+          insert: async () => ({ error: null }),
+        }),
+      };
+
+      const result = await claimLocalSessions('11111111-2222-3333-4444-555555555555', mockClient as never);
+      expect(result.success).toBe(true);
+      expect(result.claimedCount).toBe(2);
+
+      const updated = JSON.parse(localStorage.getItem('cadensa_sessions') || '[]');
+      expect(updated[0].userId).toBe('11111111-2222-3333-4444-555555555555');
+      expect(updated[1].userId).toBe('11111111-2222-3333-4444-555555555555');
     });
   });
 

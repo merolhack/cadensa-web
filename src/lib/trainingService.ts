@@ -143,6 +143,71 @@ export async function recordTrainingSession(
 }
 
 /**
+ * Adopta y sincroniza en Supabase las sesiones locales huérfanas creadas en modo invitado.
+ */
+export async function claimLocalSessions(
+  userId: string,
+  client = supabase
+): Promise<{ claimedCount: number; success: boolean; error?: string }> {
+  if (!userId || userId === 'local_guest' || typeof window === 'undefined') {
+    return { claimedCount: 0, success: true };
+  }
+
+  try {
+    const stored = localStorage.getItem('cadensa_sessions');
+    if (!stored) {
+      return { claimedCount: 0, success: true };
+    }
+
+    const sessions: Array<{
+      id?: string;
+      bpm: number;
+      durationSeconds: number;
+      syllableCount: number;
+      accuracyScore: number;
+      exercisePhrase?: string;
+      completedAt?: string;
+      userId?: string;
+    }> = JSON.parse(stored);
+
+    const orphanSessions = sessions.filter(
+      (s) => !s.userId || s.userId === 'local_guest' || s.userId.includes('@')
+    );
+
+    if (orphanSessions.length === 0) {
+      return { claimedCount: 0, success: true };
+    }
+
+    const payload = orphanSessions.map((s) => ({
+      user_id: userId,
+      bpm: s.bpm,
+      duration_seconds: s.durationSeconds,
+      syllable_count: s.syllableCount,
+      accuracy_score: s.accuracyScore,
+      completed_at: s.completedAt || new Date().toISOString(),
+    }));
+
+    const { error } = await client.from('training_sessions').insert(payload);
+    if (error) {
+      return { claimedCount: 0, success: false, error: error.message };
+    }
+
+    const updatedSessions = sessions.map((s) => {
+      if (!s.userId || s.userId === 'local_guest' || s.userId.includes('@')) {
+        return { ...s, userId };
+      }
+      return s;
+    });
+    localStorage.setItem('cadensa_sessions', JSON.stringify(updatedSessions));
+
+    return { claimedCount: orphanSessions.length, success: true };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    return { claimedCount: 0, success: false, error: errorMsg };
+  }
+}
+
+/**
  * Obtiene el catálogo de ejercicios clínicos.
  */
 export async function getExerciseCatalog(): Promise<ExerciseRow[]> {

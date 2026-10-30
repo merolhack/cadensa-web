@@ -1019,3 +1019,86 @@
   - `wiki/concepts/altered_auditory_feedback_daf_faf.md`, `wiki/architecture/hl7_fhir_interoperability.md`, `wiki/concepts/clinical_certificates_and_positive_reinforcement.md`
   - `wiki/index.md`, `wiki/roadmap/next_steps_plan.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-29] feature | Autenticación Federada Google OAuth 2.0 y Algoritmo de Adopción de Sesiones Locales (Data Claiming)
+- **Detalle**:
+  1. **Configuración de Google OAuth 2.0 (GCP `cadensa-web-dev`)**:
+     - Credenciales de cliente Web OAuth 2.0 (`GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET`) respaldadas en `.env` conforme a directrices de seguridad.
+     - Apertura y sincronización de paneles de control (GCP Credentials y Supabase Auth Providers).
+  2. **Algoritmo de Adopción de Sesiones Locales (`src/lib/trainingService.ts`)**:
+     - Función `claimLocalSessions`: Reclama automáticamente sesiones huérfanas creadas en modo invitado (`local_guest`) en `localStorage` y las inserta en `public.training_sessions` bajo el `user_id` UUID en Supabase PostgreSQL.
+     - Actualización local de sesiones con el UUID autenticado.
+  3. **Propagación de Identidad Estricta (`src/app/page.tsx`)**:
+     - Manejo de `currentUserId` en memoria y persistencia local vinculada a `session.user.id`.
+     - Corrección de tipo para llamadas a `recordTrainingSession` asegurando compatibilidad estricta con RLS `auth.uid() = user_id`.
+  4. **Sincronización Mandatoria de Hoja de Ruta**:
+     - Actualización de `wiki/roadmap/next_steps_plan.md` (Hito 17) y la página pública `src/app/about/page.tsx`.
+  5. **Cobertura de Pruebas**:
+     - 57 archivos Vitest / 254 pruebas unitarias aprobadas al 100%.
+     - 95 escenarios Cucumber BDD / 369 pasos en español aprobados al 100%.
+- **Archivos creados/modificados**:
+  - `src/lib/trainingService.ts`, `src/lib/trainingService.test.ts`
+  - `src/app/page.tsx`
+  - `src/app/about/page.tsx`
+  - `wiki/roadmap/next_steps_plan.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-29] test | Validación en Vivo de Google OAuth 2.0 (Estrategias A, B y C) e Ingesta en Wiki
+- **Detalle**:
+  1. **Ejecución y Verificación Exitosa de Estrategia A (Live Handshake sin Mocks)**:
+     - Script `scripts/verify_google_oauth_live.cjs`: Llamada directa a Supabase Auth Edge con `skipBrowserRedirect: true`.
+     - Inspección de respuesta HTTP `302 Found` y cabecera `Location`.
+     - Confirmación en vivo de `client_id=1014778372980-ff8dp5c48nss88745u0r70nsn7ovob2a.apps.googleusercontent.com` y `redirect_uri=https://kddeejyhnxrnmkmiwjxp.supabase.co/auth/v1/callback` emitidos por Google Accounts.
+  2. **Estrategia B (E2E Playwright)**:
+     - Creación de `e2e/google_oauth_simulation.spec.ts` simulando apertura de modal, presencia de botón Google y ciclo de vida de adopción de sesiones huérfanas con `localStorage`.
+  3. **Ingesta Canónica en LLM Wiki**:
+     - Creación de `wiki/architecture/google_oauth_live_validation.md` detallando las 3 estrategias y el algoritmo de adopción.
+     - Registro en `wiki/index.md` y bitácora en `wiki/log.md`.
+- **Archivos creados/modificados**:
+  - `scripts/verify_google_oauth_live.cjs`
+  - `e2e/google_oauth_simulation.spec.ts`
+  - `wiki/architecture/google_oauth_live_validation.md`
+  - `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+
+---
+
+## [2026-10-29] feature | Arquitectura Híbrida de Observabilidad de Cliente y Telemetría de Errores (GA4 + Supabase RLS)
+- **Detalle**:
+  1. **Base de Datos y RLS (`20261029210000_client_telemetry_errors.sql`)**:
+     - Creación de tabla `public.client_telemetry_errors` con políticas Zero Trust: inserción permitida para anónimos y autenticados, lectura blind-drop restringida exclusivamente a administradores (`is_admin()`).
+     - Migración ejecutada con éxito mediante `npm run db:migrate` en proyecto vivo de Supabase.
+  2. **Servicio Despachador Dual (`src/lib/errorTracker.ts`)**:
+     - `reportAppError`: Envío simultáneo al evento nativo `exception` de GA4 y a la tabla de Supabase.
+     - Deduplicación en memoria de 10 segundos por firma de error para prevenir saturación ante loops.
+     - `initGlobalErrorTracking`: Escuchadores globales para `error` y `unhandledrejection` con protección Silent Fail.
+  3. **Instrumentación en Componentes**:
+     - Captura de fallas en `AuthModal.tsx` (`handleSubmit` y `handleOAuthLogin`).
+     - Integración del escuchador global en `src/app/page.tsx`.
+  4. **Panel Administrativo (`/admin`)**:
+     - Nueva pestaña **🛡️ Observabilidad & Errores JS** con visualización de los últimos 50 incidentes en vivo, timestamps locales, stacks y componentes.
+     - Servicio `fetchAdminClientErrors` en `src/lib/adminService.ts`.
+  5. **Cobertura de Pruebas**:
+     - 58 archivos Vitest / 260 pruebas unitarias aprobadas al 100%.
+     - 97 escenarios Cucumber BDD / 377 pasos en español aprobados al 100%.
+  6. **Ingesta en LLM Wiki**:
+     - Creación de `wiki/architecture/client_error_telemetry_and_observability.md`, actualización de `wiki/index.md`, `wiki/roadmap/next_steps_plan.md` y `src/app/about/page.tsx`.
+- **Archivos creados/modificados**:
+  - `supabase/migrations/20261029210000_client_telemetry_errors.sql`
+  - `src/types/supabase.ts`
+  - `src/lib/errorTracker.ts`, `src/lib/errorTracker.test.ts`
+  - `src/components/AuthModal.tsx`
+  - `src/app/page.tsx`
+  - `src/lib/adminService.ts`, `src/lib/adminService.test.ts`
+  - `src/app/admin/page.tsx`, `src/app/admin/page.test.tsx`
+  - `features/client_observability_and_error_telemetry.feature`, `features/step_definitions/client_observability_steps.ts`
+  - `src/app/about/page.tsx`
+  - `wiki/architecture/client_error_telemetry_and_observability.md`, `wiki/index.md`, `wiki/roadmap/next_steps_plan.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

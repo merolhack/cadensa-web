@@ -18,3 +18,4 @@ Cadensa cuenta con diplomas fonoaudiológicos diseñados para distintas etapas d
 
 ## 3. Generación para Impresión y PDF
 El motor `generateCertificateHtml` produce un documento HTML estilizado con formato apaisado (`@page { size: landscape; }`), fondos sobrios y tipografía nítida apta para impresión en consultorios o descarga directa en PDF por el usuario o su familia.
+

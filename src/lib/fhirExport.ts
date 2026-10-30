@@ -275,3 +275,4 @@ export function downloadFhirReportJson(payload: ClinicalReportPayload): boolean 
     return false;
   }
 }
+

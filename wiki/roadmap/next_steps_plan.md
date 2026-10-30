@@ -75,9 +75,21 @@
     - Observaciones con terminología estandarizada LOINC (77150-1, 89066-5, 77151-9, 55411-3) y clasificación clínica SNOMED-CT (289190003).
 
 16. **Auditoría de Seguridad, Zero Trust y Cobertura de Pruebas**: ✅
-    - 57 archivos Vitest / 252 pruebas unitarias aprobadas al 100%.
+    - 57 archivos Vitest / 254 pruebas unitarias aprobadas al 100%.
     - 95 escenarios Cucumber BDD / 369 pasos en español aprobados al 100%.
     - Suite de auditoría de seguridad (`securityAudit.test.ts`) verificando cabeceras HTTP (HSTS, CSP, Permissions-Policy) y protección de secretos en Git.
+
+17. **Autenticación Federada Google OAuth 2.0 y Adopción de Sesiones Locales (`src/lib/trainingService.ts` & `src/app/page.tsx`)**: ✅
+    - Configuración de credenciales de cliente OAuth 2.0 en Google Cloud Platform (`cadensa-web-dev`) respaldadas en `.env`.
+    - Flujo de identidad federada Zero-Friction para personas con disfemia, reduciendo la ansiedad de entrada en la práctica foniátrica.
+    - Algoritmo de Adopción de Datos (`claimLocalSessions`): migración automática de sesiones y racha local huérfanas (`local_guest`) a Supabase PostgreSQL RLS al iniciar sesión.
+    - Propagación de identidad estricta mediante UUID `session.user.id` en lugar de strings de correo para inserción segura en PostgreSQL.
+
+18. **Observabilidad Híbrida de Cliente y Telemetría Forense de Errores (`src/lib/errorTracker.ts`, `public.client_telemetry_errors` & `/admin`)**: ✅
+    - Despachador dual simultáneo: Google Analytics 4 (evento nativo `exception` para métricas agregadas) + Supabase PostgreSQL RLS (inmune a bloqueadores de anuncios con stack traces íntegros).
+    - Escuchadores automáticos en `window.onerror` y `unhandledrejection` con deduplicación en memoria de 10 segundos y protección Silent Fail.
+    - Instrumentación de fallas en flujos de autenticación (`AuthModal.tsx`) y botones críticos.
+    - Pestaña de auditoría en la consola administrativa `/admin` para inspección de incidentes en tiempo real.
 
 ---
 

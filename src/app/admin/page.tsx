@@ -12,12 +12,14 @@ import {
   fetchAdminExercises,
   createAdminExercise,
   deleteAdminExercise,
+  fetchAdminClientErrors,
   generateFeedbackCSV,
   generateUsersCSV,
   AdminFeedbackReport,
   AdminUserRow,
   AdminSummaryMetrics,
   AdminExerciseItem,
+  AdminClientErrorRow,
 } from '@/lib/adminService';
 import { AuthModal } from '@/components/AuthModal';
 
@@ -26,8 +28,8 @@ export default function AdminDashboardPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Pestaña activa: 'feedback' | 'users' | 'cms' | 'metrics' | 'clinical'
-  const [activeTab, setActiveTab] = useState<'feedback' | 'users' | 'cms' | 'metrics' | 'clinical'>('feedback');
+  // Pestaña activa: 'feedback' | 'users' | 'cms' | 'metrics' | 'clinical' | 'errors'
+  const [activeTab, setActiveTab] = useState<'feedback' | 'users' | 'cms' | 'metrics' | 'clinical' | 'errors'>('feedback');
 
   // Datos del dashboard
   const [summary, setSummary] = useState<AdminSummaryMetrics>({
@@ -40,6 +42,7 @@ export default function AdminDashboardPage() {
   const [reports, setReports] = useState<AdminFeedbackReport[]>([]);
   const [users, setUsers] = useState<AdminUserRow[]>([]);
   const [exercises, setExercises] = useState<AdminExerciseItem[]>([]);
+  const [clientErrors, setClientErrors] = useState<AdminClientErrorRow[]>([]);
   const [loadingData, setLoadingData] = useState(false);
 
   // Filtros de feedback
@@ -56,17 +59,19 @@ export default function AdminDashboardPage() {
 
   const refreshData = useCallback(async () => {
     setLoadingData(true);
-    const [summaryRes, reportsRes, usersRes, exercisesRes] = await Promise.all([
+    const [summaryRes, reportsRes, usersRes, exercisesRes, clientErrorsRes] = await Promise.all([
       fetchAdminSummary(),
       fetchAdminFeedbackReports({ category: filterCategory, status: filterStatus }),
       fetchAdminUsersList(),
       fetchAdminExercises(),
+      fetchAdminClientErrors(50),
     ]);
 
     setSummary(summaryRes);
     setReports(reportsRes);
     setUsers(usersRes);
     setExercises(exercisesRes);
+    setClientErrors(clientErrorsRes);
     setLoadingData(false);
   }, [filterCategory, filterStatus]);
 
@@ -81,17 +86,19 @@ export default function AdminDashboardPage() {
 
       if (allowed) {
         setLoadingData(true);
-        const [summaryRes, reportsRes, usersRes, exercisesRes] = await Promise.all([
+        const [summaryRes, reportsRes, usersRes, exercisesRes, clientErrorsRes] = await Promise.all([
           fetchAdminSummary(),
           fetchAdminFeedbackReports({ category: filterCategory, status: filterStatus }),
           fetchAdminUsersList(),
           fetchAdminExercises(),
+          fetchAdminClientErrors(50),
         ]);
         if (!isMounted) return;
         setSummary(summaryRes);
         setReports(reportsRes);
         setUsers(usersRes);
         setExercises(exercisesRes);
+        setClientErrors(clientErrorsRes);
         setLoadingData(false);
       }
     }
@@ -369,6 +376,18 @@ export default function AdminDashboardPage() {
           >
             <span>🏥</span>
             <span>Diagnóstico Fonoaudiológico</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('errors')}
+            className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === 'errors'
+                ? 'bg-red-500/15 text-red-300 border border-red-500/30'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+            }`}
+          >
+            <span>🛡️</span>
+            <span>Observabilidad & Errores JS ({clientErrors.length})</span>
           </button>
         </div>
 
@@ -786,6 +805,69 @@ export default function AdminDashboardPage() {
                 <div className="text-[11px] text-zinc-500 font-mono">Latencia estimada: ≤ 15 ms</div>
               </div>
             </div>
+          </section>
+        )}
+
+        {/* TAB 6: OBSERVABILIDAD Y ERRORES JS DE CLIENTES */}
+        {activeTab === 'errors' && (
+          <section className="space-y-4 animate-fade-in">
+            <div className="p-4 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center justify-between text-xs">
+              <span className="text-zinc-400">
+                Últimos 50 errores de JavaScript y excepciones de cliente reportados en Supabase Zero Trust RLS.
+              </span>
+              <button
+                onClick={refreshData}
+                className="px-3 py-1 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors cursor-pointer"
+              >
+                🔄 Actualizar
+              </button>
+            </div>
+
+            {clientErrors.length === 0 ? (
+              <div className="p-8 rounded-2xl bg-zinc-900/40 border border-zinc-800 text-center space-y-2">
+                <span className="text-3xl">✨</span>
+                <p className="text-sm font-semibold text-zinc-200">¡Cero errores de ejecución registrados!</p>
+                <p className="text-xs text-zinc-400">Todos los componentes, flujos de autenticación y metrónomo operan con normalidad.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {clientErrors.map((err) => (
+                  <div
+                    key={err.id}
+                    className="p-4 rounded-2xl bg-zinc-900/80 border border-red-500/20 space-y-2 text-xs"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 font-mono text-[10px]">
+                          {err.event_name}
+                        </span>
+                        <span className="font-bold text-zinc-200">
+                          {err.component || 'global'}
+                        </span>
+                      </div>
+                      <span className="text-zinc-500 text-[11px] font-mono">
+                        {new Date(err.created_at).toLocaleString('es-MX')}
+                      </span>
+                    </div>
+
+                    <div className="text-red-400 font-mono text-[11px] break-words">
+                      {err.error_message}
+                    </div>
+
+                    {err.stack_trace && (
+                      <pre className="p-2.5 rounded-xl bg-zinc-950 text-zinc-400 text-[10px] overflow-x-auto max-h-32 font-mono">
+                        {err.stack_trace}
+                      </pre>
+                    )}
+
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] text-zinc-500 pt-1">
+                      <span>URL: {err.url || 'Desconocida'}</span>
+                      <span>Usuario: {err.user_id ? `${err.user_id.slice(0, 8)}...` : 'Invitado / Anónimo'}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
 

@@ -175,3 +175,4 @@ export const FluencyCertificateModal: React.FC<FluencyCertificateModalProps> = (
     </div>
   );
 };
+

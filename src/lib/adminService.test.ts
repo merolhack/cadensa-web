@@ -8,6 +8,7 @@ import {
   fetchAdminExercises,
   createAdminExercise,
   deleteAdminExercise,
+  fetchAdminClientErrors,
   generateFeedbackCSV,
   generateUsersCSV,
 } from './adminService';
@@ -261,6 +262,34 @@ describe('adminService', () => {
       expect(csv).toContain('"usr-202"');
       expect(csv).toContain('"merolhack"');
       expect(csv).toContain('7,14,240,920');
+    });
+
+    it('fetchAdminClientErrors consulta la tabla client_telemetry_errors en Supabase', async () => {
+      const mockOrder = vi.fn().mockReturnValue({
+        limit: vi.fn().mockResolvedValue({
+          data: [
+            {
+              id: 'err-1',
+              event_name: 'javascript_error',
+              error_message: 'Cannot read properties of undefined',
+              component: 'MetronomeVisual',
+              created_at: '2026-10-29T20:00:00Z',
+            },
+          ],
+          error: null,
+        }),
+      });
+
+      vi.mocked(supabase.from).mockReturnValueOnce({
+        select: vi.fn().mockReturnValue({
+          order: mockOrder,
+        }),
+      } as never);
+
+      const errors = await fetchAdminClientErrors(10);
+      expect(errors.length).toBe(1);
+      expect(errors[0].component).toBe('MetronomeVisual');
+      expect(errors[0].error_message).toContain('Cannot read properties');
     });
   });
 });

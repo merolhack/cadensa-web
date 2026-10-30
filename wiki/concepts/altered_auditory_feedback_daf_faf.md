@@ -30,3 +30,4 @@ MediaStream (Micrófono)
 ## 3. Seguridad Acústica y Privacidad Zero Trust
 - **Uso obligatorio de auriculares:** El audio retrasado retroalimentado al altavoz sin auriculares produciría un ciclo de retroalimentación o acople acústico de alta ganancia. La interfaz de usuario bloquea o advierte explícitamente al paciente.
 - **Procesamiento estrictamente local (Zero Trust):** Los búferes de audio PCM circulan únicamente en la memoria local del hilo de audio del navegador; ningún frame de voz es subido a servidores remotos ni almacenado en bases de datos.
+

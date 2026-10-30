@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { reportAppError } from '@/lib/errorTracker';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -70,6 +71,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error al procesar autenticación';
       setErrorMessage(msg);
+      reportAppError({
+        message: msg,
+        eventName: 'auth_submit_error',
+        component: 'AuthModal',
+        metadata: {
+          isSignUp,
+          useMagicLink,
+        },
+      }).catch(() => {});
     } finally {
       setLoading(false);
     }
@@ -90,6 +100,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       const msg = err instanceof Error ? err.message : `Error al conectar con ${provider}`;
       setErrorMessage(msg);
       setLoading(false);
+      reportAppError({
+        message: msg,
+        eventName: 'oauth_connect_error',
+        component: 'AuthModal',
+        metadata: {
+          provider,
+        },
+      }).catch(() => {});
     }
   };
 

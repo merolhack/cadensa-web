@@ -10,3 +10,4 @@ Característica: Validación en Ambiente Productivo Real (cadensa-web.pages.dev)
     Y se verifica la disponibilidad del modal de acceso con Google OAuth 2.0
     Entonces el despachador de observabilidad registra eventos en la base de datos de Supabase
     Y las excepciones y métricas quedan disponibles para auditoría clínica
+

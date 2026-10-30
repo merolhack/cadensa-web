@@ -1138,3 +1138,21 @@
   - `src/app/about/page.tsx`
   - `wiki/architecture/sitemap_and_gsc_indexing.md`, `wiki/architecture/proactive_error_alerting.md`, `wiki/concepts/acoustic_block_detection.md`, `wiki/architecture/production_live_validation.md`, `wiki/index.md`, `wiki/roadmap/next_steps_plan.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+## [2026-10-29T21:31:00-06:00] Ingesta: Registro Histórico de Envío de sitemap.xml a Google Search Console
+- **Tipo de Cambio**: Ingesta de Documentación Histórica y Diagnóstico de Rastreo
+- **Contexto**: Registro formal de la fecha y hora de envío del archivo `sitemap.xml` para la propiedad `https://cadensa-web.pages.dev/` en Google Search Console para referencia futura y seguimiento de indexación.
+- **Detalle de la Operación**:
+  1. **Registro de Fecha y Hora**:
+     - Fecha: **29 de octubre de 2026** (2026-10-29T21:30:00-06:00 / Oct 29, 2026).
+     - Recurso: `https://cadensa-web.pages.dev/sitemap.xml`.
+  2. **Diagnóstico del Estado en GSC**:
+     - Estado inicial observado en consola: `Couldn't fetch` (Tipo: `Unknown`, Última lectura: pendiente).
+     - Validación técnica: Verificado con cabecera de User-Agent de Googlebot (`Mozilla/5.0 (compatible; Googlebot/2.1)`), confirmando respuesta inmediata HTTP 200 OK, Content-Type `application/xml` y acceso sin restricciones desde Cloudflare Edge.
+     - Documentación de estado transitorio: Comportamiento estándar de la cola de procesamiento de Google Search Central a la espera del primer ciclo de rastreo (24 a 48 horas para transición a `Success`).
+  3. **Ingesta en LLM Wiki**:
+     - Sección 4 incorporada en `wiki/architecture/sitemap_and_gsc_indexing.md`.
+- **Archivos creados/modificados**:
+  - `wiki/architecture/sitemap_and_gsc_indexing.md`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

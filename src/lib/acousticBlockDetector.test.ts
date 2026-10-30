@@ -130,3 +130,4 @@ describe('AcousticBlockDetector - Unit Tests', () => {
     expect(event).toBeNull();
   });
 });
+

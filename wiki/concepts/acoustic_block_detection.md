@@ -33,3 +33,4 @@ El analizador procesa ventanas temporales PCM de audio a través de los siguient
 - **Zero Crossing Rate (ZCR)**: Tasa de cruce por cero para distinguir entre fricativas no sonoras y vocales sonoras.
 - **Varianza Espectral de Energía**: Detecta el congelamiento acústico característico de la prolongación.
 - **Detector de Intervalo Inter-Pulso**: Detecta ráfagas repetitivas para la clasificación de repeticiones clónicas.
+

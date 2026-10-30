@@ -26,3 +26,4 @@ Para activar el canal de alertas en producción:
 - Agregar en Cloudflare Pages Environment Variables:
   `NEXT_PUBLIC_ERROR_WEBHOOK_URL="https://discord.com/api/webhooks/..."`
 - O en el archivo `.env` local para pruebas de desarrollo.
+

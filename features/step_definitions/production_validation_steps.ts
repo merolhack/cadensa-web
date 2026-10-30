@@ -38,3 +38,4 @@ Then('el despachador de observabilidad registra eventos en la base de datos de S
 Then('las excepciones y métricas quedan disponibles para auditoría clínica', function () {
   assert.ok(prodContext.gaLoaded && prodContext.supabaseRecorded);
 });
+

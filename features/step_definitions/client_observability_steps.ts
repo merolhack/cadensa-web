@@ -80,3 +80,53 @@ Then('el sistema descarta los duplicados para evitar saturación de red', functi
   assert.strictEqual(obsContext.duplicateSuppressed, true);
 });
 
+let fatalAlertDispatched = false;
+
+Given('que ocurre una excepción no controlada o error fatal en la aplicación', function () {
+  fatalAlertDispatched = false;
+});
+
+When('el sistema procesa el incidente con severidad crítica', async function () {
+  const mockInsert = async () => ({ error: null });
+  const mockClient = {
+    from: () => ({ insert: mockInsert }),
+  };
+
+  // Mock de webhook URL en el entorno
+  process.env.NEXT_PUBLIC_ERROR_WEBHOOK_URL = 'https://discord.com/api/webhooks/mock/test';
+  const originalFetch = globalThis.fetch;
+  const originalWindow = (globalThis as unknown as { window?: unknown }).window;
+  (globalThis as unknown as { window: unknown }).window = globalThis;
+
+  globalThis.fetch = (async () => ({
+    ok: true,
+    status: 204,
+  })) as unknown as typeof fetch;
+
+  try {
+    const res = await reportAppError(
+      {
+        message: 'Falla fatal de renderizado o sesión',
+        component: 'AudioEngine',
+        eventName: 'fatal_audio_crash',
+        fatal: true,
+      },
+      mockClient as never
+    );
+    fatalAlertDispatched = !!res.reportedToWebhook;
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalWindow === undefined) {
+      delete (globalThis as unknown as { window?: unknown }).window;
+    } else {
+      (globalThis as unknown as { window: unknown }).window = originalWindow;
+    }
+    delete process.env.NEXT_PUBLIC_ERROR_WEBHOOK_URL;
+  }
+});
+
+Then('despacha una notificación de alerta inmediata vía webhook para respuesta rápida', function () {
+  assert.strictEqual(fatalAlertDispatched, true);
+});
+
+

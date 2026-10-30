@@ -1102,3 +1102,39 @@
   - `src/app/about/page.tsx`
   - `wiki/architecture/client_error_telemetry_and_observability.md`, `wiki/index.md`, `wiki/roadmap/next_steps_plan.md`, `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+## [2026-10-29T21:00:00-06:00] Ingesta: Alertas Proactivas Webhook, Detección Acústica On-Device y Validación en Producción
+- **Tipo de Cambio**: Ingesta de Funcionalidad, Arquitectura y Suite de Pruebas en Vivo
+- **Contexto**: Respuesta al requerimiento de diagnóstico de sitemap para Google Search Console, alertas proactivas ante errores fatales, detector acústico de disfluencias on-device y ejecución de pruebas E2E/BDD en el sitio desplegado en Cloudflare Pages con validación de datos en GA4 y Supabase.
+- **Detalle de la Operación**:
+  1. **Diagnóstico de Sitemap y GSC**:
+     - Verificación en vivo de `https://cadensa-web.pages.dev/sitemap.xml` con HTTP 200 y 11 URLs canónicas indexables.
+     - Instrucciones de envío documentadas para Google Search Console (ingresar `sitemap.xml` en la propiedad activa).
+     - Adición de regla `disallow: ['/admin']` en `src/app/robots.ts` para proteger la privacidad del backoffice.
+  2. **Alertas Proactivas en Tiempo Real (`errorTracker.ts`)**:
+     - Función `sendFatalWebhookAlert` con formateo adaptativo para Discord (embeds con color #ef4444), Slack y endpoints HTTP genéricos al detectar incidentes con severidad `fatal: true`.
+  3. **Detección Acústica On-Device (`acousticBlockDetector.ts`)**:
+     - Analizador espectro-temporal Zero Trust que clasifica Bloqueos Tónicos (> 350 ms de esfuerzo sin fonación), Prolongaciones (> 300 ms con varianza plana) y Repeticiones Clónicas (< 220 ms) en tiempo real en el cliente.
+  4. **Validación E2E en Vivo sobre Producción (`e2e/production_live_validation.spec.ts`)**:
+     - Simulación de usuario real en `https://cadensa-web.pages.dev/` mediante Playwright Chromium.
+     - Verificación de carga de Google Analytics 4 (`G-HCTT9146TJ`) y visualización del botón Google OAuth 2.0.
+     - Descubrimiento del patrón PostgREST Blind-Drop: inserción con `Prefer: return=minimal` para evitar error 42501 (RLS SELECT) en usuarios anónimos.
+     - Verificación directa en base de datos de registros insertados en `public.client_telemetry_errors`.
+  5. **Cobertura de Pruebas**:
+     - 59 archivos Vitest / 270 pruebas unitarias aprobadas al 100%.
+     - 99 escenarios Cucumber BDD / 385 pasos aprobados al 100%.
+     - Playwright E2E contra `cadensa-web.pages.dev` aprobado al 100%.
+  6. **Sincronización Mandatoria `/about` y LLM Wiki**:
+     - Creación de `wiki/architecture/sitemap_and_gsc_indexing.md`, `wiki/architecture/proactive_error_alerting.md`, `wiki/concepts/acoustic_block_detection.md` y `wiki/architecture/production_live_validation.md`.
+     - Actualización de `src/app/about/page.tsx`, `wiki/index.md` y `wiki/roadmap/next_steps_plan.md`.
+- **Archivos creados/modificados**:
+  - `src/app/robots.ts`
+  - `src/lib/errorTracker.ts`, `src/lib/errorTracker.test.ts`
+  - `src/lib/acousticBlockDetector.ts`, `src/lib/acousticBlockDetector.test.ts`
+  - `e2e/production_live_validation.spec.ts`
+  - `scripts/inspect_live_telemetry_supabase.cjs`, `scripts/test_supabase_live_insert.cjs`
+  - `features/production_environment_validation.feature`, `features/step_definitions/production_validation_steps.ts`
+  - `features/client_observability_and_error_telemetry.feature`, `features/step_definitions/client_observability_steps.ts`
+  - `src/app/about/page.tsx`
+  - `wiki/architecture/sitemap_and_gsc_indexing.md`, `wiki/architecture/proactive_error_alerting.md`, `wiki/concepts/acoustic_block_detection.md`, `wiki/architecture/production_live_validation.md`, `wiki/index.md`, `wiki/roadmap/next_steps_plan.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

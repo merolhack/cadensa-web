@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { reportAppError, initGlobalErrorTracking } from './errorTracker';
+import { reportAppError, initGlobalErrorTracking, sendFatalWebhookAlert } from './errorTracker';
 
 describe('ErrorTracker - Unit Tests', () => {
   beforeEach(() => {
@@ -105,6 +105,70 @@ describe('ErrorTracker - Unit Tests', () => {
     const second = await reportAppError(payload, mockClient as never);
     expect(second.reportedToGA4).toBe(false);
     expect(second.reportedToSupabase).toBe(false);
+  });
+
+  it('sendFatalWebhookAlert debe formatear y enviar payload adecuado a Discord', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 204,
+    } as Response);
+
+    const sent = await sendFatalWebhookAlert(
+      {
+        message: 'Falla crítica de base de datos',
+        component: 'DatabaseEngine',
+        eventName: 'fatal_db_crash',
+        fatal: true,
+        stack: 'Error: DB unreachable at eval:1:1',
+      },
+      'https://discord.com/api/webhooks/12345/abcdef'
+    );
+
+    expect(sent).toBe(true);
+    expect(fetchSpy).toHaveBeenCalledWith(
+      'https://discord.com/api/webhooks/12345/abcdef',
+      expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+    const bodySent = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    expect(bodySent.embeds[0].title).toContain('fatal_db_crash');
+    expect(bodySent.embeds[0].color).toBe(0xef4444);
+  });
+
+  it('sendFatalWebhookAlert debe formatear adecuadamente para Slack y genérico', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+    } as Response);
+
+    // Slack
+    const slackSent = await sendFatalWebhookAlert(
+      { message: 'Falla Slack', component: 'App' },
+      'https://hooks.slack.com/services/T00/B00/X00'
+    );
+    expect(slackSent).toBe(true);
+    const slackBody = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    expect(slackBody.text).toContain('Falla Slack');
+
+    // Genérico
+    const genericSent = await sendFatalWebhookAlert(
+      { message: 'Falla Genérica', component: 'API' },
+      'https://alerts.mycompany.org/webhook'
+    );
+    expect(genericSent).toBe(true);
+    const genericBody = JSON.parse(fetchSpy.mock.calls[1][1]?.body as string);
+    expect(genericBody.level).toBe('fatal');
+  });
+
+  it('sendFatalWebhookAlert debe retornar false si la URL no está definida o la petición falla', async () => {
+    const noUrl = await sendFatalWebhookAlert({ message: 'Sin webhook' }, undefined);
+    expect(noUrl).toBe(false);
+
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Network offline'));
+    const failed = await sendFatalWebhookAlert({ message: 'Red caída' }, 'https://example.com/webhook');
+    expect(failed).toBe(false);
   });
 
   it('initGlobalErrorTracking debe registrar escuchadores de error y unhandledrejection y permitir cleanup', () => {

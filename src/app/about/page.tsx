@@ -288,6 +288,18 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Observabilidad Híbrida de Cliente y Telemetría Forense de Errores:</strong> Despachador dual GA4 (evento exception) + Supabase Zero Trust RLS inmune a adblockers, captura global de errores de runtime y panel de auditoría forense en /admin.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Alertas Proactivas en Tiempo Real (Fatal Errors Webhook):</strong> Despacho automático de notificaciones de incidentes críticos formateadas para Discord, Slack y webhooks genéricos ante fallas fatales en el cliente.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Detección Acústica On-Device de Bloqueos Tónicos y Prolongaciones:</strong> Analizador espectro-temporal en tiempo real (Zero Trust) que clasifica bloqueos laríngeos, prolongaciones y repeticiones clónicas directamente en el navegador.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Validación Continua en Vivo de Entorno Productivo (E2E &amp; BDD):</strong> Suite automatizada sobre cadensa-web.pages.dev verificando en caliente la telemetría GA4, el handshake de Google OAuth 2.0 y la persistencia PostgreSQL.</span>
+                </li>
               </ul>
             </div>
 

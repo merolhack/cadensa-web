@@ -42,6 +42,9 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [multimedia_and_video_facade.md](architecture/multimedia_and_video_facade.md) | Reproducción de video nativo con patrón Façade, cero CLS, lazy transfer y streaming HTTP 206. | `architecture`, `multimedia`, `video`, `player`, `performance` |
 | [google_oauth_live_validation.md](architecture/google_oauth_live_validation.md) | Validación en vivo sin mocks de Google OAuth 2.0 (GCP cadensa-web-dev), 302 Handshake y adopción de sesiones huérfanas. | `architecture`, `auth`, `google-oauth`, `zero-trust`, `e2e` |
 | [client_error_telemetry_and_observability.md](architecture/client_error_telemetry_and_observability.md) | Arquitectura híbrida de observabilidad de cliente y telemetría de errores (GA4 exception + Supabase Zero Trust RLS). | `architecture`, `observability`, `telemetry`, `errors`, `ga4`, `supabase` |
+| [sitemap_and_gsc_indexing.md](architecture/sitemap_and_gsc_indexing.md) | Arquitectura de sitemap dinámico estático (11 URLs canónicas), robots.txt optimizado y alta en Google Search Console. | `architecture`, `seo`, `sitemap`, `search-console`, `indexing` |
+| [proactive_error_alerting.md](architecture/proactive_error_alerting.md) | Despacho de alertas proactivas en tiempo real vía Webhooks (Discord, Slack, genérico) ante incidentes críticos fatales. | `architecture`, `alerts`, `webhooks`, `discord`, `slack` |
+| [production_live_validation.md](architecture/production_live_validation.md) | Validación continua sobre Cloudflare Pages en caliente: GA4, Google OAuth y patrón PostgREST Blind-Drop (return=minimal). | `architecture`, `e2e`, `production`, `playwright`, `supabase` |
 
 ---
 
@@ -69,6 +72,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [audio_self_monitoring.md](concepts/audio_self_monitoring.md) | Auto-escucha propioceptiva diferida con MediaRecorder API y aislamiento de audio Zero Trust. | `clinical`, `audio`, `self-monitoring`, `zero-trust` |
 | [zero_trust_rls.md](concepts/zero_trust_rls.md) | Seguridad delegada a PostgreSQL: por qué el cliente es untrusted y cómo opera Row Level Security. | `security`, `postgres`, `rls`, `zero-trust` |
 | [static_spa_paradigm.md](concepts/static_spa_paradigm.md) | Justificación técnica de `output: 'export'`, eliminación de servidores Node.js y restricciones. | `jamstack`, `spa`, `performance`, `edge` |
+| [acoustic_block_detection.md](concepts/acoustic_block_detection.md) | Detección acústica on-device Zero Trust de bloqueos tónicos, prolongaciones y repeticiones clónicas. | `clinical`, `acoustics`, `disfluency`, `tonic-block`, `zero-trust` |
 
 ---
 

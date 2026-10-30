@@ -16,3 +16,9 @@ Característica: Observabilidad de Cliente y Telemetría de Errores Híbrida (GA
     Cuando se reportan errores con la misma firma en menos de 10 segundos
     Entonces el sistema descarta los duplicados para evitar saturación de red
 
+  Escenario: Alerta proactiva en tiempo real ante errores de severidad fatal
+    Dado que ocurre una excepción no controlada o error fatal en la aplicación
+    Cuando el sistema procesa el incidente con severidad crítica
+    Entonces despacha una notificación de alerta inmediata vía webhook para respuesta rápida
+
+

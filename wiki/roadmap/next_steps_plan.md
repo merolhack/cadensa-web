@@ -91,6 +91,19 @@
     - Instrumentación de fallas en flujos de autenticación (`AuthModal.tsx`) y botones críticos.
     - Pestaña de auditoría en la consola administrativa `/admin` para inspección de incidentes en tiempo real.
 
+19. **Alertas Proactivas en Tiempo Real de Errores Fatales (`src/lib/errorTracker.ts`)**: ✅
+    - Despacho inmediato asíncrono hacia Webhooks configurados (`NEXT_PUBLIC_ERROR_WEBHOOK_URL`) formateado para Discord (embeds con código de color rojo #ef4444), Slack y JSON genérico.
+    - Filtrado estricto por severidad `fatal: true` y desacoplamiento con protección Silent Fail.
+
+20. **Detección Acústica On-Device de Bloqueos Tónicos y Disfluencias (`src/lib/acousticBlockDetector.ts`)**: ✅
+    - Procesamiento de audio en tiempo real Zero Trust que extrae energía RMS, cruces por cero (ZCR) y varianza espectral.
+    - Clasificación fonatoria de Bloqueos Tónicos (> 350ms de esfuerzo sin emisión), Prolongaciones (> 300ms con varianza plana) y Repeticiones Clónicas (< 220ms).
+
+21. **Validación Continua en Vivo de Entorno Productivo E2E & BDD (`e2e/production_live_validation.spec.ts` & `features/production_environment_validation.feature`)**: ✅
+    - Simulación de usuario real directamente sobre `https://cadensa-web.pages.dev/`.
+    - Verificación de carga de GA4 (`G-HCTT9146TJ`), modal de Google OAuth 2.0 y despacho dual de telemetría.
+    - Demostración de compatibilidad con el patrón PostgREST Blind-Drop (`Prefer: return=minimal` para inserción sin política de lectura).
+
 ---
 
 ## 2. Próximos Lanzamientos en la Hoja de Ruta Activa

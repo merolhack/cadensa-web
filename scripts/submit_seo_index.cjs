@@ -38,7 +38,7 @@ if (!gcpSaKeyRaw) {
   }
 }
 
-const bingApiKey = process.env.BING_API_KEY || '38ccc57036f94ecf9f0988066f403014';
+const bingApiKey = process.env.BING_API_KEY;
 const siteUrl = 'https://cadensa-web.pages.dev/';
 const sitemapUrl = 'https://cadensa-web.pages.dev/sitemap.xml';
 const indexNowKey = '856757614ffc2c5582fbcb81b1b4e4ca';
@@ -88,8 +88,12 @@ async function submitToGoogle(token) {
 
 async function submitToBingSitemap() {
   console.log(`🌐 Registrando Sitemap en Bing Webmaster Tools API...`);
-  const url = `https://ssl.bing.com/webmaster/api.svc/json/SubmitFeed?feedUrl=${encodeURIComponent(sitemapUrl)}&siteUrl=${encodeURIComponent(siteUrl)}&apikey=${bingApiKey}`;
-  const res = await fetch(url);
+  const url = `https://ssl.bing.com/webmaster/api.svc/json/SubmitFeed?apikey=${bingApiKey}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify({ siteUrl, feedUrl: sitemapUrl }),
+  });
   console.log(`   Resultado Bing Sitemap Feed: HTTP ${res.status}`);
 }
 

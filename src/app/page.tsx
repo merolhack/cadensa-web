@@ -20,6 +20,7 @@ import { TechniqueVisualizer } from '@/components/TechniqueVisualizer';
 import { TechniquesCatalogHome } from '@/components/TechniquesCatalogHome';
 import { TechniqueVideoModal } from '@/components/TechniqueVideoModal';
 import { RealWorldSimulator } from '@/components/RealWorldSimulator';
+import { AcousticBiofeedback } from '@/components/AcousticBiofeedback';
 import { QuickDailyRoutine } from '@/components/QuickDailyRoutine';
 import { FeedbackModal } from '@/components/FeedbackModal';
 import { FeedbackCategory } from '@/lib/feedbackService';
@@ -63,6 +64,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const [isQuickRoutineOpen, setIsQuickRoutineOpen] = useState(false);
+  const [isAcousticAiOpen, setIsAcousticAiOpen] = useState(false);
   const [isDDKOpen, setIsDDKOpen] = useState(false);
   const [isFormantsOpen, setIsFormantsOpen] = useState(false);
   const [isTelehealthOpen, setIsTelehealthOpen] = useState(false);
@@ -515,6 +517,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onOpenKids={() => setIsKidsOpen(true)}
           onOpenDAF={() => setIsDafOpen(true)}
           onOpenCertificates={() => setIsCertificatesOpen(true)}
+          onOpenAcousticAi={() => setIsAcousticAiOpen(true)}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -578,6 +581,18 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onClose={() => setIsQuickRoutineOpen(false)}
           onStartFullPractice={() => {
             setCurrentView('practice');
+          }}
+        />
+
+        {/* Modal de Biofeedback Acústico On-Device (IA de Micro-Tensión Laríngea) */}
+        <AcousticBiofeedback
+          isOpen={isAcousticAiOpen}
+          onClose={() => setIsAcousticAiOpen(false)}
+          onApplyTechnique={(techId) => {
+            const tech = CLINICAL_TECHNIQUES[techId as TechniqueId];
+            if (tech) {
+              handleSelectTechniqueFromHome(tech);
+            }
           }}
         />
 

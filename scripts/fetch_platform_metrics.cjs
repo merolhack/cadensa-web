@@ -35,7 +35,7 @@ if (!gcpSaKeyRaw) {
   }
 }
 
-const bingApiKey = process.env.BING_API_KEY || '38ccc57036f94ecf9f0988066f403014';
+const bingApiKey = process.env.BING_API_KEY;
 const gaPropertyId = process.env.GA4_PROPERTY_ID || '560646502';
 const gscSiteUrl = process.env.GSC_SITE_URL || 'https://cadensa-web.pages.dev/';
 const cfApiToken = process.env.CLOUDFLARE_API_TOKEN;

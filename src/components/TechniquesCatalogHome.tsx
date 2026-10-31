@@ -12,6 +12,7 @@ import {
 import { CommunityBanner } from './CommunityBanner';
 import { PwaInstallButton } from './PwaInstallButton';
 import { BrowserCompatibilityBanner } from './BrowserCompatibilityBanner';
+import { Footer } from './Footer';
 
 interface TechniquesCatalogHomeProps {
   onSelectTechnique: (technique: ClinicalTechnique) => void;
@@ -24,6 +25,7 @@ interface TechniquesCatalogHomeProps {
   onOpenKids?: () => void;
   onOpenDAF?: () => void;
   onOpenCertificates?: () => void;
+  onOpenAcousticAi?: () => void;
   streakDays: number;
   totalMinutes: number;
   xpPoints: number;
@@ -43,6 +45,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onOpenKids,
   onOpenDAF,
   onOpenCertificates,
+  onOpenAcousticAi,
   streakDays,
   totalMinutes,
   xpPoints,
@@ -239,6 +242,17 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
               <span>Diplomas</span>
             </button>
           )}
+
+          {onOpenAcousticAi && (
+            <button
+              onClick={onOpenAcousticAi}
+              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-900/50 to-emerald-900/50 hover:from-cyan-900/70 hover:to-emerald-900/70 border border-cyan-500/40 text-cyan-200 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
+              aria-label="Abrir Biofeedback Acústico On-Device"
+            >
+              <span>🧠</span>
+              <span>IA Acústica</span>
+            </button>
+          )}
         </div>
       </section>
 
@@ -404,56 +418,8 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
         <CommunityBanner className="max-w-5xl" />
       </div>
 
-      {/* 7. Footer Homogéneo (max-w-5xl) */}
-      <footer className="max-w-5xl w-full pt-6 pb-6 border-t border-zinc-900 text-center text-xs text-zinc-400 space-y-3">
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-zinc-400">
-          <Link
-            href="/about"
-            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
-          >
-            <span>ℹ️</span>
-            <span>Acerca de Cadensa</span>
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <Link
-            href="/stats"
-            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
-          >
-            <span>📊</span>
-            <span>Estadísticas de Uso</span>
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <Link
-            href="/privacy"
-            className="hover:text-emerald-400 transition-colors font-medium"
-          >
-            Privacidad
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <Link
-            href="/terms"
-            className="hover:text-emerald-400 transition-colors font-medium"
-          >
-            Términos y Aviso Clínico
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <a
-            href="https://www.facebook.com/AMTTM/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-emerald-400 transition-colors"
-          >
-            Asociación Mexicana de la Tartamudez (Facebook)
-          </a>
-        </div>
-
-        {/* Aviso no intrusivo de compatibilidad al fondo de todo para perfil técnico */}
-        <BrowserCompatibilityBanner />
-
-        <p className="text-zinc-500 text-[11px] pt-1">
-          © 2026 Cadensa — Plataforma de Fluidez del Habla. Diseñado con enfoque en fonoaudiología clínica y accesibilidad.
-        </p>
-      </footer>
+      {/* 7. Footer Homogéneo Global con Enlaces Fonoaudiológicos SEO (max-w-5xl) */}
+      <Footer />
     </div>
   );
 };

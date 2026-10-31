@@ -73,6 +73,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [zero_trust_rls.md](concepts/zero_trust_rls.md) | Seguridad delegada a PostgreSQL: por qué el cliente es untrusted y cómo opera Row Level Security. | `security`, `postgres`, `rls`, `zero-trust` |
 | [static_spa_paradigm.md](concepts/static_spa_paradigm.md) | Justificación técnica de `output: 'export'`, eliminación de servidores Node.js y restricciones. | `jamstack`, `spa`, `performance`, `edge` |
 | [acoustic_block_detection.md](concepts/acoustic_block_detection.md) | Detección acústica on-device Zero Trust de bloqueos tónicos, prolongaciones y repeticiones clónicas. | `clinical`, `acoustics`, `disfluency`, `tonic-block`, `zero-trust` |
+| [acoustic_ai_laryngeal_tension.md](concepts/acoustic_ai_laryngeal_tension.md) | Inferencia acústica on-device de micro-tensión laríngea, WebGPU y calibración fonética dialectal. | `clinical`, `acoustic-ai`, `laryngeal-tension`, `webgpu`, `dialect-presets` |
 
 ---
 

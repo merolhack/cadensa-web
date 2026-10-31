@@ -300,6 +300,18 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Validación Continua en Vivo de Entorno Productivo (E2E &amp; BDD):</strong> Suite automatizada sobre cadensa-web.pages.dev verificando en caliente la telemetría GA4, el handshake de Google OAuth 2.0 y la persistencia PostgreSQL.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Inferencia Acústica On-Device de Micro-Tensión Laríngea:</strong> Analizador de tensión prefonatoria y riesgo de bloqueo tónico ejecutado 100% en el cliente (Zero Trust / WebGPU) con sugerencias inmediatas de Inicio Suave.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Mapeo Fonético Transversal Multilingüe y Calibración Dialectal:</strong> Ajuste de tempo isocrónico y formantes F1/F2 según la variante regional del español (México Central, Cono Sur, Andino, Caribeño y Peninsular).</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Arquitectura de Interlinking SEO y Crawlers Globales:</strong> Pie de página unificado con enlaces a las 7 técnicas fonoaudiológicas, despacho IndexNow HTTP 200 y sitemaps sincronizados en Google Search Console y Bing Webmaster Tools.</span>
+                </li>
               </ul>
             </div>
 
@@ -317,15 +329,15 @@ export default function AboutPage() {
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 1: Inferencia Acústica On-Device con ONNX Runtime Web &amp; WebGPU:</strong> Redes neuronales convolucionales ultraligeras ejecutadas en GPU local para alertar sobre hiperaducción laríngea y espasmos tónicos previos a la fonación.</span>
+                  <span><strong>Hito 1: Desensibilización Fóbica en Realidad Virtual WebXR:</strong> Escenarios 3D interactivos en el navegador para exposición gradual ante entrevistas laborales y presentaciones públicas con biofeedback de ritmo.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 2: Desensibilización Fóbica en Realidad Virtual WebXR:</strong> Escenarios 3D interactivos en el navegador para exposición gradual ante entrevistas laborales y presentaciones públicas con biofeedback de ritmo.</span>
+                  <span><strong>Hito 2: Generación Dinámica de Textos Fonéticamente Balanceados:</strong> Algoritmos en cliente para componer lecturas personalizadas priorizando las consonantes temidas específicas de cada paciente.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 3: Mapeo Fonético Transversal Multilingüe:</strong> Calibración fonoaudiológica para variaciones dialectales y acentuales hispanohablantes regionales.</span>
+                  <span><strong>Hito 3: Biofeedback EMG No Invasivo Vía Wearables:</strong> Integración de bioseñales electromiográficas de superficie para pacientes con hipertonía laríngea severa.</span>
                 </li>
               </ul>
             </div>

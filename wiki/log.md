@@ -1156,3 +1156,88 @@
   - `wiki/architecture/sitemap_and_gsc_indexing.md`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+## [2026-10-30T16:15:00-06:00] Auditoría Multi-Plataforma (GA4, GSC, AdSense, Bing), Corrección de Feed Bing y Plan de Evolución
+- **Tipo de Cambio**: Auditoría de Telemetría, Corrección de Issues SEO y Actualización de Roadmap
+- **Contexto**: Extracción y análisis exhaustivo de métricas y errores a través de las APIs de Google Analytics 4, Google Search Console, Google AdSense y Bing Webmaster Tools mediante Service Account y API Keys del ecosistema.
+- **Detalle de la Operación**:
+  1. **Descarga y Análisis de Telemetría Global**:
+     - **Google Analytics 4**: Crecimiento de usuarios activos a 32 (+52.4%), 61 sesiones, 106 vistas de página, duración media de 295 segundos (~4 min 55 seg), tasa de interacción de 37.7% y tasa de rebote reducida al 62.3%. Nuevas visitas registradas desde Irlanda (🇮🇪) y Reino Unido (🇬🇧), sumando 9 países.
+     - **Google Search Console**: Verificación de sitemap `https://cadensa-web.pages.dev/sitemap.xml` en estado `Pending` sin errores ni advertencias (`warnings: 0, errors: 0`). Home validada en estado `Enviada e indexada`.
+     - **Google AdSense**: Confirmación de estado HTTP 200 en API, `ads.txt` verificado con `pub-2700240339792942`, meta tag en layout y cumplimiento YMYL con `/privacy` y `/terms`.
+     - **Bing Webmaster Tools**: Confirmación de IndexNow con HTTP 200 para las 12 URLs prioritarias.
+  2. **Corrección de Issues Técnicos**:
+     - **Issue Bing SubmitFeed HTTP 405**: Corrección en `scripts/submit_seo_index.cjs` sustituyendo método GET por POST con cuerpo JSON `{ siteUrl, feedUrl }`, logrando respuesta HTTP 200 `{"d":null}` y confirmación de sitemap en estado `Pending` en Bing `GetFeeds`.
+     - **Issue Banderas Faltantes en `/stats`**: Incorporación de metadatos de banderas para Irlanda (🇮🇪) y Reino Unido (🇬🇧) en `COUNTRY_FLAGS` de `src/app/stats/page.tsx`.
+  3. **Delegación a Modelos Secundarios y Validación de Pruebas**:
+     - Síntesis asistida mediante `consultar_modelo_local` (Ollama).
+     - Validación con `npm run test:all`: 59 archivos Vitest / 270 pruebas aprobadas (100%), 99 escenarios Cucumber BDD / 385 pasos aprobados (100%).
+  4. **Documentación en LLM Wiki**:
+     - Actualización integral de `wiki/roadmap/platform_telemetry_and_seo_plan.md` con las estadísticas más recientes, matriz de issues y plan de funcionalidades clínicas.
+- **Archivos creados/modificados**:
+  - `scripts/submit_seo_index.cjs`
+  - `src/app/stats/page.tsx`
+  - `src/data/platform_stats.json`
+  - `wiki/roadmap/platform_telemetry_and_seo_plan.md`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+## [2026-10-30T19:51:00-06:00] Implementación del Plan Maestro: Interlinking SEO Crawler, Inferencia Acústica On-Device y Calibración Dialectal
+- **Tipo de Cambio**: Nueva Capacidad Clínica, Arquitectura SEO y Sincronización de Roadmap
+- **Contexto**: Ejecución integral de la Fase 1, Fase 2 y Fase 3 del Plan Maestro de Remediación y Nuevas Funcionalidades derivado de la auditoría multi-plataforma (GA4, GSC, AdSense, Bing).
+- **Detalle de la Operación**:
+  1. **Arquitectura de Interlinking SEO y Crawlers (`Footer.tsx`)**:
+     - Creación de `src/components/Footer.tsx` con enlaces directos e hipervínculos canónicos hacia las 7 técnicas fonoaudiológicas (`/tecnicas/*`), páginas institucionales (`/about`, `/stats`, `/privacy`, `/terms`), aviso médico YMYL y compatibilidad web.
+     - Sustitución de footers locales por el componente global en `src/components/TechniquesCatalogHome.tsx`.
+     - Resolución técnica del déficit de páginas hijas detectado en Bing Webmaster Tools (`AnchorCount: 0`).
+  2. **Inferencia Acústica On-Device de Micro-Tensión Laríngea (`AcousticAiDetector` & `AcousticBiofeedback`)**:
+     - Creación de `src/lib/acousticAiDetector.ts` para estimar jitter, flujo espectral y ratio de energía en altas frecuencias antes de la emisión de voz.
+     - Detección de aceleración WebGPU en el navegador con degradación suave a DSP en CPU, bajo estricto principio Zero Trust (sin salida de audio fuera del cliente).
+     - Componente interactivo `src/components/AcousticBiofeedback.tsx` con medidor visual de tensión continua (0% a 100%), clasificación de riesgo (bajo, moderado, hiperaducción) y botón de derivación inmediata a Inicio Suave (Easy Onset).
+  3. **Mapeo Fonético Transversal Multilingüe y Calibración Dialectal (`phoneticPresets` & `DialectSelector`)**:
+     - Implementación de `src/lib/phoneticPresets.ts` con 5 configuraciones regionales del español (México Central, Cono Sur / Rioplatense, Andino, Caribeño y Castellano Peninsular), definiendo tempos objetivo (74 a 86 BPM), tasas silábicas y formantes F1/F2 vocálicos de referencia.
+     - Componente de interfaz `src/components/DialectSelector.tsx` para ajuste de parámetros fonoaudiológicos personalizados.
+  4. **Cobertura de Pruebas Unitarias y BDD**:
+     - Pruebas unitarias en Vitest para todos los componentes y librerías (`Footer.test.tsx`, `acousticAiDetector.test.ts`, `AcousticBiofeedback.test.tsx`, `phoneticPresets.test.ts`, `DialectSelector.test.tsx`).
+     - Actualización de escenarios Gherkin BDD en `features/seo_adsense_and_clinical_features.feature` y sus step definitions correspondientes.
+  5. **Sincronización Mandatoria `/about` y LLM Wiki**:
+     - Actualización de hitos completados y próximos pasos en `src/app/about/page.tsx`.
+     - Creación del documento conceptual modular `wiki/concepts/acoustic_ai_laryngeal_tension.md` e indexación en `wiki/index.md`.
+- **Archivos creados/modificados**:
+  - `src/components/Footer.tsx`, `src/components/Footer.test.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`, `src/components/TechniquesCatalogHome.test.tsx`
+  - `src/lib/acousticAiDetector.ts`, `src/lib/acousticAiDetector.test.ts`
+  - `src/components/AcousticBiofeedback.tsx`, `src/components/AcousticBiofeedback.test.tsx`
+  - `src/lib/phoneticPresets.ts`, `src/lib/phoneticPresets.test.ts`
+  - `src/components/DialectSelector.tsx`, `src/components/DialectSelector.test.tsx`
+  - `src/app/page.tsx`
+  - `src/app/about/page.tsx`
+  - `features/seo_adsense_and_clinical_features.feature`, `features/step_definitions/seo_and_clinical_features_steps.ts`
+  - `wiki/concepts/acoustic_ai_laryngeal_tension.md`, `wiki/index.md`, `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+## [2026-10-30T23:51:00-06:00] Integración GitGuardian API REST, GitHub Secrets y Workflow Health-Check
+- **Tipo de Cambio**: Seguridad, Auditoría CI/CD y Gestión de Secretos
+- **Contexto**: Auditoría de incidentes de seguridad con GitGuardian API REST vía `GITGUARDIAN_API_KEY`, provisión del secreto en GitHub Secrets y creación del workflow automatizado de monitoreo de disponibilidad y salud de secretos.
+- **Detalle de la Operación**:
+  1. **Auditoría GitGuardian API REST**:
+     - Consulta y filtrado de los 70 incidentes del workspace de GitGuardian con control de rate limiting (`GET /v1/incidents/secrets`).
+     - Confirmación de postura de seguridad impecable: `0` incidentes abiertos en `cadensa-web` (`Postura: SEGURA`).
+  2. **Eliminación de Fallbacks Hardcodeados y Respaldo Mandatorio .env**:
+     - Eliminación de la clave de Bing en `scripts/fetch_platform_metrics.cjs` y `scripts/submit_seo_index.cjs`.
+     - Respaldo de `BING_API_KEY` y `GITGUARDIAN_API_KEY` en `.env` local y sincronización de plantillas en `.env.example`.
+  3. **Aprovisionamiento en GitHub Secrets**:
+     - `GITGUARDIAN_API_KEY` registrado exitosamente en el repositorio `merolhack/cadensa-web` mediante GitHub CLI (`gh secret set`).
+  4. **Creación del Workflow 'Periodic Health & Uptime Audit'**:
+     - Creación de `.github/workflows/health-check.yml` programado diariamente a las 06:00 UTC con smoke tests para los 15 endpoints core de producción (`https://cadensa-web.pages.dev`) y auditoría de seguridad automatizada con `scripts/audit-gitguardian.py`.
+  5. **Validación de la Suite de Pruebas**:
+     - 64 archivos Vitest / 286 pruebas unitarias aprobadas al 100%.
+     - 101 escenarios Cucumber BDD / 391 pasos aprobados al 100%.
+- **Archivos creados/modificados**:
+  - `.env.example`
+  - `.github/workflows/health-check.yml`
+  - `scripts/audit-gitguardian.py`
+  - `scripts/fetch_platform_metrics.cjs`
+  - `scripts/submit_seo_index.cjs`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

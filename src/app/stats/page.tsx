@@ -23,6 +23,8 @@ const COUNTRY_FLAGS: Record<string, { flag: string; esName: string }> = {
   Bolivia: { flag: '🇧🇴', esName: 'Bolivia' },
   Venezuela: { flag: '🇻🇪', esName: 'Venezuela' },
   Sweden: { flag: '🇸🇪', esName: 'Suecia' },
+  Ireland: { flag: '🇮🇪', esName: 'Irlanda' },
+  'United Kingdom': { flag: '🇬🇧', esName: 'Reino Unido' },
 };
 
 function getCountryMeta(countryName: string) {

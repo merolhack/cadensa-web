@@ -25,7 +25,7 @@ describe('TechniquesCatalogHome Component - Unit Tests', () => {
   it('debe renderizar las 7 tarjetas de técnicas clínicas en el catálogo', () => {
     render(<TechniquesCatalogHome {...defaultProps} />);
 
-    expect(screen.getByText('Habla Rítmica Silábica (STS)')).toBeInTheDocument();
+    expect(screen.getAllByText('Habla Rítmica Silábica (STS)')[0]).toBeInTheDocument();
     expect(screen.getByText('Inicio Vocal Suave (Easy Onset)')).toBeInTheDocument();
     expect(screen.getByText('Contacto Articular Suave (Light Contact)')).toBeInTheDocument();
     expect(screen.getByText('Habla Prolongada y Fonación Continua')).toBeInTheDocument();

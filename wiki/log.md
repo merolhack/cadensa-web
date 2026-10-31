@@ -1318,3 +1318,23 @@
   - `wiki/index.md`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+## [2026-10-31] - Corrección de Hydration Mismatch (React Error #418) y Cobertura Integral de Avatar en Práctica
+
+- **Contexto**: Al acceder a la estación de práctica (`?view=practice`) y hacer clic en el botón `🤖 Avatar IA`, el navegador reportaba un desajuste de hidratación (Minified React error #418) originado por la discrepancia entre el HTML estático pre-renderizado del servidor (`Home`) y la inicialización síncrona del estado del cliente con parámetros de búsqueda (`URLSearchParams`) y `localStorage`. Asimismo, el componente `VirtualSLPAvatarModal` no se encontraba renderizado dentro del bloque JSX de retorno de la vista de práctica.
+- **Acciones Realizadas**:
+  1. **Reconciliación Libre de Desajustes de Hidratación (`useSyncExternalStore`)**:
+     - Creado el hook reactivo `useUrlView` utilizando `useSyncExternalStore` con `getServerSnapshot` retornando `'home'` y `getSnapshot` resolviendo la URL en el cliente.
+     - Inicialización estable de variables de gamificación y sesión (`currentUserEmail`, `streakDays`, `xpPoints`, `customExercises`) con sincronización asíncrona diferida.
+  2. **Renderizado Universal de `VirtualSLPAvatarModal`**:
+     - Incorporado el modal del Avatar en la estación de entrenamiento activo (`currentView === 'practice'`), permitiendo invocar al co-terapeuta facio-articular 3D y aplicar técnicas clínicas directamente en la práctica.
+  3. **Robustecimiento de Canvas 2D**:
+     - Agregado fallback defensivo para `ctx.roundRect` en `VirtualSLPAvatar.tsx` para navegadores con soporte parcial.
+  4. **Validación de Calidad**:
+     - Compilación estática de Next.js Turbopack 100% exitosa (18 rutas prerenderizadas).
+     - Pruebas unitarias (297) y escenarios BDD (104) aprobados al 100%.
+- **Archivos modificados**:
+  - `src/app/page.tsx`
+  - `src/components/VirtualSLPAvatar.tsx`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

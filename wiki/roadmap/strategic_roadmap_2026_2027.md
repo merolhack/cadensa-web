@@ -35,3 +35,4 @@ La hoja de ruta 2026–2027 consolida a Cadensa como una plataforma de biofeedba
 
 ## 3. Sincronización Mandatoria con `/about`
 Conforme a la **Regla 7 de AGENTS.md**, cada hito completado o reprogramado en esta hoja de ruta se sincroniza de forma inmediata en la página pública de "Acerca de" (`src/app/about/page.tsx`) y en la bitácora `wiki/log.md`.
+

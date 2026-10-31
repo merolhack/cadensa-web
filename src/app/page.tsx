@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { AudioMetronome, TimeSignature, SoundPreset } from '@/lib/audioMetronome';
 import { flattenSentenceSyllables } from '@/lib/syllables';
@@ -49,15 +49,29 @@ const TRAINING_PHRASES = [
   'Hablar con calma y seguridad es posible',
 ];
 
+function useUrlView(initialView: 'home' | 'practice'): 'home' | 'practice' {
+  return useSyncExternalStore(
+    (callback) => {
+      window.addEventListener('popstate', callback);
+      return () => window.removeEventListener('popstate', callback);
+    },
+    () => {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('view') === 'practice') return 'practice';
+      }
+      return initialView;
+    },
+    () => initialView
+  );
+}
+
 export default function Home({ initialView = 'home' }: { initialView?: 'home' | 'practice' } = {}) {
-  // Vista actual: 'home' (Página de inicio y catálogo) o 'practice' (Estación de entrenamiento activo)
-  const [currentView, setCurrentView] = useState<'home' | 'practice'>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('view') === 'practice') return 'practice';
-    }
-    return initialView;
-  });
+  // Vista actual con reconciliación libre de hydration mismatch
+  const urlView = useUrlView(initialView);
+  const [viewOverride, setViewOverride] = useState<'home' | 'practice' | null>(null);
+  const currentView = viewOverride ?? urlView;
+  const setCurrentView = (view: 'home' | 'practice') => setViewOverride(view);
 
   // Estado para el modal de video explicativo de técnicas
   const [videoModalTechnique, setVideoModalTechnique] = useState<ClinicalTechnique | null>(null);
@@ -92,57 +106,64 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [fontScale, setFontScale] = useState<SyllableFontScale>('normal');
   const [isBreathingOpen, setIsBreathingOpen] = useState(false);
   const [isCustomPhraseOpen, setIsCustomPhraseOpen] = useState(false);
-  const [customExercises, setCustomExercises] = useState<ClinicalExercise[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem('cadensa_custom_phrases');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed.map((item: { id?: string; phrase: string; bpm?: number; createdAt?: string }) => ({
-              id: item.id || `custom-${Date.now()}`,
-              category: 'fonetica_basica' as ClinicalCategory,
-              difficulty: 'personalizado',
-              phrase: item.phrase,
-              bpm_recommended: item.bpm || 80,
-              created_at: item.createdAt || new Date().toISOString(),
-              clinicalObjective: 'Frase personalizada de desafío del paciente',
-              targetPhonemes: [],
-            }));
-          }
-        }
-      } catch {
-        // Ignorar error de lectura local
-      }
-    }
-    return [];
-  });
+  const [customExercises, setCustomExercises] = useState<ClinicalExercise[]>([]);
   const [selectedTechniqueId, setSelectedTechniqueId] = useState<TechniqueId>('sts');
 
   const activeTechnique = CLINICAL_TECHNIQUES[selectedTechniqueId] || CLINICAL_TECHNIQUES.sts;
 
-  // Estados de Usuario, Sesión y Modales con inicialización perezosa segura
-  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(() => {
-    return typeof window !== 'undefined' ? localStorage.getItem('cadensa_user_email') : null;
-  });
-  const [currentUserId, setCurrentUserId] = useState<string | null>(() => {
-    return typeof window !== 'undefined' ? localStorage.getItem('cadensa_user_id') : null;
-  });
-  const [streakDays, setStreakDays] = useState<number>(() => {
-    return typeof window !== 'undefined' ? Number(localStorage.getItem('cadensa_streak_days') || '1') : 1;
-  });
-  const [totalMinutes, setTotalMinutes] = useState<number>(() => {
-    return typeof window !== 'undefined' ? Number(localStorage.getItem('cadensa_total_minutes') || '5') : 5;
-  });
-  const [xpPoints, setXpPoints] = useState<number>(() => {
-    return typeof window !== 'undefined' ? Number(localStorage.getItem('cadensa_xp_points') || '125') : 125;
-  });
+  // Estados de Usuario y Gamificación (inicializados estables para evitar Hydration Mismatch)
+  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [streakDays, setStreakDays] = useState<number>(1);
+  const [totalMinutes, setTotalMinutes] = useState<number>(5);
+  const [xpPoints, setXpPoints] = useState<number>(125);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [sessionSeconds, setSessionSeconds] = useState(0);
   const [lastAccuracy, setLastAccuracy] = useState<AccuracyResult | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [voiceModeActive, setVoiceModeActive] = useState(false);
+
+  // Sincronización asíncrona de datos locales tras el montaje para cero desajustes de hidratación
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const email = localStorage.getItem('cadensa_user_email');
+        const uid = localStorage.getItem('cadensa_user_id');
+        const streak = localStorage.getItem('cadensa_streak_days');
+        const mins = localStorage.getItem('cadensa_total_minutes');
+        const xp = localStorage.getItem('cadensa_xp_points');
+        const stored = localStorage.getItem('cadensa_custom_phrases');
+
+        if (email) setCurrentUserEmail(email);
+        if (uid) setCurrentUserId(uid);
+        if (streak) setStreakDays(Number(streak));
+        if (mins) setTotalMinutes(Number(mins));
+        if (xp) setXpPoints(Number(xp));
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setCustomExercises(
+              parsed.map((item: { id?: string; phrase: string; bpm?: number; createdAt?: string }) => ({
+                id: item.id || `custom-${Date.now()}`,
+                category: 'fonetica_basica' as ClinicalCategory,
+                difficulty: 'personalizado',
+                phrase: item.phrase,
+                bpm_recommended: item.bpm || 80,
+                created_at: item.createdAt || new Date().toISOString(),
+                clinicalObjective: 'Frase personalizada de desafío del paciente',
+                targetPhonemes: [],
+              }))
+            );
+          }
+        }
+      } catch {
+        // Ignorar excepciones de lectura en entornos restringidos
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const metronomeRef = useRef<AudioMetronome | null>(null);
 
@@ -1255,6 +1276,31 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           </div>
         </div>
       )}
+
+      {/* Modal de Agente Avatar de IA Fonoaudiológico (Virtual SLP Agent) en Estación de Práctica */}
+      <VirtualSLPAvatarModal
+        isOpen={isAvatarOpen}
+        onClose={() => setIsAvatarOpen(false)}
+        bpm={bpm}
+        onApplyTechnique={(mode) => {
+          if (mode === 'easy_onset') {
+            const tech = CLINICAL_TECHNIQUES['easy_onset'];
+            if (tech) handleSelectTechnique(tech);
+          } else if (mode === 'light_contact') {
+            const tech = CLINICAL_TECHNIQUES['light_contact'];
+            if (tech) handleSelectTechnique(tech);
+          } else if (mode === 'pull_out') {
+            const tech = CLINICAL_TECHNIQUES['pull_out'];
+            if (tech) handleSelectTechnique(tech);
+          } else if (mode === 'cancellation') {
+            const tech = CLINICAL_TECHNIQUES['cancellation'];
+            if (tech) handleSelectTechnique(tech);
+          } else if (mode === 'breathing') {
+            const tech = CLINICAL_TECHNIQUES['box_breathing'];
+            if (tech) handleSelectTechnique(tech);
+          }
+        }}
+      />
     </main>
   );
 }

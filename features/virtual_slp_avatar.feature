@@ -21,3 +21,4 @@ Característica: Agente Avatar de IA Fonoaudiológico y Generador Fonético Bala
     Cuando el avatar reproduce el modo clínico "Pull-Out"
     Entonces demuestra la desaceleración del órgano articulatorio en tensión
     Y guía la transición gradual hacia el deslizamiento fluido
+

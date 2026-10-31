@@ -55,3 +55,4 @@ El **Virtual SLP Agent** resuelve esta barrera mediante un **modelo facio-articu
 - [`VirtualSLPAvatar.tsx`](file:////wsl$/Ubuntu-20.04/home/merolhack/fl/cadensa-web/src/components/VirtualSLPAvatar.tsx)
 - [`phoneticTextGenerator.ts`](file:////wsl$/Ubuntu-20.04/home/merolhack/fl/cadensa-web/src/lib/phoneticTextGenerator.ts)
 - [`acousticAiDetector.ts`](file:////wsl$/Ubuntu-20.04/home/merolhack/fl/cadensa-web/src/lib/acousticAiDetector.ts)
+

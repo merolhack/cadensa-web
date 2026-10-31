@@ -44,3 +44,4 @@ Métricas calculadas en tiempo real:
 - **`targetDensity`:** Porcentaje de fonemas diana respecto al total de letras.
 - **`difficultyScore` (0 a 100):** Ponderación de longitud silábica y densidad fonemática.
 - **`recommendedBpm`:** Tempo sugerido para maximizar la fluidez motora.
+

@@ -230,13 +230,17 @@ export function VirtualSLPAvatar({
       ctx.strokeStyle = '#3f3f46';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.roundRect(
-        centerX - chestWidth / 2,
-        torsoY,
-        chestWidth,
-        chestHeight,
-        [16, 16, 8, 8]
-      );
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(
+          centerX - chestWidth / 2,
+          torsoY,
+          chestWidth,
+          chestHeight,
+          [16, 16, 8, 8]
+        );
+      } else {
+        ctx.rect(centerX - chestWidth / 2, torsoY, chestWidth, chestHeight);
+      }
       ctx.fill();
       ctx.stroke();
 

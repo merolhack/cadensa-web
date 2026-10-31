@@ -1274,3 +1274,47 @@
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
 
+
+## [2026-10-31] - Implementación del Agente Avatar de IA Fonoaudiológico (Virtual SLP Agent), Motor NLP de Textos Balanceados y Sincronización del Roadmap 2026–2027
+
+- **Contexto**: Tras la consolidación del resumen maestro `CADENSA_MASTER_SUMMARY.md` y el análisis de la hoja de ruta 2026–2027 derivado de Gemini Notebook (`wiki/raw/Plan_Estratgico_y_Hoja_de_Ruta_de_Evolucin.md`), se ejecutó la implementación técnica de los hitos fonoaudiológicos clave y se sincronizó el roadmap de próximos lanzamientos en la página `/about` conforme a la Regla 7 de AGENTS.md.
+- **Acciones Realizadas**:
+  1. **Generador Dinámico de Textos Fonéticamente Balanceados (Client-Side NLP)**:
+     - Creado `src/lib/phoneticTextGenerator.ts` con clasificación por niveles (sílabas aisladas, bisílabos, oraciones controladas y prosa continua) y grupos articulatorios diana (oclusivas bilabiales /p, b, m/, dentales /t, d/, velares /k, g/, fricativas, líquidas, inicios vocálicos y balanceado general).
+     - Adaptación léxica y prosódica a los 5 dialectos hispanohablantes (México Central, Cono Sur, Andino, Caribeño, Ibérico) con cálculo de densidad fonética, dificultad y BPM recomendado.
+     - Creada suite unitaria `src/lib/phoneticTextGenerator.test.ts` (5 pruebas aprobadas al 100%).
+  2. **Agente Avatar de IA Fonoaudiológico 3D (Virtual SLP Agent)**:
+     - Desarrollado `src/components/VirtualSLPAvatar.tsx` con motor de renderizado fisiológico facio-articular en Canvas 2D / WebGL a 60 FPS sin dependencias pesadas de servidor (Zero Trust).
+     - Modela en tiempo real: Respiración Diafragmática Cuadrada (4-4-4-4) con expansión torácica, Inicios Suaves (*Easy Onset*) con aproximación progresiva de cuerdas vocales en el cuello, técnicas de modificación de Van Riper (*Pull-Out* con desaceleración articular y *Cancelación* con pausa de 3 segundos), Contactos Ligeros con mapa de calor de sobretensión en labios/lengua, y Espejo Vocal con aureola luminosa de semáforo de micro-tensión laríngea.
+     - Desarrollado `src/components/VirtualSLPAvatarModal.tsx` e integrado en `TechniquesCatalogHome.tsx` y la barra de navegación de la estación de práctica en `src/app/page.tsx`.
+     - Creada suite unitaria `src/components/VirtualSLPAvatar.test.tsx` (4 pruebas aprobadas al 100%).
+  3. **Cobertura BDD Cucumber en Español**:
+     - Creada característica `features/virtual_slp_avatar.feature` con 3 escenarios clínicos.
+     - Implementados pasos en `features/step_definitions/virtual_slp_avatar_steps.ts`.
+  4. **Sincronización Mandatoria de `/about` (AGENTS.md #7)**:
+     - Actualizada la sección de Hitos Completados en `src/app/about/page.tsx` con el Agente Avatar, Generador Fonético NLP y Espejo Vocal.
+     - Sincronizada la sección de Futuros Pasos en Desarrollo Activo con los 8 hitos planificados de la hoja de ruta 2026–2027 (Mes 5: WebXR VR Desensibilización Fóbica, Mes 6: rPPG y Web Bluetooth EMG, Mes 7: Cadensa Kids 2.0, Mes 8: Modo Dúo WebRTC E2EE, Mes 9: Motor Multilingüe Portugués/Inglés, Mes 10: Integración Hospitalaria SMART on FHIR, Mes 11: Capacitor iOS/Android, Mes 12: Evaluación Longitudinal FHIR R4).
+     - Actualizada la suite `src/app/about/page.test.tsx` (6 pruebas aprobadas al 100%).
+  5. **Documentación en LLM Wiki (`wiki/`)**:
+     - Creado concepto `wiki/concepts/virtual_slp_avatar.md`.
+     - Creado concepto `wiki/concepts/phonetic_text_generator.md`.
+     - Creado roadmap `wiki/roadmap/strategic_roadmap_2026_2027.md`.
+     - Actualizado catálogo maestro `wiki/index.md`.
+- **Archivos creados/modificados**:
+  - `src/lib/phoneticTextGenerator.ts` (nuevo)
+  - `src/lib/phoneticTextGenerator.test.ts` (nuevo)
+  - `src/components/VirtualSLPAvatar.tsx` (nuevo)
+  - `src/components/VirtualSLPAvatar.test.tsx` (nuevo)
+  - `src/components/VirtualSLPAvatarModal.tsx` (nuevo)
+  - `features/virtual_slp_avatar.feature` (nuevo)
+  - `features/step_definitions/virtual_slp_avatar_steps.ts` (nuevo)
+  - `wiki/concepts/virtual_slp_avatar.md` (nuevo)
+  - `wiki/concepts/phonetic_text_generator.md` (nuevo)
+  - `wiki/roadmap/strategic_roadmap_2026_2027.md` (nuevo)
+  - `src/components/TechniquesCatalogHome.tsx`
+  - `src/app/page.tsx`
+  - `src/app/about/page.tsx`
+  - `src/app/about/page.test.tsx`
+  - `wiki/index.md`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).

@@ -24,6 +24,7 @@ interface TechniquesCatalogHomeProps {
   onOpenDAF?: () => void;
   onOpenCertificates?: () => void;
   onOpenAcousticAi?: () => void;
+  onOpenAvatar?: () => void;
   streakDays: number;
   totalMinutes: number;
   xpPoints: number;
@@ -44,6 +45,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onOpenDAF,
   onOpenCertificates,
   onOpenAcousticAi,
+  onOpenAvatar,
   streakDays,
   totalMinutes,
   xpPoints,
@@ -249,6 +251,17 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             >
               <span>🧠</span>
               <span>IA Acústica</span>
+            </button>
+          )}
+
+          {onOpenAvatar && (
+            <button
+              onClick={onOpenAvatar}
+              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-900/50 via-teal-900/50 to-cyan-900/50 hover:from-emerald-900/70 hover:to-cyan-900/70 border border-emerald-500/40 text-emerald-200 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
+              aria-label="Abrir Agente Avatar de IA Fonoaudiológico"
+            >
+              <span>🤖</span>
+              <span>Avatar IA</span>
             </button>
           )}
         </div>

@@ -1,10 +1,12 @@
-﻿export interface VowelFormants {
+export interface VowelFormants {
   a: { f1: number; f2: number };
   e: { f1: number; f2: number };
   i: { f1: number; f2: number };
   o: { f1: number; f2: number };
   u: { f1: number; f2: number };
 }
+
+export type DialectId = 'mexico_central' | 'mx_central' | 'cono_sur' | 'andino' | 'caribeno' | 'iberico';
 
 export interface DialectPreset {
   id: string;

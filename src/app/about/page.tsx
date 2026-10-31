@@ -317,6 +317,18 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Homologación Universal de Pie de Página (Footer Canónico):</strong> Consolidación transversal de Footer en todas las secciones con banner comunitario oficial AMTTM, red fonoaudiológica de 7 técnicas, aviso YMYL y autor.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Agente Avatar de IA Fonoaudiológico (Virtual SLP Agent 3D):</strong> Motor facio-articular en cliente a 60 FPS con modelado fisiológico de respiración diafragmática 4-4-4-4, aproximación progresiva de cuerdas vocales (Inicios Suaves), técnicas de modificación de Van Riper (Pull-out y Cancelación), y contactos ligeros con mapa de calor de sobretensión.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Generador Dinámico de Textos Fonéticamente Balanceados por Dialecto (Client-Side NLP):</strong> Motor de procesamiento de lenguaje natural en el cliente (`phoneticTextGenerator.ts`) que analiza y categoriza textos por niveles de complejidad (aislados, bisílabos, frases y prosa) y zonas de conflicto fonético según las 5 variantes del español.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Espejo Vocal Interactivo y Biofeedback de Micro-Tensión:</strong> Sincronización de apertura labial, visualización laríngea y aureola luminosa de advertencia temprana prefonatoria (Verde, Ámbar, Roja) acoplada a la inferencia acústica local.</span>
+                </li>
               </ul>
             </div>
 
@@ -328,21 +340,41 @@ export default function AboutPage() {
                   <span>Futuros Pasos en Desarrollo Activo</span>
                 </h3>
                 <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300">
-                  Próximos Lanzamientos
+                  Roadmap 2026–2027
                 </span>
               </div>
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 1: Desensibilización Fóbica en Realidad Virtual WebXR:</strong> Escenarios 3D interactivos en el navegador para exposición gradual ante entrevistas laborales y presentaciones públicas con biofeedback de ritmo.</span>
+                  <span><strong>Mes 5: Desensibilización Fóbica en Realidad Virtual WebXR (Escenarios 3D):</strong> Entornos inmersivos en el navegador para exposición gradual ante entrevistas laborales con panel evaluador virtual, presentaciones en auditorios interactivos y situaciones cotidianas.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 2: Generación Dinámica de Textos Fonéticamente Balanceados:</strong> Algoritmos en cliente para componer lecturas personalizadas priorizando las consonantes temidas específicas de cada paciente.</span>
+                  <span><strong>Mes 6: Biofeedback Fisiológico Remoto (rPPG vía Webcam) y Web Bluetooth EMG:</strong> Estimación de la variabilidad del ritmo cardiaco por micro-cambios cromáticos de la piel y conexión directa por Web Bluetooth con sensores electromiográficos superficiales suprahioideos.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Hito 3: Biofeedback EMG No Invasivo Vía Wearables:</strong> Integración de bioseñales electromiográficas de superficie para pacientes con hipertonía laríngea severa.</span>
+                  <span><strong>Mes 7: Cadensa Kids 2.0 con Avatar Lúdico Gamificado:</strong> Narrativa espacial interactiva (&ldquo;Viaje intergaláctico del ritmo&rdquo;), misiones diarias y refuerzo positivo bajo contingencias verbales tipo Lidcombe.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">→</span>
+                  <span><strong>Mes 8: Modo Dúo Avanzado y Co-Terapeuta Avatar en Telesalud WebRTC E2EE:</strong> Árbitro neutral de cadencia en salas de videollamada cifradas punto a punto para práctica fonoaudiólogo-paciente y tutor-niño con métricas de sincronía compartidas.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">→</span>
+                  <span><strong>Mes 9: Motor Fonético Multilingüe (Portugués e Inglés):</strong> Presets acústicos para Portugués (Brasil / Portugal) e Inglés (General American / RP British) con sintonización de visemas del avatar para vocales abiertas y nasalizadas.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">→</span>
+                  <span><strong>Mes 10: Integración Clínica Hospitalaria SMART on FHIR y Portal Fonoaudiológico:</strong> Capa de interoperabilidad con expedientes clínicos electrónicos (EHR / HIS de redes hospitalarias públicas y privadas) mediante OAuth 2.0 y mapeo automático de recursos FHIR R4.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">→</span>
+                  <span><strong>Mes 11: Empaquetado Nativo Offline-First con Capacitor (iOS / iPadOS / Android):</strong> Distribución en App Store y Google Play Store con ejecución 100% autónoma del avatar y procesamiento de audio en zonas sin conectividad.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">→</span>
+                  <span><strong>Mes 12: Evaluación Clínica Longitudinal Automatizada y Reportes Anuales FHIR R4:</strong> Informes comparativos anuales de tasa SPS en DDK y control de formantes, con certificación digital y diplomas con el sello de la AMTTM.</span>
                 </li>
               </ul>
             </div>

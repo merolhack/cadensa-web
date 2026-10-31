@@ -58,4 +58,21 @@ describe('AboutPage - Unit Tests', () => {
     expect(statsLinks.length).toBeGreaterThanOrEqual(1);
     expect(statsLinks[0]).toHaveAttribute('href', '/stats');
   });
+
+  it('debe incluir los hitos del Agente Avatar de IA y el Roadmap 2026-2027', () => {
+    render(<AboutPage />);
+
+    expect(
+      screen.getByText(/Agente Avatar de IA Fonoaudiológico \(Virtual SLP Agent 3D\):/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Generador Dinámico de Textos Fonéticamente Balanceados por Dialecto/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Mes 5: Desensibilización Fóbica en Realidad Virtual WebXR/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Mes 10: Integración Clínica Hospitalaria SMART on FHIR/i)
+    ).toBeInTheDocument();
+  });
 });

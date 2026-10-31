@@ -36,6 +36,7 @@ import { TelehealthRoom } from '@/components/TelehealthRoom';
 import { PediatricFluencyTrainer } from '@/components/PediatricFluencyTrainer';
 import { AlteredAuditoryTrainer } from '@/components/AlteredAuditoryTrainer';
 import { FluencyCertificateModal } from '@/components/FluencyCertificateModal';
+import { VirtualSLPAvatarModal } from '@/components/VirtualSLPAvatarModal';
 import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionValidator';
 import { LiveAudioVUMeter } from '@/components/LiveAudioVUMeter';
 import { setupAudioContextUnlock } from '@/lib/audioUnlock';
@@ -64,6 +65,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const [isQuickRoutineOpen, setIsQuickRoutineOpen] = useState(false);
   const [isAcousticAiOpen, setIsAcousticAiOpen] = useState(false);
+  const [isAvatarOpen, setIsAvatarOpen] = useState(false);
   const [isDDKOpen, setIsDDKOpen] = useState(false);
   const [isFormantsOpen, setIsFormantsOpen] = useState(false);
   const [isTelehealthOpen, setIsTelehealthOpen] = useState(false);
@@ -517,6 +519,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onOpenDAF={() => setIsDafOpen(true)}
           onOpenCertificates={() => setIsCertificatesOpen(true)}
           onOpenAcousticAi={() => setIsAcousticAiOpen(true)}
+          onOpenAvatar={() => setIsAvatarOpen(true)}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -591,6 +594,31 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             const tech = CLINICAL_TECHNIQUES[techId as TechniqueId];
             if (tech) {
               handleSelectTechniqueFromHome(tech);
+            }
+          }}
+        />
+
+        {/* Modal de Agente Avatar de IA Fonoaudiológico (Virtual SLP Agent) */}
+        <VirtualSLPAvatarModal
+          isOpen={isAvatarOpen}
+          onClose={() => setIsAvatarOpen(false)}
+          bpm={bpm}
+          onApplyTechnique={(mode) => {
+            if (mode === 'easy_onset') {
+              const tech = CLINICAL_TECHNIQUES['easy_onset'];
+              if (tech) handleSelectTechniqueFromHome(tech);
+            } else if (mode === 'light_contact') {
+              const tech = CLINICAL_TECHNIQUES['light_contact'];
+              if (tech) handleSelectTechniqueFromHome(tech);
+            } else if (mode === 'pull_out') {
+              const tech = CLINICAL_TECHNIQUES['pull_out'];
+              if (tech) handleSelectTechniqueFromHome(tech);
+            } else if (mode === 'cancellation') {
+              const tech = CLINICAL_TECHNIQUES['cancellation'];
+              if (tech) handleSelectTechniqueFromHome(tech);
+            } else if (mode === 'breathing') {
+              const tech = CLINICAL_TECHNIQUES['box_breathing'];
+              if (tech) handleSelectTechniqueFromHome(tech);
             }
           }}
         />
@@ -749,6 +777,16 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           >
             <span>🎥</span>
             <span className="hidden sm:inline">Video</span>
+          </button>
+
+          {/* Botón Agente Avatar IA Co-Terapeuta */}
+          <button
+            onClick={() => setIsAvatarOpen(true)}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-950/80 to-cyan-950/80 border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 text-xs font-semibold transition-all cursor-pointer shadow-sm"
+            title="Abrir Agente Avatar de IA Fonoaudiológico"
+          >
+            <span>🤖</span>
+            <span className="hidden sm:inline">Avatar IA</span>
           </button>
 
           {/* Botón PWA Instalable */}

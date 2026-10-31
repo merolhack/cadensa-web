@@ -74,6 +74,8 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [static_spa_paradigm.md](concepts/static_spa_paradigm.md) | Justificación técnica de `output: 'export'`, eliminación de servidores Node.js y restricciones. | `jamstack`, `spa`, `performance`, `edge` |
 | [acoustic_block_detection.md](concepts/acoustic_block_detection.md) | Detección acústica on-device Zero Trust de bloqueos tónicos, prolongaciones y repeticiones clónicas. | `clinical`, `acoustics`, `disfluency`, `tonic-block`, `zero-trust` |
 | [acoustic_ai_laryngeal_tension.md](concepts/acoustic_ai_laryngeal_tension.md) | Inferencia acústica on-device de micro-tensión laríngea, WebGPU y calibración fonética dialectal. | `clinical`, `acoustic-ai`, `laryngeal-tension`, `webgpu`, `dialect-presets` |
+| [virtual_slp_avatar.md](concepts/virtual_slp_avatar.md) | Agente Avatar de IA Fonoaudiológico 3D: motor facio-articular en cliente, modelado respiratorio y visemas de técnicas clínicas. | `clinical`, `virtual-slp`, `avatar`, `threejs`, `facio-articular` |
+| [phonetic_text_generator.md](concepts/phonetic_text_generator.md) | Generador dinámico de textos fonéticamente balanceados por dialecto (Client-Side NLP) clasificado por grupos consonánticos diana. | `clinical`, `nlp`, `phonetics`, `dialects`, `zero-trust` |
 
 ---
 
@@ -97,6 +99,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [next_steps_plan.md](roadmap/next_steps_plan.md) | Plan de siguientes pasos para evolución clínica: ejercicios fonéticos, reportes para fonoaudiólogos y análisis vocal. | `roadmap`, `clinical`, `reporting`, `next-steps` |
 | [product_evolution.md](roadmap/product_evolution.md) | Ruta de evolución técnica del PoC actual hacia el MVP interactivo (Web Audio, silabador, rachas). | `roadmap`, `product`, `mvp`, `audio` |
 | [platform_telemetry_and_seo_plan.md](roadmap/platform_telemetry_and_seo_plan.md) | Auditoría de métricas y errores en GA4, Search Console, AdSense y Bing Webmaster Tools, con plan de remediación y nuevas funcionalidades. | `roadmap`, `analytics`, `seo`, `adsense`, `bing` |
+| [strategic_roadmap_2026_2027.md](roadmap/strategic_roadmap_2026_2027.md) | Plan estratégico y hoja de ruta mensual 2026-2027: Agente Avatar Fonoaudiológico, NLP dialectal, WebXR, telepráctica y FHIR R4. | `roadmap`, `strategic`, `virtual-slp`, `avatar`, `2026-2027` |
 
 ---
 
@@ -106,3 +109,4 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 |---|---|---|
 | [clinical_foundations.md](raw/clinical_foundations.md) | Documento original sobre la terapia del habla, técnica de metrónomo y problema de abandono. | `clinical-spec` |
 | [poc_specifications.md](raw/poc_specifications.md) | Requisitos originales de ingeniería, decisiones de stack y restricciones del PoC. | `engineering-spec` |
+| [Plan_Estratgico_y_Hoja_de_Ruta_de_Evolucin.md](raw/Plan_Estratgico_y_Hoja_de_Ruta_de_Evolucin.md) | Plan estratégico mensual detallado de 12 meses basado en el análisis maestro y Virtual SLP Agent. | `strategic-analysis` |

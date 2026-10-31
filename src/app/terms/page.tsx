@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Términos de Uso y Aviso Clínico Fonoaudiológico — Cadensa',
@@ -89,15 +90,8 @@ export default function TermsPage() {
           </section>
         </div>
 
-        <footer className="pt-6 border-t border-zinc-900 text-center text-xs text-zinc-500 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/" className="hover:text-emerald-400">Inicio</Link>
-          <span>•</span>
-          <Link href="/about" className="hover:text-emerald-400">Acerca de</Link>
-          <span>•</span>
-          <Link href="/stats" className="hover:text-emerald-400">Estadísticas</Link>
-          <span>•</span>
-          <Link href="/privacy" className="hover:text-emerald-400">Política de Privacidad</Link>
-        </footer>
+        {/* Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos */}
+        <Footer />
       </div>
     </main>
   );

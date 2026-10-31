@@ -1,6 +1,6 @@
-﻿import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { Footer } from './Footer';
 
 describe('Footer Component', () => {
@@ -25,10 +25,10 @@ describe('Footer Component', () => {
     });
   });
 
-  it('debe renderizar los enlaces institucionales y legales', () => {
+  it('debe renderizar los enlaces institucionales, legales y autor', () => {
     render(<Footer />);
 
-    const platformUrls = ['/about', '/stats', '/privacy', '/terms'];
+    const platformUrls = ['/about', '/stats', '/privacy', '/terms', '/admin', 'https://merolhack.github.io'];
     const allLinks = screen.getAllByRole('link');
 
     platformUrls.forEach((href) => {
@@ -42,6 +42,23 @@ describe('Footer Component', () => {
     render(<Footer />);
 
     expect(screen.getByText(/Aviso Fonoaudiológico YMYL/i)).toBeInTheDocument();
-    expect(screen.getByText(/Asociación Mexicana de la Tartamudez/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Asociación Mexicana de la Tartamudez/i).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('debe renderizar nota de contexto opcional y botón de comentarios si se proporcionan', () => {
+    const handleFeedback = vi.fn();
+    render(
+      <Footer
+        contextNotice="Métricas de prueba"
+        onOpenFeedback={handleFeedback}
+      />
+    );
+
+    expect(screen.getByText('Métricas de prueba')).toBeInTheDocument();
+
+    const feedbackBtn = screen.getByRole('button', { name: /enviar comentarios/i });
+    expect(feedbackBtn).toBeInTheDocument();
+    fireEvent.click(feedbackBtn);
+    expect(handleFeedback).toHaveBeenCalledTimes(1);
   });
 });

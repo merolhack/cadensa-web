@@ -22,6 +22,7 @@ import {
   AdminClientErrorRow,
 } from '@/lib/adminService';
 import { AuthModal } from '@/components/AuthModal';
+import { Footer } from '@/components/Footer';
 
 export default function AdminDashboardPage() {
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -871,16 +872,8 @@ export default function AdminDashboardPage() {
           </section>
         )}
 
-        {/* Pie del Dashboard */}
-        <footer className="pt-6 border-t border-zinc-900 text-center text-xs text-zinc-500 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/" className="hover:text-emerald-400">Inicio</Link>
-          <span>•</span>
-          <Link href="/stats" className="hover:text-emerald-400">Estadísticas Públicas</Link>
-          <span>•</span>
-          <Link href="/about" className="hover:text-emerald-400">Acerca de</Link>
-          <span>•</span>
-          <span>Cadensa Admin Console v1.0 • Zero Trust PostgreSQL</span>
-        </footer>
+        {/* Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos */}
+        <Footer contextNotice="Cadensa Admin Console v1.0 • Zero Trust PostgreSQL" />
       </div>
     </main>
   );

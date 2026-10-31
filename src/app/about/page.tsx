@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Acerca de Cadensa — Propósito, Futuros Pasos y Autor',
@@ -310,7 +311,11 @@ export default function AboutPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 font-bold">✓</span>
-                  <span><strong>Arquitectura de Interlinking SEO y Crawlers Globales:</strong> Pie de página unificado con enlaces a las 7 técnicas fonoaudiológicas, despacho IndexNow HTTP 200 y sitemaps sincronizados en Google Search Console y Bing Webmaster Tools.</span>
+                  <span><strong>Arquitectura de Interlinking SEO y Crawlers Globales:</strong> Despacho IndexNow HTTP 200 y sitemaps sincronizados en Google Search Console y Bing Webmaster Tools.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Homologación Universal de Pie de Página (Footer Canónico):</strong> Consolidación transversal de Footer en todas las secciones con banner comunitario oficial AMTTM, red fonoaudiológica de 7 técnicas, aviso YMYL y autor.</span>
                 </li>
               </ul>
             </div>
@@ -464,32 +469,8 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 7. Footer */}
-        <footer className="w-full text-center pt-6 pb-4 border-t border-zinc-900 text-xs text-zinc-500 space-y-2">
-          <div className="flex flex-wrap items-center justify-center gap-3 text-zinc-400">
-            <Link href="/" className="hover:text-emerald-400 transition-colors">
-              Inicio
-            </Link>
-            <span>•</span>
-            <Link href="/stats" className="hover:text-emerald-400 transition-colors">
-              Estadísticas Globales
-            </Link>
-            <span>•</span>
-            <span className="text-emerald-400 font-medium">Acerca de Cadensa</span>
-            <span>•</span>
-            <a
-              href="https://merolhack.github.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-emerald-400 transition-colors"
-            >
-              Lenin Meza (Autor)
-            </a>
-          </div>
-          <p className="text-[11px] text-zinc-600">
-            Cadensa — Encuentra el ritmo de tu voz • Next.js 16 • Supabase • Cloudflare Pages
-          </p>
-        </footer>
+        {/* 7. Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos */}
+        <Footer />
       </div>
     </main>
   );

@@ -12,7 +12,7 @@ import { MetronomeVisual } from '@/components/MetronomeVisual';
 import { SyllableReader, SyllableFontScale } from '@/components/SyllableReader';
 import { Dashboard } from '@/components/Dashboard';
 import { AuthModal } from '@/components/AuthModal';
-import { CommunityBanner } from '@/components/CommunityBanner';
+import { Footer } from '@/components/Footer';
 import { BreathingPacer } from '@/components/BreathingPacer';
 import { FaqAndMethodology } from '@/components/FaqAndMethodology';
 import { TechniqueSelector } from '@/components/TechniqueSelector';
@@ -37,7 +37,6 @@ import { PediatricFluencyTrainer } from '@/components/PediatricFluencyTrainer';
 import { AlteredAuditoryTrainer } from '@/components/AlteredAuditoryTrainer';
 import { FluencyCertificateModal } from '@/components/FluencyCertificateModal';
 import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionValidator';
-import { BrowserCompatibilityBanner } from '@/components/BrowserCompatibilityBanner';
 import { LiveAudioVUMeter } from '@/components/LiveAudioVUMeter';
 import { setupAudioContextUnlock } from '@/lib/audioUnlock';
 import { initGlobalErrorTracking } from '@/lib/errorTracker';
@@ -1142,72 +1141,15 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         onSelectTechnique={handleSelectTechnique}
       />
 
-      {/* Banner Comunitario Oficial AMTTM */}
-      <CommunityBanner />
-
-      {/* Footer Homogéneo y Simétrico (max-w-4xl) */}
-      <footer className="w-full max-w-4xl text-center pt-6 pb-6 border-t border-zinc-900 text-xs text-zinc-500 space-y-3">
-        <div className="flex flex-wrap items-center justify-center gap-3 text-zinc-400">
-          <Link
-            href="/about"
-            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
-          >
-            <span>ℹ️</span>
-            <span>Acerca de</span>
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <Link
-            href="/stats"
-            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
-          >
-            <span>📊</span>
-            <span>Estadísticas</span>
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <Link
-            href="/privacy"
-            className="hover:text-emerald-400 transition-colors font-medium"
-          >
-            Privacidad
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <Link
-            href="/terms"
-            className="hover:text-emerald-400 transition-colors font-medium"
-          >
-            Términos
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <button
-            type="button"
-            onClick={() => {
-              setFeedbackCategory('other');
-              setFeedbackTechniqueId(null);
-              setIsFeedbackOpen(true);
-            }}
-            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium cursor-pointer"
-          >
-            <span>💬</span>
-            <span>Comentarios</span>
-          </button>
-          <span className="hidden sm:inline">•</span>
-          <Link
-            href="/admin"
-            className="hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium"
-            title="Panel de Administración Zero Trust"
-          >
-            <span>🛡️</span>
-            <span>Admin</span>
-          </Link>
-          <span className="hidden sm:inline">•</span>
-          <span>Cadensa Web — Terapia Rítmica Silábica</span>
-        </div>
-
-        {/* Aviso discreto de compatibilidad para personas técnicas */}
-        <BrowserCompatibilityBanner />
-
-        <p className="text-[11px] text-zinc-600">Next.js 16 • Supabase • Cloudflare Pages</p>
-      </footer>
+      {/* Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos (max-w-4xl) */}
+      <Footer
+        containerClassName="w-full max-w-4xl"
+        onOpenFeedback={() => {
+          setFeedbackCategory('other');
+          setFeedbackTechniqueId(null);
+          setIsFeedbackOpen(true);
+        }}
+      />
 
       {/* Modal de Respiración Diafragmática */}
       <BreathingPacer

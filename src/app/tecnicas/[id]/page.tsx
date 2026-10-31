@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { CLINICAL_TECHNIQUES, TECHNIQUE_FAMILIES, TechniqueId } from '@/lib/clinicalTechniques';
 import { TechniqueFeedbackButton } from '@/components/TechniqueFeedbackButton';
+import { Footer } from '@/components/Footer';
 
 export const dynamic = 'force-static';
 
@@ -213,16 +214,8 @@ export default async function TechniqueDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="pt-6 border-t border-zinc-900 text-center text-xs text-zinc-500 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/" className="hover:text-emerald-400">Inicio</Link>
-          <span>•</span>
-          <Link href="/about" className="hover:text-emerald-400">Acerca de</Link>
-          <span>•</span>
-          <Link href="/privacy" className="hover:text-emerald-400">Privacidad</Link>
-          <span>•</span>
-          <Link href="/terms" className="hover:text-emerald-400">Términos y Aviso Clínico</Link>
-        </footer>
+        {/* Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos */}
+        <Footer />
       </div>
     </main>
   );

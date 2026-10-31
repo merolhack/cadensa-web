@@ -9,7 +9,6 @@ import {
   TECHNIQUE_FAMILIES,
   TechniqueFamilyId,
 } from '@/lib/clinicalTechniques';
-import { CommunityBanner } from './CommunityBanner';
 import { PwaInstallButton } from './PwaInstallButton';
 import { Footer } from './Footer';
 
@@ -412,12 +411,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
         </p>
       </section>
 
-      {/* 6. Banner Oficial AMTTM (Homogéneo en max-w-5xl) */}
-      <div className="max-w-5xl w-full my-2">
-        <CommunityBanner className="max-w-5xl" />
-      </div>
-
-      {/* 7. Footer Homogéneo Global con Enlaces Fonoaudiológicos SEO (max-w-5xl) */}
+      {/* 6. Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos SEO (max-w-5xl) */}
       <Footer />
     </div>
   );

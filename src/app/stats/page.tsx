@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import statsData from '@/data/platform_stats.json';
+import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Estadísticas de Uso e Impacto Global — Cadensa',
@@ -337,29 +338,8 @@ export default function StatsPage() {
           </div>
         </section>
 
-        {/* 6. Footer de la página de estadísticas */}
-        <footer className="pt-6 border-t border-zinc-900 text-center text-xs text-zinc-400 space-y-2">
-          <p>
-            Métricas recopiladas de forma anónima y agregada en cumplimiento con la privacidad del usuario clínico.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-zinc-400">
-            <Link href="/" className="hover:text-emerald-400 transition-colors">
-              Inicio
-            </Link>
-            <span>•</span>
-            <Link href="/about" className="hover:text-emerald-400 transition-colors">
-              Acerca de Cadensa
-            </Link>
-            <span>•</span>
-            <Link href="/privacy" className="hover:text-emerald-400 transition-colors">
-              Privacidad
-            </Link>
-            <span>•</span>
-            <Link href="/terms" className="hover:text-emerald-400 transition-colors">
-              Términos
-            </Link>
-          </div>
-        </footer>
+        {/* 6. Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos */}
+        <Footer contextNotice="Métricas recopiladas de forma anónima y agregada en cumplimiento con la privacidad del usuario clínico." />
       </div>
     </main>
   );

@@ -1241,3 +1241,36 @@
   - `scripts/submit_seo_index.cjs`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-31] refactor | Homologación universal de pie de página (Footer Canónico) en todas las secciones
+- **Tipo de Cambio**: Refactorización de Arquitectura Frontend, Interlinking SEO y UX
+- **Contexto**: Unificación transversal del componente `Footer.tsx` en todas las rutas del sitio (`/`, `/about`, `/stats`, `/privacy`, `/terms`, `/tecnicas/[id]`, `/admin`), eliminando 7 implementaciones inline fragmentadas.
+- **Detalle de la Operación**:
+  1. **Consolidación de `src/components/Footer.tsx`**:
+     - Integración nativa del `CommunityBanner` (Asociación Mexicana de la Tartamudez A.C.) en la cabecera del footer, garantizando apoyo comunitario visible en todas las páginas.
+     - Red transversal fonoaudiológica completa: enlaces directos con iconos a las 7 técnicas (`/tecnicas/*`), enlaces de plataforma (`/about`, `/stats`, `/privacy`, `/terms`, `/admin`), autor Lenin Meza (`https://merolhack.github.io`), aviso de responsabilidad médica YMYL y `BrowserCompatibilityBanner`.
+     - Soporte de notas contextuales vía `contextNotice` (usado en `/stats` y `/admin`).
+     - Botón opcional de retroalimentación `onOpenFeedback` para reportar comentarios o errores directamente.
+  2. **Reemplazo Transversal de Footers Inline**:
+     - Actualizadas todas las secciones eliminando etiquetas `<footer>` artesanales redundantes.
+  3. **Sincronización Mandatoria de `/about` (AGENTS.md #7)**:
+     - Actualizada la sección de hitos completados y operativos en `src/app/about/page.tsx`.
+  4. **Suite de Pruebas Unitarias y BDD**:
+     - Actualizado `src/components/Footer.test.tsx` (4/4 pruebas aprobadas).
+     - Validación integral con `npm run test:all`: 64 suites Vitest (287 pruebas) y 101 escenarios BDD aprobados al 100%. Cero errores de linting.
+- **Archivos modificados**:
+  - `src/components/Footer.tsx`
+  - `src/components/Footer.test.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`
+  - `src/app/page.tsx`
+  - `src/app/about/page.tsx`
+  - `src/app/stats/page.tsx`
+  - `src/app/privacy/page.tsx`
+  - `src/app/terms/page.tsx`
+  - `src/app/tecnicas/[id]/page.tsx`
+  - `src/app/admin/page.tsx`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+

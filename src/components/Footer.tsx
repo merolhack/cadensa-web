@@ -1,6 +1,7 @@
-﻿import React from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { BrowserCompatibilityBanner } from './BrowserCompatibilityBanner';
+import { CommunityBanner } from './CommunityBanner';
 
 const CLINICAL_TECHNIQUE_LINKS = [
   { id: 'sts', name: 'Habla Rítmica Silábica (STS)', href: '/tecnicas/sts', icon: '⏱️' },
@@ -17,12 +18,40 @@ const PLATFORM_LINKS = [
   { name: 'Estadísticas de Uso', href: '/stats', icon: '📊' },
   { name: 'Política de Privacidad', href: '/privacy', icon: '🛡️' },
   { name: 'Términos y Aviso Clínico', href: '/terms', icon: '⚖️' },
+  { name: 'Panel de Administración', href: '/admin', icon: '🔒' },
+  { name: 'Lenin Meza (Autor)', href: 'https://merolhack.github.io', icon: '👨‍💻', external: true },
 ];
 
-export const Footer: React.FC = () => {
+export interface FooterProps {
+  showCommunityBanner?: boolean;
+  contextNotice?: React.ReactNode;
+  containerClassName?: string;
+  onOpenFeedback?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({
+  showCommunityBanner = true,
+  contextNotice,
+  containerClassName = 'max-w-5xl w-full',
+  onOpenFeedback,
+}) => {
   return (
-    <footer className="max-w-5xl w-full pt-8 pb-10 border-t border-zinc-900 text-xs text-zinc-400 space-y-8" data-testid="global-footer">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+    <footer className={`${containerClassName} pt-8 pb-10 text-xs text-zinc-400 space-y-6`} data-testid="global-footer">
+      {/* Banner Comunitario Superior */}
+      {showCommunityBanner && (
+        <div className="w-full">
+          <CommunityBanner className="w-full" />
+        </div>
+      )}
+
+      {/* Nota de contexto específica de la vista si existe */}
+      {contextNotice && (
+        <div className="text-center text-[11px] text-zinc-400 p-2.5 rounded-xl bg-zinc-900/40 border border-zinc-800/80">
+          {contextNotice}
+        </div>
+      )}
+
+      <div className="pt-6 border-t border-zinc-900 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
         {/* Columna 1: Guías Clínicas Fonoaudiológicas */}
         <div className="space-y-3">
           <h4 className="text-zinc-100 font-bold uppercase tracking-wider text-[11px] text-emerald-400">
@@ -51,13 +80,25 @@ export const Footer: React.FC = () => {
           <ul className="space-y-2">
             {PLATFORM_LINKS.map((link) => (
               <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="hover:text-cyan-400 transition-colors flex items-center gap-1.5"
-                >
-                  <span className="text-xs">{link.icon}</span>
-                  <span>{link.name}</span>
-                </Link>
+                {link.external ? (
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-cyan-400 transition-colors flex items-center gap-1.5"
+                  >
+                    <span className="text-xs">{link.icon}</span>
+                    <span>{link.name}</span>
+                  </a>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className="hover:text-cyan-400 transition-colors flex items-center gap-1.5"
+                  >
+                    <span className="text-xs">{link.icon}</span>
+                    <span>{link.name}</span>
+                  </Link>
+                )}
               </li>
             ))}
             <li>
@@ -71,6 +112,18 @@ export const Footer: React.FC = () => {
                 <span>Asociación Mexicana de la Tartamudez (AMTTM)</span>
               </a>
             </li>
+            {onOpenFeedback && (
+              <li>
+                <button
+                  type="button"
+                  onClick={onOpenFeedback}
+                  className="hover:text-cyan-400 transition-colors flex items-center gap-1.5 cursor-pointer text-left text-zinc-400"
+                >
+                  <span className="text-xs">💬</span>
+                  <span>Enviar Comentarios</span>
+                </button>
+              </li>
+            )}
           </ul>
         </div>
 
@@ -88,6 +141,7 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
+      {/* Barra de Copyright e Infraestructura */}
       <div className="pt-4 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left text-zinc-500 text-[11px]">
         <p>
           © 2026 Cadensa — Plataforma de Fluidez del Habla. Diseñado con enfoque en fonoaudiología clínica y accesibilidad.

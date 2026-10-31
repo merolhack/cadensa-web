@@ -11,7 +11,6 @@ import {
 } from '@/lib/clinicalTechniques';
 import { CommunityBanner } from './CommunityBanner';
 import { PwaInstallButton } from './PwaInstallButton';
-import { BrowserCompatibilityBanner } from './BrowserCompatibilityBanner';
 import { Footer } from './Footer';
 
 interface TechniquesCatalogHomeProps {

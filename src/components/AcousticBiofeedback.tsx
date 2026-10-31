@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useMemo } from 'react';
 import { AcousticAiDetector, LaryngealTensionAnalysis } from '@/lib/acousticAiDetector';
@@ -16,7 +16,7 @@ export const AcousticBiofeedback: React.FC<AcousticBiofeedbackProps> = ({
 }) => {
   const detector = useMemo(() => new AcousticAiDetector(), []);
   const [analysis, setAnalysis] = useState<LaryngealTensionAnalysis>({
-    timestamp: Date.now(),
+    timestamp: 0,
     tensionLevel: 0.15,
     riskLevel: 'low',
     metrics: { jitter: 0.05, spectralFlux: 0.1, hfRatio: 0.1 },

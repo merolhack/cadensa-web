@@ -1330,11 +1330,16 @@
      - Incorporado el modal del Avatar en la estación de entrenamiento activo (`currentView === 'practice'`), permitiendo invocar al co-terapeuta facio-articular 3D y aplicar técnicas clínicas directamente en la práctica.
   3. **Robustecimiento de Canvas 2D**:
      - Agregado fallback defensivo para `ctx.roundRect` en `VirtualSLPAvatar.tsx` para navegadores con soporte parcial.
-  4. **Validación de Calidad**:
+  4. **Eliminación Total de Hydration Mismatches en Banner y Catálogo**:
+     - En `BrowserCompatibilityBanner.tsx`, implementado `useSyncExternalStore` con snapshot estático en servidor (`DEFAULT_BROWSER_INFO`) y detección en caché en cliente para evitar renders en cascada y warnings de hidratación.
+     - En `TechniquesCatalogHome.tsx`, adaptado el estado `mounted` con `useSyncExternalStore` para renderizado seguro de información de sesión local sin violar la regla `react-hooks/set-state-in-effect`.
+  5. **Validación de Calidad**:
      - Compilación estática de Next.js Turbopack 100% exitosa (18 rutas prerenderizadas).
      - Pruebas unitarias (297) y escenarios BDD (104) aprobados al 100%.
 - **Archivos modificados**:
   - `src/app/page.tsx`
+  - `src/components/BrowserCompatibilityBanner.tsx`
+  - `src/components/TechniquesCatalogHome.tsx`
   - `src/components/VirtualSLPAvatar.tsx`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).

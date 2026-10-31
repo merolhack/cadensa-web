@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -54,6 +54,11 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onOpenDashboard,
 }) => {
   const [selectedFamilyFilter, setSelectedFamilyFilter] = useState<TechniqueFamilyId | 'todas'>('todas');
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const techniquesList = Object.values(CLINICAL_TECHNIQUES);
 
@@ -62,7 +67,10 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
     : techniquesList.filter((tech) => tech.familyId === selectedFamilyFilter);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-100 font-sans selection:bg-emerald-500 selection:text-zinc-950">
+    <div
+      className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-100 font-sans selection:bg-emerald-500 selection:text-zinc-950"
+      suppressHydrationWarning
+    >
       {/* 1. Barra de Navegación Superior */}
       <header className="max-w-5xl w-full flex items-center justify-between py-2 sm:py-3 border-b border-zinc-900 mb-6">
         <div className="flex items-center gap-2 sm:gap-3">
@@ -76,12 +84,15 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
 
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Métricas rápidas */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 text-xs">
-            <span className="text-amber-400 font-bold">🔥 {streakDays}d</span>
+          <div
+            className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 text-xs"
+            suppressHydrationWarning
+          >
+            <span className="text-amber-400 font-bold" suppressHydrationWarning>🔥 {streakDays}d</span>
             <span className="text-zinc-600">|</span>
-            <span className="text-cyan-400 font-bold">⭐ {xpPoints} XP</span>
+            <span className="text-cyan-400 font-bold" suppressHydrationWarning>⭐ {xpPoints} XP</span>
             <span className="text-zinc-600">|</span>
-            <span className="text-emerald-400 font-bold">⏱️ {totalMinutes}m</span>
+            <span className="text-emerald-400 font-bold" suppressHydrationWarning>⏱️ {totalMinutes}m</span>
           </div>
 
           {/* Botón PWA Instalable */}
@@ -108,10 +119,11 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
           </Link>
 
           {/* Botón de Acceso / Perfil */}
-          {currentUserEmail ? (
+          {mounted && currentUserEmail ? (
             <button
               onClick={onOpenDashboard}
               className="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold hover:bg-emerald-500/25 transition-all cursor-pointer flex items-center gap-1.5"
+              suppressHydrationWarning
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="max-w-[120px] truncate">{currentUserEmail.split('@')[0]}</span>
@@ -120,6 +132,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             <button
               onClick={onOpenAuthModal}
               className="px-3.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+              suppressHydrationWarning
             >
               <span>👤</span>
               <span>Iniciar Sesión</span>

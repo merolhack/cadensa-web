@@ -766,7 +766,10 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
 
   // 2. Vista de Estación de Entrenamiento Activo (Práctica)
   return (
-    <main className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-50 selection:bg-emerald-500 selection:text-zinc-950 animate-fade-in">
+    <main
+      className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-50 selection:bg-emerald-500 selection:text-zinc-950 animate-fade-in"
+      suppressHydrationWarning
+    >
       {/* Barra de Navegación Superior Homogénea (max-w-5xl) */}
       <nav className="w-full max-w-5xl flex items-center justify-between py-1.5 sm:py-2 border-b border-zinc-900 mb-2">
         <div className="flex items-center gap-2">
@@ -832,15 +835,16 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           <button
             onClick={() => setIsDashboardOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-xs text-zinc-200 transition-colors cursor-pointer"
+            suppressHydrationWarning
           >
             <span>🔥</span>
-            <span className="font-bold text-emerald-400">{streakDays}</span>
+            <span className="font-bold text-emerald-400" suppressHydrationWarning>{streakDays}</span>
             <span className="text-zinc-400 hidden sm:inline">días</span>
           </button>
 
           {currentUserEmail ? (
-            <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-1 text-xs">
-              <span className="text-zinc-300 max-w-[120px] truncate">{currentUserEmail.split('@')[0]}</span>
+            <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-1 text-xs" suppressHydrationWarning>
+              <span className="text-zinc-300 max-w-[120px] truncate" suppressHydrationWarning>{currentUserEmail.split('@')[0]}</span>
               <button
                 onClick={handleLogout}
                 className="text-zinc-400 hover:text-red-400 transition-colors ml-1 cursor-pointer font-semibold"
@@ -853,6 +857,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             <button
               onClick={() => setIsAuthModalOpen(true)}
               className="px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-xs text-zinc-300 transition-colors cursor-pointer"
+              suppressHydrationWarning
             >
               👤 Iniciar Sesión
             </button>

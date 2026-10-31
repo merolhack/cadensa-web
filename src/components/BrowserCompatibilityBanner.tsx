@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useSyncExternalStore } from 'react';
 
 export interface BrowserInfo {
   name: string;
@@ -11,9 +11,72 @@ export interface BrowserInfo {
   notes: string;
 }
 
+export const DEFAULT_BROWSER_INFO: BrowserInfo = {
+  name: 'Navegador Web Estándar',
+  icon: '🌐',
+  status: 'standard',
+  badgeText: 'Compatible',
+  badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+  notes: 'Soporte estándar para Web Audio y técnicas de metrónomo rítmico.',
+};
+
+let cachedBrowserInfo: BrowserInfo | null = null;
+
 export function detectBrowserInfo(): BrowserInfo {
+  if (cachedBrowserInfo) return cachedBrowserInfo;
   if (typeof window === 'undefined') {
-    return {
+    return DEFAULT_BROWSER_INFO;
+  }
+
+  const ua = navigator.userAgent;
+  let result: BrowserInfo;
+  if (ua.includes('Edg/')) {
+    result = {
+      name: 'Microsoft Edge',
+      icon: '🌊',
+      status: 'optimal',
+      badgeText: 'Compatibilidad Óptima 100%',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+      notes: 'Soporte completo de AudioWorklet, Web Speech, WebRTC y aceleración gráfica.',
+    };
+  } else if (ua.includes('OPR/') || ua.includes('Opera')) {
+    result = {
+      name: 'Opera',
+      icon: '🔴',
+      status: 'optimal',
+      badgeText: 'Compatibilidad Óptima 100%',
+      badgeColor: 'bg-red-500/20 text-red-300 border-red-500/40',
+      notes: 'Motor Chromium con soporte nativo de baja latencia y Web Speech API.',
+    };
+  } else if (ua.includes('Firefox')) {
+    result = {
+      name: 'Mozilla Firefox',
+      icon: '🦊',
+      status: 'compatible',
+      badgeText: 'Compatible (Modo Acústico)',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+      notes: 'AudioWorklet, Formantes F1/F2 y Telesalud al 100%. Web Speech en modo acústico de respaldo.',
+    };
+  } else if (ua.includes('Safari') && !ua.includes('Chrome')) {
+    result = {
+      name: 'Apple Safari',
+      icon: '🧭',
+      status: 'optimal',
+      badgeText: 'Compatibilidad Óptima (WebKit)',
+      badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
+      notes: 'Requiere primer toque para activar audio. Soporte de WebRTC y Web Speech en iOS y macOS.',
+    };
+  } else if (ua.includes('Chrome')) {
+    result = {
+      name: 'Google Chrome',
+      icon: '🚀',
+      status: 'optimal',
+      badgeText: 'Compatibilidad Óptima 100%',
+      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+      notes: 'Soporte integral y máxima aceleración en todas las herramientas clínicas.',
+    };
+  } else {
+    result = {
       name: 'Navegador Web Estándar',
       icon: '🌐',
       status: 'standard',
@@ -23,77 +86,28 @@ export function detectBrowserInfo(): BrowserInfo {
     };
   }
 
-  const ua = navigator.userAgent;
-  if (ua.includes('Edg/')) {
-    return {
-      name: 'Microsoft Edge',
-      icon: '🌊',
-      status: 'optimal',
-      badgeText: 'Compatibilidad Óptima 100%',
-      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
-      notes: 'Soporte completo de AudioWorklet, Web Speech, WebRTC y aceleración gráfica.',
-    };
-  }
-  if (ua.includes('OPR/') || ua.includes('Opera')) {
-    return {
-      name: 'Opera',
-      icon: '🔴',
-      status: 'optimal',
-      badgeText: 'Compatibilidad Óptima 100%',
-      badgeColor: 'bg-red-500/20 text-red-300 border-red-500/40',
-      notes: 'Motor Chromium con soporte nativo de baja latencia y Web Speech API.',
-    };
-  }
-  if (ua.includes('Firefox')) {
-    return {
-      name: 'Mozilla Firefox',
-      icon: '🦊',
-      status: 'compatible',
-      badgeText: 'Compatible (Modo Acústico)',
-      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-      notes: 'AudioWorklet, Formantes F1/F2 y Telesalud al 100%. Web Speech en modo acústico de respaldo.',
-    };
-  }
-  if (ua.includes('Safari') && !ua.includes('Chrome')) {
-    return {
-      name: 'Apple Safari',
-      icon: '🧭',
-      status: 'optimal',
-      badgeText: 'Compatibilidad Óptima (WebKit)',
-      badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
-      notes: 'Requiere primer toque para activar audio. Soporte de WebRTC y Web Speech en iOS y macOS.',
-    };
-  }
-  if (ua.includes('Chrome')) {
-    return {
-      name: 'Google Chrome',
-      icon: '🚀',
-      status: 'optimal',
-      badgeText: 'Compatibilidad Óptima 100%',
-      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-      notes: 'Soporte integral y máxima aceleración en todas las herramientas clínicas.',
-    };
-  }
-
-  return {
-    name: 'Navegador Web Estándar',
-    icon: '🌐',
-    status: 'standard',
-    badgeText: 'Compatible',
-    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-    notes: 'Soporte estándar para Web Audio y técnicas de metrónomo rítmico.',
-  };
+  cachedBrowserInfo = result;
+  return cachedBrowserInfo;
 }
 
+const emptySubscribe = () => () => {};
+
 export function BrowserCompatibilityBanner() {
-  const [browserInfo] = useState<BrowserInfo>(() => detectBrowserInfo());
+  const browserInfo = useSyncExternalStore(
+    emptySubscribe,
+    detectBrowserInfo,
+    () => DEFAULT_BROWSER_INFO
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
       {/* Aviso discreto integrado en el pie de página para no quitar atención clínica */}
-      <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-2 text-[11px] text-zinc-500 border-t border-zinc-900/60 mt-3 select-none">
-        <span className="flex items-center gap-1.5">
+      <div
+        className="w-full flex flex-wrap items-center justify-center gap-2 pt-2 text-[11px] text-zinc-500 border-t border-zinc-900/60 mt-3 select-none"
+        suppressHydrationWarning
+      >
+        <span className="flex items-center gap-1.5" suppressHydrationWarning>
           <span>{browserInfo.icon}</span>
           <span className="text-zinc-400 font-medium">{browserInfo.name}:</span>
           <span className={`px-2 py-0.2 rounded-full border text-[10px] font-semibold ${browserInfo.badgeColor}`}>

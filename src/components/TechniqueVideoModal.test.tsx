@@ -30,7 +30,7 @@ describe('TechniqueVideoModal Component - Unit Tests', () => {
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText('Inicio Vocal Suave (Easy Onset)')).toBeInTheDocument();
-    expect(screen.getByText(/video demostrativo/i)).toBeInTheDocument();
+    expect(screen.getByText(/Avatar IA Maestro/i)).toBeInTheDocument();
   });
 
   it('invoca onClose al hacer clic en el botón de cerrar', () => {
@@ -67,7 +67,7 @@ describe('TechniqueVideoModal Component - Unit Tests', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('renderiza la portada interactiva y monta el video al hacer clic en reproducir para la técnica STS', () => {
+  it('renderiza la portada interactiva y monta el video con audio directo al hacer clic en reproducir para la técnica STS', () => {
     const stsTechnique = CLINICAL_TECHNIQUES.sts;
     render(
       <TechniqueVideoModal
@@ -86,7 +86,7 @@ describe('TechniqueVideoModal Component - Unit Tests', () => {
     const playBtn = screen.getByRole('button', { name: /reproducir video demostrativo/i });
     expect(playBtn).toBeInTheDocument();
 
-    // Al hacer clic en play, se monta el elemento video
+    // Al hacer clic en play, se monta el elemento video con audio directo (muted: false)
     fireEvent.click(playBtn);
 
     const videoEl = screen.getByRole('dialog').querySelector('video');
@@ -94,13 +94,34 @@ describe('TechniqueVideoModal Component - Unit Tests', () => {
     expect(videoEl).toHaveAttribute('src', stsTechnique.videoUrl);
     expect(videoEl).toHaveAttribute('poster', stsTechnique.thumbnailUrl);
     expect(videoEl).toHaveAttribute('preload', 'metadata');
-    expect(videoEl).toHaveProperty('muted', true);
+    expect(videoEl).toHaveProperty('muted', false);
 
-    // Debe mostrar el botón de activar audio y permitir desmutear al usuario
-    const unmuteBtn = screen.getByRole('button', { name: /activar audio del video/i });
-    expect(unmuteBtn).toBeInTheDocument();
-    fireEvent.click(unmuteBtn);
-    expect(screen.queryByRole('button', { name: /activar audio del video/i })).not.toBeInTheDocument();
+    // Debe mostrar el botón de alternar audio (Audio activo) y permitir silenciar / reactivar
+    const audioToggleBtn = screen.getByRole('button', { name: /silenciar audio del video/i });
+    expect(audioToggleBtn).toBeInTheDocument();
+    fireEvent.click(audioToggleBtn);
+    expect(videoEl).toHaveProperty('muted', true);
+    expect(screen.getByRole('button', { name: /activar audio del video/i })).toBeInTheDocument();
+  });
+
+  it('permite alternar entre las 7 técnicas fonoaudiológicas dentro del modal', () => {
+    render(
+      <TechniqueVideoModal
+        technique={technique}
+        isOpen={true}
+        onClose={vi.fn()}
+        onStartPractice={vi.fn()}
+      />
+    );
+
+    // Debe listar las técnicas disponibles
+    expect(screen.getByText('TÉCNICAS DISPONIBLES EN EL AVATAR IA:')).toBeInTheDocument();
+
+    // Al pulsar la técnica de Respiración Diafragmática
+    const bbBtn = screen.getByRole('button', { name: /Respiración/i });
+    fireEvent.click(bbBtn);
+
+    expect(screen.getByText('Respiración Diafragmática (Box Breathing)')).toBeInTheDocument();
   });
 
   it('permite reportar falla o duda en el video mediante onReportIssue o modal integrado', () => {

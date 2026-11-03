@@ -540,7 +540,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onOpenDAF={() => setIsDafOpen(true)}
           onOpenCertificates={() => setIsCertificatesOpen(true)}
           onOpenAcousticAi={() => setIsAcousticAiOpen(true)}
-          onOpenAvatar={() => setIsAvatarOpen(true)}
+          onOpenAvatar={() => handleOpenVideoModal(activeTechnique)}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -803,14 +803,16 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             <span className="hidden sm:inline">Video</span>
           </button>
 
-          {/* Botón Agente Avatar IA Co-Terapeuta */}
+          {/* Botón Agente Avatar IA Fonoaudiológico Maestro (Reemplazo Directo) */}
           <button
-            onClick={() => setIsAvatarOpen(true)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-950/80 to-cyan-950/80 border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 text-xs font-semibold transition-all cursor-pointer shadow-sm"
-            title="Abrir Agente Avatar de IA Fonoaudiológico"
+            onClick={() => handleOpenVideoModal(activeTechnique)}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-emerald-950/80 to-cyan-950/80 border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 text-xs font-semibold transition-all cursor-pointer shadow-sm hover:shadow-[0_0_12px_rgba(16,185,129,0.3)]"
+            title={`Abrir Avatar IA Fonoaudiológico: ${activeTechnique.shortName}`}
+            aria-label={`Abrir Avatar IA Fonoaudiológico: ${activeTechnique.shortName}`}
           >
             <span>🤖</span>
-            <span className="hidden sm:inline">Avatar IA</span>
+            <span>Avatar IA</span>
+            <span className="text-[10px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono">1080p</span>
           </button>
 
           {/* Botón PWA Instalable */}

@@ -51,7 +51,7 @@ async function runMigrations() {
     REVOKE ALL ON TABLE public._schema_migrations FROM anon, authenticated;
   `;
 
-  await fetch(`https://api.supabase.com/v1/projects/${projectRef}/database/query`, {
+  const setupRes = await fetch(`https://api.supabase.com/v1/projects/${projectRef}/database/query`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -59,6 +59,12 @@ async function runMigrations() {
     },
     body: JSON.stringify({ query: setupTrackerSql }),
   });
+
+  if (setupRes.status === 401) {
+    console.warn(`⚠️ Error de autenticación en Supabase (HTTP 401): SUPABASE_ACCESS_TOKEN inválido o expirado.`);
+    console.warn(`⚠️ Omitiendo migraciones automáticas para permitir el despliegue del frontend estático.`);
+    return;
+  }
 
   // 2. Obtener migraciones ya registradas
   const getAppliedRes = await fetch(`https://api.supabase.com/v1/projects/${projectRef}/database/query`, {

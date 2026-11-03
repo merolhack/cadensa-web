@@ -59,6 +59,7 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'requirements-test.txt'
 
       - name: Install System Dependencies (FFmpeg)
         run: |
@@ -68,7 +69,7 @@ jobs:
       - name: Install Python Test Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-mock numpy scipy opencv-python-headless imageio imageio-ffmpeg
+          pip install -r requirements-test.txt
 
       - name: Run Python Multimedia Unit Tests
         run: |

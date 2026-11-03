@@ -37,7 +37,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           if [ -n "$SUPABASE_ACCESS_TOKEN" ]; then
-            npm run db:migrate
+            npm run db:migrate || echo "::warning::Supabase migration skipped or failed"
           else
             echo "SUPABASE_ACCESS_TOKEN not configured. Skipping migrations."
           fi

@@ -21,7 +21,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
   onReportIssue,
 }) => {
   // Estado para la técnica actualmente visualizada (permite alternar entre las 7 técnicas dentro del modal)
-  const [currentTechnique, setCurrentTechnique] = useState<ClinicalTechnique | null>(technique);
+  const [selectedTechnique, setSelectedTechnique] = useState<ClinicalTechnique | null>(null);
   const [playingTechniqueId, setPlayingTechniqueId] = useState<string | null>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState<boolean>(false);
   // Audio directo: por defecto el audio se activa al presionar Play
@@ -30,16 +30,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Sincronizar técnica si cambia desde las props
-  useEffect(() => {
-    if (technique) {
-      setCurrentTechnique(technique);
-      setPlayingTechniqueId(null);
-      setIsMuted(false);
-    }
-  }, [technique]);
-
-  const activeTech = currentTechnique || technique;
+  const activeTech = selectedTechnique || technique;
   const isPlayingVideo = Boolean(isOpen && activeTech && playingTechniqueId === activeTech.id);
 
   // Lazy loading mediante IntersectionObserver: suspende la reproducción si el modal sale de la vista
@@ -94,7 +85,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
   };
 
   const handleSelectTechnique = (t: ClinicalTechnique) => {
-    setCurrentTechnique(t);
+    setSelectedTechnique(t);
     setPlayingTechniqueId(t.id);
     setIsMuted(false);
   };
@@ -103,6 +94,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
     if (videoRef.current) {
       videoRef.current.pause();
     }
+    setSelectedTechnique(null);
     setPlayingTechniqueId(null);
     setIsMuted(false);
     onClose();

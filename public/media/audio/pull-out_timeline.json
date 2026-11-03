@@ -1,0 +1,28 @@
+{
+  "bpm": null,
+  "tts_mode": "guided_phrase",
+  "prep_silence_sec": 2.5,
+  "post_silence_sec": 2.0,
+  "total_duration": 9.39,
+  "breathing_intervals": [
+    [
+      0.0,
+      2.5
+    ],
+    [
+      7.391,
+      9.39
+    ]
+  ],
+  "syllable_events": [
+    {
+      "syllable": "Si sientes el bloque...",
+      "time": 2.5,
+      "duration": 4.891,
+      "box_index": 0
+    }
+  ],
+  "script_text": "Si sientes el bloqueo... detén el empuje... afloja la mandíbula... y deslízate suave.",
+  "tts_engine": "gcp_neural2",
+  "audio_48k_path": "public/media/audio\\pull-out_sample_48k.wav"
+}

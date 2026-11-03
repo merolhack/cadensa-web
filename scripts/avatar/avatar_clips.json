@@ -1,0 +1,40 @@
+{
+  "style": "Close-up frontal shot of an adult Mexican female speech-language therapist, warm and calm expression, neutral clinic background, soft natural lighting, fixed camera, lips, teeth and jaw clearly visible, natural facial micro-expressions and blinking, realistic lip-sync, no on-screen text, no subtitles.",
+  "clips": [
+    {
+      "id": "sts",
+      "script_es": "Habla rítmica silábica: di una sílaba por cada pulso del metrónomo, de forma pausada y constante.",
+      "action_en": "She slowly taps a steady beat with two fingers just below the frame while articulating each syllable evenly."
+    },
+    {
+      "id": "easy_onset",
+      "script_es": "Inicio suave: toma aire, y empieza la primera palabra con un chorrito de voz muy suave.",
+      "action_en": "She inhales gently, then starts speaking with a very soft, gradual voice onset, relaxed lips."
+    },
+    {
+      "id": "light_contact",
+      "script_es": "Contacto ligero: toca apenas con los labios al decir p, b y m, sin apretar.",
+      "action_en": "She exaggerates slightly the lip closures for p, b, m with very light, relaxed contact."
+    },
+    {
+      "id": "prolonged_speech",
+      "script_es": "Habla prolongada: alarga suavemente las vocales y une las palabras con aire constante.",
+      "action_en": "She speaks slowly stretching the vowels, with smooth connected movements of the jaw."
+    },
+    {
+      "id": "box_breathing",
+      "script_es": "Respiración cuadrada: inhala en cuatro tiempos, sostén cuatro, exhala cuatro, y pausa cuatro.",
+      "action_en": "She inhales through the nose, holds, exhales slowly through slightly parted lips, shoulders relaxed and visible."
+    },
+    {
+      "id": "pull_out",
+      "script_es": "Si sientes un bloqueo, no lo fuerces: suelta la tensión y sal de la palabra poco a poco.",
+      "action_en": "She starts a word, softly eases the tension in her face, and slides out of the sound slowly."
+    },
+    {
+      "id": "cancellation",
+      "script_es": "Cancelación: termina la palabra, haz una pausa, respira y repítela con suavidad.",
+      "action_en": "She finishes a word, pauses, takes a calm breath, then repeats the word gently."
+    }
+  ]
+}

@@ -1343,3 +1343,390 @@
   - `src/components/VirtualSLPAvatar.tsx`
   - `wiki/log.md`
 - **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-31] ingest | Pipeline de Generación de Video con Servidores MCP (Ollama, Gemini GenMedia y FFmpeg)
+
+- **Contexto**: Validación de capacidades multimodales y generación de video breve (3.0s) para la representación audiovisual de la cadencia de voz y el habla rítmica silábica (STS) en Cadensa.
+- **Acciones Realizadas**:
+  1. **Conceptualización y Prompting con `ollama-local`**:
+     - Invocación de `consultar_modelo_local` para delegar la redacción cinemática en inglés orientada a modelos de difusión visual (ondas de neón esmeralda y cian sobre fondo oscuro elegante).
+  2. **Diagnóstico de API Upstream y Generación Visual con `gemini-genmedia`**:
+     - Identificada la deprecación de endpoints previos de Veo 3.1 (`veo-3.1-generate-preview` / `veo-3.1-lite-generate-preview`) en favor de `gemini-omni-1.1-flash` (Interactions API).
+     - Síntesis de fotograma en alta definición (`1376x768`, 16:9) mediante `generate_image` con motor Nano Banana Pro (`gemini-3-pro-image`).
+  3. **Animación y Codificación Cinemática (3.0 segundos)**:
+     - Renderizado de secuencia H.264 MP4 a 25 fps (75 cuadros exactos, 1280x720, YUV420p) con efecto `zoompan` para simular la pulsación rítmica del habla y disolución suave `fade in/out` de 0.5s para bucles continuos.
+     - Depuración y parche de empaquetado en Windows de `ffmpeg-mcp.cmd` para anteponer `node` al binario y evitar avisos emergentes de asociación de archivo `.js`.
+  4. **Inspección y Certificación con `filesystem-cadensa`**:
+     - Validación con `get_file_info`: archivo generado en `public/cadensa_rhythm_3s.mp4` (267,436 bytes / ~261 KB).
+- **Archivos creados/modificados**:
+  - `wiki/architecture/ai_video_generation_mcp.md` (Nuevo módulo de arquitectura de generación audiovisual con MCP)
+  - `wiki/index.md` (Enlace e indexación del nuevo módulo)
+  - `wiki/log.md` (Registro cronológico en bitácora)
+  - `public/cadensa_rhythm_3s.mp4` (Video generado de 3 segundos)
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-31] ingest | Pipeline Multimedia Autónomo Local ComfyUI + Ollama + FFmpeg (Costo Cero)
+
+- **Contexto**: Ejecución integral y autónoma de la misión de orquestación de contenido audiovisual clínico a costo cero para Cadensa (https://cadensa-web.pages.dev/), operando 100% en infraestructura local mediante ComfyUI (GPU RTX 4060), Ollama Local y FFmpeg.
+- **Acciones Realizadas**:
+  1. **Auditoría de Entorno y Servidores MCP (Fase 1)**:
+     - Verificada la disponibilidad de los servidores MCP `filesystem-cadensa`, `ollama-local` y `ffmpeg-avtool`.
+     - Validada la conectividad con la API REST de ComfyUI Desktop (`http://127.0.0.1:8188`), detectando GPU NVIDIA GeForce RTX 4060 Laptop (8.5 GB VRAM) y los modelos locales cargados (`z_image_turbo_bf16.safetensors`, `qwen_3_4b.safetensors`, `ae.safetensors`).
+     - Validada la conectividad con Ollama Local (`http://127.0.0.1:11434`) con modelos `gemma4:cloud` y `qwen3:8b-8k`.
+  2. **Desarrollo del Script Autónomo en Python (Fase 2)**:
+     - Creado el script `scripts/generate_cadensa_media.py`.
+     - **Generación Clínica y Prompting**: Invocó a Ollama para redactar la guía clínica de *Habla Rítmica Silábica (STS)* y formular un visual prompt en inglés con la identidad visual de Cadensa (ondas bioluminiscentes verde esmeralda `#10b981` y cian `#06b6d4` sobre fondo zinc ultraoscuro `#09090b`).
+     - **Automatización de ComfyUI via API REST**: Construyó el flujo de nodos en formato API (*Workflow API Format*) con `UNETLoader`, `CLIPLoader`, `CLIPTextEncode`, `EmptyLatentImage` (1280x720), `KSampler` (8 pasos, `res_multistep`, `simple`) y `VAEDecode`.
+     - Inyectó dinámicamente el prompt, despachó a `/prompt`, monitoreó la ejecución via polling y descargó el fotograma renderizado en 24.1 segundos.
+  3. **Ensamblaje y Transcodificación de Video con FFmpeg (Fase 3)**:
+     - Renderizó una secuencia cinemática de 4.0 segundos a 25 fps (100 cuadros exactos) con resolución HD 1280x720.
+     - Aplicó filtros `zoompan` para simulación de pulsación rítmica y respiración diafragmática (`min(zoom+0.002,1.2)`) y transiciones de entrada y salida `fade in/out` de 0.5s para bucles continuos fluidos (*seamless loop*).
+     - Codificó el video final con códec H.264 (`yuv420p`) guardándolo en `public/cadensa_automated_test.mp4`.
+  4. **Auditoría de Calidad con `filesystem-cadensa` (Fase 4)**:
+     - Auditoría exitosa mediante la herramienta MCP `get_file_info`.
+     - Tamaño final del archivo: **419,774 bytes (409.94 KB)**, cumpliendo con el umbral presupuestario (< 500 KB) para despliegues móviles y web perimetral.
+- **Archivos creados/modificados**:
+  - `scripts/generate_cadensa_media.py` (Script de automatización end-to-end Python)
+  - `public/cadensa_automated_test.mp4` (Video final optimizado de 4.0s)
+  - `wiki/log.md` (Registro en bitácora)
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-10-31] ingest | Generación y Ensamblaje de Video Clínico con el Avatar Maestro Oficial
+
+- **Contexto**: Ejecución autónoma de la misión de generación del video de demostración clínica para la plataforma Cadensa (https://cadensa-web.pages.dev/), utilizando obligatoriamente la imagen oficial estática del Avatar Maestro (`public/media/images/avatar-maestro.jpg`) para preservar la consistencia visual del personaje corporativo (sudadera gris oscura con detalles turquesa).
+- **Acciones Realizadas**:
+  1. **Validación del Recurso Oficial Fuente**:
+     - Inspección técnica del archivo oficial `public/media/images/avatar-maestro.jpg` (2752 × 1536 px, JPEG, 2,132,952 bytes). Se determinó el recorte centrado `crop=1536:1536:(in_w-1536)/2:0` para aislar con precisión la cabeza, expresión facial y torso superior sin alterar proporciones anatómicas.
+  2. **Generación del Guion Fonoaudiológico con Ollama Local**:
+     - Invocación de `consultar_modelo_local` (`gemma4:cloud`) para redactar el guion clínico en primera persona. El Avatar Maestro explica con empatía cómo el metrónomo externo a 60 BPM compensa la disfunción temporal de los ganglios basales para eludir bloqueos del habla, guiando la práctica con las sílabas rítmicas `[CA] [DEN] [SA]`.
+  3. **Composición Gráfica Vectorial (SVG) e Interfaz 16:9**:
+     - Diseño y renderizado de un lienzo cinemático horizontal de 1920 × 1080 px (`#09090b` zinc profundo) con gradientes de acento verde esmeralda (`#10b981`) y cian (`#06b6d4`).
+     - Creación del contenedor lateral estandarizado para el avatar: recuadro cuadrado de 800 × 800 px posicionado a la izquierda con esquinas curvas pronunciadas (`rounded-3xl`, radio de curvatura de 44 px).
+     - Generación de máscara alfa vectorial SVG para recorte antialiasing perfecto del avatar maestro.
+     - Incorporación en el área derecha (1120 px restantes) de la identidad gráfica de Cadensa: badge de Técnica STS, titular "HABLA RÍTMICA SILÁBICA", lema *"Encuentra el ritmo de tu voz"*, indicador de metrónomo a 60 BPM con biofeedback y cajas de pulsación silábica `[ CA ] [ DEN ] [ SA ]`.
+  4. **Orquestación y Transcodificación con FFmpeg**:
+     - Script Python `scripts/generate_avatar_sts_video.py` que ejecuta la canalización de filtros de FFmpeg:
+       - Recorte del avatar a 1536 × 1536 px y escalado a 800 × 800 px.
+       - Filtro temporal `zoompan` para simular micro-movimiento orgánico y respiración pausada.
+       - Aplicación de máscara de bordes redondeados con `alphamerge`.
+       - Superposición sobre el fondo clínico 1920 × 1080 px en las coordenadas exactas `(80, 140)`.
+       - Transiciones `fade` de entrada y salida de 0.5s para posibilitar bucles continuos fluidos (*seamless loop*).
+       - Codificación H.264 MP4 (`yuv420p`, CRF 23, preset medium) a 25 fps durante exactamente 4.0 segundos (100 fotogramas).
+  5. **Auditoría con el Servidor MCP `filesystem-cadensa`**:
+     - Verificación con la herramienta `get_file_info` sobre `public/media/techniques/cadensa_sts_avatar_final.mp4`:
+       - Archivo creado: `cadensa_sts_avatar_final.mp4`
+       - Tamaño: **396,642 bytes (~387.35 KB)** (óptimo para web y significativamente menor al límite de 500 KB).
+       - Permisos: `666`.
+       - Disponibilidad pública confirmada: `/media/techniques/cadensa_sts_avatar_final.mp4`.
+- **Archivos creados/modificados**:
+  - `scripts/generate_avatar_sts_video.py` (Script de ensamblaje audiovisual con el Avatar Maestro)
+  - `public/media/techniques/cadensa_sts_avatar_final.mp4` (Video final generado 1920x1080)
+  - `wiki/log.md` (Registro en bitácora)
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-11-01] ingest | Animación Facial (Lip-Sync), Locución Clínica y Sincronización del Avatar Maestro
+
+- **Contexto**: Resolución de la misión de corrección y sincronización labial (*lip-sync*) del Avatar Maestro en Cadensa. El video previo consistía en una toma estática de 4 segundos sin fonación; el nuevo entregable implementa locución fonoaudiológica completa de 29.2 segundos con animación facial real, movimiento de labios gobernado por la envolvente acústica, parpadeo natural y sincronización con el metrónomo clínico a 60 BPM.
+- **Acciones Realizadas**:
+  1. **Generación y Mezcla de Audio Clínico (29.23 segundos)**:
+     - Síntesis de voz en español fonoaudiológico con TTS de alta fidelidad explicando la técnica de *Habla Rítmica Silábica (STS)* y la regulación externa de los ganglios basales.
+     - Mezcla de audio con pulsos de metrónomo acústico a 60 BPM (1 pulso / segundo) sintetizados a 950 Hz con decaimiento percutivo de madera, acentuados durante la sección de práctica guiada de las sílabas `[ CA ] [ DEN ] [ SA ]`.
+  2. **Análisis Espectral y Extracción de Envolvente Lip-Sync**:
+     - Procesamiento de señal a 24 kHz y extracción de energía RMS cuadro a cuadro (730 fotogramas a 25 fps).
+     - Aplicación de filtro de suavizado temporal y curva de respuesta no lineal para modular la apertura labial, distinguiendo pausas respiratorias de fonemas activos.
+  3. **Animación Facial Real sobre la Imagen Oficial (`avatar-maestro.jpg`)**:
+     - Recorte del Avatar Maestro oficial de 1536 × 1536 px a 800 × 800 px.
+     - Deformación anatómica de labios: traslación suave hacia abajo del labio inferior y mentón mediante mapa de desplazamiento gaussiano, apertura de la cavidad bucal, dientes superiores y lengua con antialiasing.
+     - Parpadeo fisiológico natural (*blinking*) cada 3.5 a 4.5 segundos mediante descenso sinusoidal del párpado con el tono cutáneo del avatar.
+     - Micro-movimientos orgánicos: ciclo respiratorio sinusoidal y asentimiento de énfasis (*speech nods*) en sílabas tónicas.
+  4. **Composición Gráfica Interactiva 16:9 (1920 × 1080 px)**:
+     - **Contenedor lateral izquierdo**: Avatar Maestro enmarcado en recuadro `rounded-3xl` (800 × 800 px, radio 44 px) con badge oficial *"AVATAR MAESTRO | GUÍA CLÍNICA"*.
+     - **Estación de práctica derecha**:
+       - Metrónomo visual a 60 BPM con pulso luminoso expansivo verde esmeralda (`#10b981`) cada 1.0 segundo exacto.
+       - Cajas de pulsación silábica `[ CA ] [ DEN ] [ SA ]` que se activan e iluminan secuencialmente al ritmo de la fonación guiada.
+       - Panel de directrices fonoaudiológicas y biofeedback de técnica.
+     - Transiciones de entrada y salida `fade in/out` de 0.5s.
+  5. **Auditoría con el Servidor MCP `filesystem-cadensa`**:
+     - Inspección con `get_file_info` sobre `public/media/techniques/cadensa_sts_avatar_final.mp4`:
+       - Tamaño: **1,814,718 bytes (~1.73 MB)**.
+       - Duración: **29.23 segundos** (730 fotogramas a 25 fps con audio estéreo AAC).
+       - Resolución: **1920 × 1080 px** (16:9 Full HD, H.264).
+       - Permisos: `666`.
+- **Archivos creados/modificados**:
+  - `scripts/generate_avatar_lipsync_video.py` (Orquestador integral de audio, lipsync y transcodificación)
+  - `public/media/techniques/cadensa_sts_avatar_final.mp4` (Video final sustituido y optimizado)
+  - `wiki/log.md` (Registro en bitácora)
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-11-01] ingest | Refactorización de Video STS, Eliminación de Textos Redundantes, Voz Masculina y Guardrails de Gasto Cero
+
+- **Contexto**: Refactorización de alto nivel del pipeline de video del Avatar Maestro para Cadensa (https://cadensa-web.pages.dev/), resolviendo los problemas identificados: eliminación de textos largos redundantes no requeridos en el modal web, corrección de la línea de costura estática en la boca, adopción de voz masculina cálida fonoaudiológica con acentuación prosódica perfecta, e incorporación estricta de Agent Guardrails para garantizar costo cero y cero desperdicio de recursos.
+- **Acciones Realizadas**:
+  1. **Composición Limpia para Modal Web (1920 × 1080 px)**:
+     - Eliminados títulos estáticos largos, descripciones fonoaudiológicas en párrafo y subtítulos redundantes que ya se encuentran presentes en el modal HTML de la aplicación web.
+     - El lienzo se redujo a sus dos componentes esenciales de máxima legibilidad:
+       - **Panel Izquierdo**: Avatar Maestro animado dentro de contenedor `rounded-3xl` (800 × 800 px, radio de 44 px).
+       - **Panel Derecho**: Metrónomo visual grande a 60 BPM con contador numérico central, indicador de pulso luminoso en verde esmeralda (`#10b981`) y cajas silábicas dinámicas `[ CA ] [ DEN ] [ SA ]` sincronizadas con los pulsos de fonación.
+  2. **Deformación Labial Orgánica Continua (Zero-Seam Lip-Morphing)**:
+     - Eliminado el parche rectangular con superposición de labio superior previo que generaba una línea estática sobre la boca.
+     - Implementado algoritmo de deformación labial con decaimiento elíptico en S (coseno) sobre `(cx=392, cy=395)`, garantizando continuidad matemática C1 y diferencia 0.0 en los límites del parche.
+     - Apertura anatómica de cavidad oral con gradiente suave de sombra, dientes superiores y lengua con bordes gaussianos difuminados.
+     - Mantenido el parpadeo ocular fisiológico cada 3.5s a 4.5s y micro-asentimientos orgánicos en consonancia con la energía de la voz.
+  3. **Locución Masculina Cálida y Corrección Prosódica (TTS)**:
+     - Sustituida la voz genérica previa por la voz masculina fonoaudiológica `es-MX-JorgeNeural` (rate: `-3%`, pitch: `-1Hz`).
+     - Corregida la pronunciación fonética de *"Habla Rít-mi-ca Si-lá-bi-ca"* mediante separación silábica precisa, garantizando la acentuación esdrújula correcta y un tono empático profesional.
+     - Mezcla con metrónomo acústico de madera a 60 BPM (980 Hz con decaimiento percutivo en 40 ms), intensificado durante la práctica de las sílabas `[ CA ] [ DEN ] [ SA ]`.
+  4. **Implementación de Agent Guardrails (Gasto Cero y No Redundancia)**:
+     - **Guardrail 1 (Cache Check)**: Verificación previa de existencia y peso (> 500 KB) de `cadensa_sts_avatar_final.mp4`. Si existe un asset válido, el script omite el procesamiento pesado a menos que se invoque explícitamente con `--force`.
+     - **Guardrail 2 (Local Priority)**: Ejecución 100% en infraestructura local mediante Ollama y herramientas open source locales, garantizando costo $0 absoluto.
+     - **Guardrail 3 (Auditoría Automática)**: Validación automática del archivo resultante mediante `get_file_info` del servidor MCP `filesystem-cadensa`.
+  5. **Auditoría de Salida**:
+     - Archivo: `public/media/techniques/cadensa_sts_avatar_final.mp4`.
+     - Tamaño: **1,882,912 bytes (~1.80 MB)**.
+     - Duración: **29.33 segundos** (733 fotogramas a 25 fps).
+     - Formato: H.264 / AAC 192 kbps (1920 × 1080 px, 16:9 Full HD).
+- **Archivos creados/modificados**:
+  - `scripts/generate_avatar_lipsync_video.py` (Script de automatización refactorizado con guardrails y Zero-Seam Lip-Morphing)
+  - `public/media/techniques/cadensa_sts_avatar_final.mp4` (Video final de alta fidelidad)
+  - `wiki/log.md` (Registro en bitácora)
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-11-01] ingest | Arquitectura de Validación Multimedia y Parametrización Audiovisual (Costo Cero)
+
+- **Contexto**: Definición arquitectónica exhaustiva para la validación automatizada de calidad sobre imágenes/videos y el diseño del sistema parametrizado para la futura producción masiva de videos por técnica fonoaudiológica (las 7 técnicas clínicas de Cadensa) y videos promocionales multiformato (16:9 web modal, 9:16 vertical para Reels/TikTok y 1:1 para feed).
+- **Acciones Realizadas**:
+  1. **Análisis y Matriz de Validaciones de Calidad Multimedia**:
+     - *Validación Estructural y de Contenedor*: Métricas no destructivas vía ffprobe y MCP filesystem-cadensa (resolución exacta, códec H.264 High/Main, submuestreo universal yuv420p, audio AAC estéreo, tasa constante CFR 25 fps y presupuesto web < 2.0 MB para 30s).
+     - *Validación Acústica y Fonoaudiológica*: Normalización EBU R128 (-16 a -14 LUFS), límite True Peak < -1.0 dBFS para evitar distorsión, concordancia temporal audio/video (+/- 0.2s) y sincronización de metrónomo a 60 BPM.
+     - *Validación Visual y Detección de Artefactos*: Algoritmo Zero-Seam con comprobación de frontera Delta_boundary == 0.0 para eliminar líneas estáticas sobre los labios, verificación de actividad labial dinámica (sigma > 0.15) durante la fonación y oclusión en pausas respiratorias.
+  2. **Diseño de Parametrización Declarativa (`techniques_media_catalog`)**:
+     - Estructura desacoplada en JSON/dataclass donde cada una de las 7 técnicas fonoaudiológicas define sus metadatos, widget interactivo, perfil de voz masculina (`es-MX-JorgeNeural`) y guion fonetizado.
+     - Matriz de soporte multi-formato: `web_modal_16_9` (1920x1080), `social_reels_9_16` (1080x1920) y `feed_preview_1_1` (1080x1080).
+  3. **Formalización de Agent Guardrails (Gasto Cero)**:
+     - Documentadas las salvaguardas operativas de Cache Check (omisión de cómputo redundante si el asset existe y supera 500 KB), prioridad a modelos locales (Ollama) y auditoría post-render automática.
+- **Archivos creados/modificados**:
+  - `wiki/architecture/video_generation_pipeline.md` (Nueva especificación arquitectónica integral de validación y parametrización)
+  - `wiki/index.md` (Indexación del nuevo documento en el catálogo maestro)
+  - `wiki/log.md` (Registro en bitácora)
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-11-01] ingest | Automatización Local de Video con Avatar Natural (Respiración, Parpadeo y Lip-Sync)
+
+- **Contexto**: Desarrollo y ejecución autónoma del script `scripts/generate_natural_avatar_video.py` para generar el video clínico definitivo con comportamiento fisiológico relajado del Avatar Maestro, esencial para pacientes con tartamudez: inhalación preparatoria nasal, respiración diafragmática, parpadeo fisiológico regular, pausas clínicas y sincronización labial continua.
+- **Acciones Realizadas**:
+  1. **Comportamiento Fisiológico y Dinámica Respiratoria**:
+     - *Inhalación Nasal Inicial*: En los primeros 1.8 segundos de silencio previo a la fonación, se programó un ascenso suave y descenso del pecho y hombros (desplazamiento vertical de 4 px en t=0.2s a 1.4s) simulando la preparación diafragmática fonoaudiológica con la boca en reposo completo.
+     - *Parpadeo Fisiológico*: Cadencia regular de parpadeo suave cada 3.5 a 4.0 segundos (6 fotogramas por ciclo) con tono cutáneo coordinado con los párpados del Avatar Maestro.
+     - *Pausas Clínicas*: Inclusión deliberada de silencios inter-frase donde la energía acústica cae a cero, permitiendo al avatar cerrar los labios y respirar mientras el usuario procesa la instrucción rítmica.
+  2. **Sincronización Labial Dinámica (Zero-Seam Lip-Morphing)**:
+     - Apertura y cierre modulados por la envolvente acústica RMS a 24 kHz sobre la imagen oficial (`public/media/images/avatar-maestro.jpg`).
+     - Máscara elíptica de atenuación en coseno garantizando frontera suave sin líneas estáticas ni parches visibles.
+  3. **Composición de Lienzo Estricto (Modal Web Limpio)**:
+     - Fondo sólido en gris carbón (#0F0F13 -> BGR 19, 15, 15) sin elementos gráficos ajenos a Cadensa.
+     - Distribución rigurosa en 2 elementos: Contenedor del Avatar Maestro `rounded-3xl` de 800 × 800 px a la izquierda y Estación de Metrónomo 60 BPM con cajas de pacing `[ CA ] [ DEN ] [ SA ]` a la derecha. Cero textos largos ni subtítulos redundantes.
+  4. **Agent Guardrails y Certificación MCP**:
+     - Cache Check implementado: el script verifica la existencia y peso del video en `public/media/techniques/cadensa_sts_avatar_natural.mp4`, saltando la ejecución redundante si el asset es válido.
+     - Certificación automática con la herramienta `get_file_info` del servidor MCP `filesystem-cadensa`:
+       - Archivo: `public/media/techniques/cadensa_sts_avatar_natural.mp4`
+       - Tamaño: **1,759,750 bytes (~1.68 MB)** (< 2.0 MB).
+       - Duración: **27.43 segundos** (685 fotogramas a 25 fps).
+       - Resolución: **1920 × 1080 px** (16:9 Full HD).
+       - Códecs: H.264 (yuv420p) + AAC estéreo 192 kbps.
+- **Archivos creados/modificados**:
+  - `scripts/generate_natural_avatar_video.py` (Script de automatización autónoma en Python)
+  - `public/media/techniques/cadensa_sts_avatar_natural.mp4` (Video final de comportamiento natural)
+  - `wiki/log.md` (Registro en bitácora)
+- **Autor**: LLM Pair Programmer (Antigravity).
+
+---
+
+## [2026-11-01] comfyui | Validación y Ejecución de Workflow video-avatar.json (2026-11-01 14:21:29)
+- **Estado:** ⚠️ Fallo / Validación
+- **Prompt ID:** No asignado
+- **Workflow:** `\\wsl$\Ubuntu-20.04\home\merolhack\fl\cadensa-web\wiki\raw\comfyui\video-avatar.json`
+- **Imagen de entrada:** `avatar-maestro.jpg`
+- **Archivo de salida:** `Ninguno (Abortado o validación fallida)`
+- **Errores y Diagnósticos:**
+  - `Nodo '3' [SaveVideo]: Discrepancia de tipos en 'video'. Espera VIDEO, pero el nodo '2' [SadTalkerIsolated] emite STRING.`
+  - `Nodo '3' [SaveVideo]: Discrepancia de tipos en 'video'. Espera VIDEO, pero el nodo '2' [SadTalkerIsolated] emite STRING.`
+- **Entorno:** ComfyUI Desktop Local (Standalone Python)
+- **Autor:** Ingeniero de Automatización Senior (Antigravity).
+
+---
+
+## [2026-11-01] comfyui | Validación y Ejecución de Workflow video-avatar.json (2026-11-01 14:25:00)
+- **Estado:** ✅ Éxito
+- **Prompt ID:** 35162f61-10ae-47fd-b801-d66757ae6f53
+- **Workflow:** `\\wsl$\Ubuntu-20.04\home\merolhack\fl\cadensa-web\wiki\raw\comfyui\video-avatar.json`
+- **Imagen de entrada:** `avatar-maestro.jpg`
+- **Archivo de salida:** `sadtalker\24f20797ae5147f78b63b1b8d214811a\2026_11_01_14.22.40.mp4`
+- **Entorno:** ComfyUI Desktop Local (Standalone Python)
+- **Autor:** Ingeniero de Automatización Senior (Antigravity).
+
+
+---
+
+## [2026-11-01] ingest | Ingesta Modular de Validador de Workflows ComfyUI y Topología de Entorno Local
+
+- **Contexto**: Ingesta estructurada y modular en la LLM Wiki del script de validación, ejecución y auditoría de ComfyUI (`scripts/validate_and_run_comfyui.py`), junto con el mapeo exhaustivo del entorno híbrido local (Windows Desktop ComfyUI, WSL Ubuntu Cadensa, nodos custom SadTalker/Wav2Lip, endpoints REST/WS y almacenamiento).
+- **Acciones Realizadas**:
+  1. **Creación de Especificación de Arquitectura (`wiki/architecture/comfyui_workflow_validator_and_runner.md`)**:
+     - *Propósito y Funcionamiento*: Documentación en 4 fases del orquestador autónomo (Validación estructural vía `/object_info`, Inyección de parámetros/activos, Monitoreo asíncrono en tiempo real vía WebSockets `/ws`, e Ingesta persistente en `wiki/log.md`).
+     - *Mecanismo de Auto-Remediación*: Detalle técnico del desacoplamiento preventivo del nodo redundante `SaveVideo` ante la discrepancia de tipos (`SadTalkerIsolated` emitiendo `STRING` vs `SaveVideo` esperando `VIDEO`), eliminando errores HTTP 400.
+     - *Protocolo de Validación y Pruebas*: Instrucciones de comando en PowerShell para ejecución estándar y modo auditoría estricta (`--no-auto-fix`).
+  2. **Creación de Entidad de Infraestructura (`wiki/entities/comfyui_local_environment.md`)**:
+     - *Topología ComfyUI Desktop*: Registro de rutas de instalación activa (`...\ComfyUI\`), backup (`...\ComfyUI (1)\`), binario Electron (`C:\Program Files\Comfy Desktop`) e intérprete Python Standalone (`standalone-env\python.exe` Python 3.13 con PyTorch 2.11.0+cu128).
+     - *Nodos Personalizados (`custom_nodes/`)*: Mapeo de `ComfyUI-Manager`, `Comfyui-SadTalker` con su entorno aislado `.venv_sadtalker` (Python 3.10) y checkpoints, `ComfyUI_wav2lip` con enlaces de descarga HuggingFace del modelo GAN, y `comfyui-ollama`.
+     - *Topología WSL Cadensa*: Rutas de red UNC (`\\wsl$\Ubuntu-20.04\...`), scripts de orquestación, imágenes oficiales del avatar y videos fonoaudiológicos generados.
+     - *Matriz de Endpoints y URLs*: Mapeo de puertos locales (`:8188`), WebSocket (`/ws`), REST (`/prompt`, `/history`, `/object_info`, `/system_stats`) y repositorios Git oficiales.
+  3. **Actualización del Catálogo Maestro (`wiki/index.md`)**:
+     - Indexación de `architecture/comfyui_workflow_validator_and_runner.md` en Arquitectura del Sistema.
+     - Indexación de `entities/comfyui_local_environment.md` en Entidades y Componentes.
+     - Indexación de `raw/comfyui/video-avatar.json` en Fuentes Crudas Inmutables.
+- **Archivos creados/modificados**:
+  - `wiki/architecture/comfyui_workflow_validator_and_runner.md` (Nuevo documento modular de arquitectura)
+  - `wiki/entities/comfyui_local_environment.md` (Nuevo documento modular de entidad)
+  - `wiki/index.md` (Actualización de índices)
+  - `wiki/log.md` (Registro en bitácora)
+- **Autor**: LLM Pair Programmer (Antigravity).
+- **[2026-11-01 14:39:51]** comfyui | Prompt `failed-a0489707` | Estado: ⚠️ Fallo / Validación | Nodo: `SadTalkerIsolated` | Detalle: [[2026-11-01_failed-a0489707]] (ver [historial](raw/comfyui/history/2026-11-01_failed-a0489707.md))
+- **[2026-11-01 14:39:58]** comfyui | Prompt `8cb0b7e1-f28c-4114-a9dc-5b005de7999e` | Estado: ✅ Éxito | Nodo: `SadTalkerIsolated` | Detalle: [[2026-11-01_8cb0b7e1-f28c-4114-a9dc-5b005de7999e]] (ver [historial](raw/comfyui/history/2026-11-01_8cb0b7e1-f28c-4114-a9dc-5b005de7999e.md))
+- **[2026-11-01 15:44:14]** comfyui | Prompt `11c80bc3-4d54-4ba7-995e-34cc12b70cdf` | Estado: ⚠️ Fallo / Validación | Nodo: `SadTalkerIsolated` | Detalle: [[2026-11-01_11c80bc3-4d54-4ba7-995e-34cc12b70cdf]] (ver [historial](raw/comfyui/history/2026-11-01_11c80bc3-4d54-4ba7-995e-34cc12b70cdf.md))
+- **[2026-11-01 15:45:14]** comfyui | Prompt `13cdc683-5820-4370-9a29-b2bc18fc8d19` | Estado: ⚠️ Fallo / Validación | Nodo: `SadTalkerIsolated` | Detalle: [[2026-11-01_13cdc683-5820-4370-9a29-b2bc18fc8d19]] (ver [historial](raw/comfyui/history/2026-11-01_13cdc683-5820-4370-9a29-b2bc18fc8d19.md))
+- **[2026-11-01 15:47:08]** comfyui | Prompt `5ec4f268-32ad-4a2d-b035-7294c301ca55` | Estado: ✅ Éxito | Nodo: `SadTalkerIsolated` | Detalle: [[2026-11-01_5ec4f268-32ad-4a2d-b035-7294c301ca55]] (ver [historial](raw/comfyui/history/2026-11-01_5ec4f268-32ad-4a2d-b035-7294c301ca55.md))
+
+
+---
+
+## [2026-11-01] ingest | Saneamiento y Puesta a Punto Integral de ComfyUI (Ollama, Wav2Lip GAN y FFmpeg)
+
+- **Contexto**: Resolución definitiva de todas las advertencias e interrupciones de importación en el ecosistema local de ComfyUI Desktop, asegurando la operatividad de todos los nodos personalizados y la ejecución desatendida del generador de avatares.
+- **Acciones Realizadas**:
+  1. **Instalación de Cliente Ollama**:
+     - Instalación del paquete `ollama` (v0.6.3) en `standalone-env` mediante `python.exe -m pip install ollama`, eliminando el fallo `ModuleNotFoundError` en el nodo `comfyui-ollama`.
+  2. **Aprovisionamiento de Checkpoint Wav2Lip GAN**:
+     - Descarga íntegra de `wav2lip_gan.pth` (435,801,865 bytes) desde el repositorio oficial de HuggingFace (`Nekochu/Wav2Lip`) y colocación en `custom_nodes\ComfyUI_wav2lip\Wav2Lip\checkpoints\wav2lip_gan.pth`.
+     - `ComfyUI_wav2lip` se inicializa con 0 fallos de importación y queda disponible en el catálogo de `/object_info`.
+  3. **Aprovisionamiento Local de Binario FFmpeg**:
+     - Diagnóstico: El worker de SadTalker ejecuta `ffmpeg` vía `os.system()` en su script `videoio.py` para ensamblar el contenedor MP4 con audio y marca de agua. Al no encontrarse `ffmpeg` en el PATH global de Windows, se producía un `FileNotFoundError` al mover el archivo temporal.
+     - Remediación: Se localizó el ejecutable oficial de FFmpeg y se copió atómicamente a:
+       - `Comfyui-SadTalker\.venv_sadtalker\Scripts\ffmpeg.exe`
+       - `Comfyui-SadTalker\SadTalker\ffmpeg.exe` (Directorio de trabajo del worker)
+       - `standalone-env\Scripts\ffmpeg.exe`
+       - `ComfyUI\ffmpeg.exe`
+  4. **Protección de Timeout en WebSocket (`validate_and_run_comfyui.py`)**:
+     - Ampliación del timeout del socket a 600 segundos (`ws.settimeout(600.0)`) y captura de `WebSocketTimeoutException` para tolerar inferencias neuronales pesadas de SadTalker y Wav2Lip (de 45 a 80 segundos) sin interrupciones prematuras.
+  5. **Verificación de Punta a Punta**:
+     - Servidor reiniciado con 0 fallos de importación en todos los nodos personalizados.
+     - Ejecución exitosa de `scripts/validate_and_run_comfyui.py` con Prompt ID `5ec4f268-32ad-4a2d-b035-7294c301ca55`. Video MP4 generado en `output/sadtalker/.../2026_11_01_15.46.58.mp4` (25,832 bytes).
+- **Archivos creados/modificados**:
+  - `wiki/entities/comfyui_local_environment.md` (Documentación del entorno y nuevos pesos)
+  - `scripts/validate_and_run_comfyui.py` (Resiliencia en timeouts de WebSocket)
+  - `wiki/log.md` (Registro en bitácora)
+- **Autor**: LLM Pair Programmer (Antigravity).
+- **[2026-11-01 20:22:40]** comfyui | Prompt `b2cca9a4-9a92-4218-bfcf-d0877820b19e` | Estado: ⚠️ Fallo / Validación | Pipeline LIPSYNC 3-Fases | Detalle: [[2026-11-01_b2cca9a4-9a92-4218-bfcf-d0877820b19e]] (ver [historial](raw/comfyui/history/2026-11-01_b2cca9a4-9a92-4218-bfcf-d0877820b19e.md))
+- **[2026-11-01 20:25:39]** comfyui | Prompt `b836c7bb-2183-42f3-93e4-6556bf97e376` | Estado: ✅ Éxito | Pipeline LIPSYNC 3-Fases | Detalle: [[2026-11-01_b836c7bb-2183-42f3-93e4-6556bf97e376]] (ver [historial](raw/comfyui/history/2026-11-01_b836c7bb-2183-42f3-93e4-6556bf97e376.md))
+- **[2026-11-01 20:47:55]** comfyui | Prompt `7697a335-ec17-4eea-acfc-551b27174e29` | Estado: ✅ Éxito | Pipeline LIPSYNC 3-Fases | Detalle: [[2026-11-01_7697a335-ec17-4eea-acfc-551b27174e29]] (ver [historial](raw/comfyui/history/2026-11-01_7697a335-ec17-4eea-acfc-551b27174e29.md))
+- **[2026-11-01 21:09:52]** comfyui | Prompt `f93521d8-3832-4352-a935-efe810acd96c` | Estado: ✅ Éxito | Pipeline LIPSYNC 3-Fases | Detalle: [[2026-11-01_f93521d8-3832-4352-a935-efe810acd96c]] (ver [historial](raw/comfyui/history/2026-11-01_f93521d8-3832-4352-a935-efe810acd96c.md))
+- **[2026-11-01 21:55:28]** comfyui | Prompt `667c29a3-2cac-46af-b2e0-148e68f35638` | Estado: ✅ Éxito | Pipeline LIPSYNC 3-Fases | Detalle: [[2026-11-01_667c29a3-2cac-46af-b2e0-148e68f35638]] (ver [historial](raw/comfyui/history/2026-11-01_667c29a3-2cac-46af-b2e0-148e68f35638.md))
+
+
+---
+
+## [2026-11-02] ingest | Integración de Google Cloud Text-to-Speech (SSML IPA) y Pipeline de Restauración Facial GFPGAN 2x Post-Wav2Lip
+
+- **Contexto**: Erradicación del deletreo erróneo de sílabas aisladas ("SA" -> "S... A") que rompía la isocronía del Habla Rítmica Silábica (STS), y resolución definitiva de la degradación peribucal/pixelado generada por Wav2Lip mediante el reordenamiento del flujo de restauración facial.
+- **Acciones Realizadas**:
+  1. **Aprovisionamiento e Infraestructura GCP**:
+     - Activación de `texttospeech.googleapis.com` en el proyecto GCP `cadensa-web-dev` (Project Number: `1014778372980`).
+     - Creación de cuenta de servicio dedicada `cadensa-tts-service@cadensa-web-dev.iam.gserviceaccount.com` con rol `roles/serviceusage.serviceUsageConsumer`.
+     - Generación y custodia de llave de credenciales `google_credentials.json`, resguardada en `.gitignore` y respaldada en variables de entorno `.env` (`GOOGLE_APPLICATION_CREDENTIALS`, `GCP_PROJECT_ID`) con sincronización en `.env.example`.
+  2. **Refactorización de Audio Clínico (`scripts/build_clinical_audio.py`)**:
+     - Implementación del sintetizador primario Google Cloud TTS con marcado SSML y etiquetas `<phoneme alphabet="ipa" ph="...">` para mapeo fonético estricto (`CA` -> `ka` en 0.273s, `DEN` -> `den` en 0.399s, `SA` -> `sa` en 0.366s) bajo voz `es-US-Neural2-B`.
+     - Salida directa nativa en PCM LINEAR16 16kHz mono (sin artefactos de compresión ni jitter).
+     - Mecanismo de degradación suave a `edge-tts` con filtros fonéticos en minúsculas en caso de ausencia de credenciales.
+  3. **Reordenamiento Arquitectónico de Restauración Facial**:
+     - Configuración de SadTalker en ComfyUI a 512x512 con `enhancer: "none"` para acelerar la generación de la malla 3DMM y evitar saturar la VRAM de la GPU.
+     - Implementación del módulo neuronal `scripts/restore_face_pipeline.py` ejecutando `GFPGANer` con pesos `GFPGANv1.4.pth` y factor de supersampling 2x en CUDA, aplicado **DESPUÉS** de Wav2Lip GAN.
+     - Eliminación del parche rectangular y desenfoque peribucal: GFPGANv1.4 restaura los dientes, contornos labiales, ojos y textura de piel directamente sobre los fotogramas sincronizados por Wav2Lip.
+  4. **Compositor de Alta Fidelidad (`scripts/compose_cadensa_video.py`)**:
+     - Integración con mapa temporal (`timeline.json`), interpolación `cv2.INTER_LANCZOS4`, máscara `rounded-3xl` de 44px, filtro de enfoque Unsharp Mask, animación sinusoidal diafragmática y metrónomo institucional a 60 BPM sobre lienzo carbón `#0F0F13` (1920x1080 px).
+  5. **Creación y Actualización Documental**:
+     - Creación de `wiki/entities/google_cloud_tts.md`.
+     - Actualización integral de `wiki/architecture/comfyui_production_pipeline.md`.
+     - Actualización de `wiki/index.md` con las nuevas entidades y enlaces.
+     - Verificación al 100% de la suite de pruebas unitarias (Vitest: 297/297) y BDD (Cucumber: 104/104 escenarios).
+- **Archivos creados/modificados**:
+  - `scripts/build_clinical_audio.py`
+  - `scripts/restore_face_pipeline.py`
+  - `scripts/validate_and_run_comfyui.py`
+  - `wiki/entities/google_cloud_tts.md`
+  - `wiki/architecture/comfyui_production_pipeline.md`
+  - `wiki/index.md`
+  - `wiki/log.md`
+- **Autor**: LLM Pair Programmer (Antigravity).
+- **[2026-11-02 11:02:42]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-02_syllable-timed-speech_production.md))
+- **[2026-11-02 11:02:53]** comfyui-batch | Técnica: `box-breathing` (Respiración Diafragmática (Box Breathing)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_box-breathing_production]] (ver [historial](raw/comfyui/history/2026-11-02_box-breathing_production.md))
+- **[2026-11-02 11:14:48]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-02_syllable-timed-speech_production.md))
+- **[2026-11-02 11:14:58]** comfyui-batch | Técnica: `easy-onset` (Inicio Vocal Suave (Easy Onset)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_easy-onset_production]] (ver [historial](raw/comfyui/history/2026-11-02_easy-onset_production.md))
+- **[2026-11-02 11:15:08]** comfyui-batch | Técnica: `light-contact` (Contacto Articular Suave (Light Contact)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_light-contact_production]] (ver [historial](raw/comfyui/history/2026-11-02_light-contact_production.md))
+- **[2026-11-02 11:15:18]** comfyui-batch | Técnica: `prolonged-speech` (Habla Prolongada y Fonación Continua) | Estado: ✅ Éxito | Detalle: [[2026-11-02_prolonged-speech_production]] (ver [historial](raw/comfyui/history/2026-11-02_prolonged-speech_production.md))
+- **[2026-11-02 11:15:28]** comfyui-batch | Técnica: `box-breathing` (Respiración Diafragmática (Box Breathing)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_box-breathing_production]] (ver [historial](raw/comfyui/history/2026-11-02_box-breathing_production.md))
+- **[2026-11-02 11:15:38]** comfyui-batch | Técnica: `pull-out` (Salida Suave del Bloqueo (Pull-Out)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_pull-out_production]] (ver [historial](raw/comfyui/history/2026-11-02_pull-out_production.md))
+- **[2026-11-02 11:15:47]** comfyui-batch | Técnica: `cancellation` (Cancelación Consciente Post-Bloqueo) | Estado: ✅ Éxito | Detalle: [[2026-11-02_cancellation_production]] (ver [historial](raw/comfyui/history/2026-11-02_cancellation_production.md))
+- **[2026-11-02 12:52:35]** comfyui-batch | Técnica: `easy-onset` (Inicio Vocal Suave (Easy Onset)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_easy-onset_production]] (ver [historial](raw/comfyui/history/2026-11-02_easy-onset_production.md))
+- **[2026-11-02 12:56:39]** comfyui-batch | Técnica: `light-contact` (Contacto Articular Suave (Light Contact)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_light-contact_production]] (ver [historial](raw/comfyui/history/2026-11-02_light-contact_production.md))
+- **[2026-11-02 12:59:23]** comfyui-batch | Técnica: `prolonged-speech` (Habla Prolongada y Fonación Continua) | Estado: ✅ Éxito | Detalle: [[2026-11-02_prolonged-speech_production]] (ver [historial](raw/comfyui/history/2026-11-02_prolonged-speech_production.md))
+- **[2026-11-02 13:04:02]** comfyui-batch | Técnica: `box-breathing` (Respiración Diafragmática (Box Breathing)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_box-breathing_production]] (ver [historial](raw/comfyui/history/2026-11-02_box-breathing_production.md))
+- **[2026-11-02 13:07:17]** comfyui-batch | Técnica: `pull-out` (Salida Suave del Bloqueo (Pull-Out)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_pull-out_production]] (ver [historial](raw/comfyui/history/2026-11-02_pull-out_production.md))
+- **[2026-11-02 13:10:35]** comfyui-batch | Técnica: `cancellation` (Cancelación Consciente Post-Bloqueo) | Estado: ✅ Éxito | Detalle: [[2026-11-02_cancellation_production]] (ver [historial](raw/comfyui/history/2026-11-02_cancellation_production.md))
+- **[2026-11-02 22:45:00]** audit | Inicio de auditor�a y resoluci�n de 4 hallazgos + 2 mejoras de calidad en pipeline multimedia (Tareas 1-5)
+- **[2026-11-02 22:55:41]** comfyui-batch | Técnica: `easy-onset` (Inicio Vocal Suave (Easy Onset)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_easy-onset_production]] (ver [historial](raw/comfyui/history/2026-11-02_easy-onset_production.md))
+- **[2026-11-02 23:05:05]** comfyui-batch | Técnica: `easy-onset` (Inicio Vocal Suave (Easy Onset)) | Estado: ✅ Éxito | Detalle: [[2026-11-02_easy-onset_production]] (ver [historial](raw/comfyui/history/2026-11-02_easy-onset_production.md))
+- **[2026-11-02 23:08:30]** audit | Cierre de auditoria y remediacion integral: SadTalker 512px estandarizado (6.98 GB VRAM pico), GFPGAN 2x, tests de orquestacion mockeados y lip-sync objetivo, unificacion de nombres de tecnicas, audio HQ 48 kHz normalizado EBU R128 (-16 LUFS) y suites 100% verdes.
+- **[2026-11-03 09:39:00]** audit-fase-a | Fase A completada: Correccion de confusor de movimiento global, serie temporal de apertura vertical de boca, matriz de correlacion r con barrido de lags (-200ms a +200ms), 6 xfails honestos en tests para tecnicas pre-512px.
+- **[2026-11-03 10:00:54]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 10:13:52]** comfyui-batch | Técnica: `box-breathing` (Respiración Diafragmática (Box Breathing)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_box-breathing_production]] (ver [historial](raw/comfyui/history/2026-11-03_box-breathing_production.md))
+- **[2026-11-03 10:14:38]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 10:20:40]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 10:24:51]** comfyui-batch | Técnica: `light-contact` (Contacto Articular Suave (Light Contact)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_light-contact_production]] (ver [historial](raw/comfyui/history/2026-11-03_light-contact_production.md))
+- **[2026-11-03 10:34:38]** comfyui-batch | Técnica: `prolonged-speech` (Habla Prolongada y Fonación Continua) | Estado: ✅ Éxito | Detalle: [[2026-11-03_prolonged-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_prolonged-speech_production.md))
+- **[2026-11-03 10:40:56]** comfyui-batch | Técnica: `pull-out` (Salida Suave del Bloqueo (Pull-Out)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_pull-out_production]] (ver [historial](raw/comfyui/history/2026-11-03_pull-out_production.md))
+- **[2026-11-03 10:46:53]** comfyui-batch | Técnica: `cancellation` (Cancelación Consciente Post-Bloqueo) | Estado: ✅ Éxito | Detalle: [[2026-11-03_cancellation_production]] (ver [historial](raw/comfyui/history/2026-11-03_cancellation_production.md))
+- **[2026-11-03 10:49:13]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 10:52:00]** audit-fase-b | Fase B completada: Regeneración GPU en lote a 512px (batch 1, GFPGAN 2x, 0 swapping VRAM), normalización EBU R128 de 2 pasadas (-16 LUFS, True Peak -1.5 dBFS), benchmark H.264 (CRF 23 vs 20), sincronización web de 7 técnicas en /media/techniques/, y suites de validación 100% verdes.
+- **[2026-11-03 11:16:54]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+ 
+ - **[2026-11-03 11:20:00]** audit-fase-c | Fase C y Remediacion de Reposo: Integracion de SyncNet VGG oficial (LSE-D y LSE-C en 7 tecnicas), avatar-maestro neutro con boca cerrada (MAR inner 0.0000), sellado labial fonoaudiologico en compositor (box-breathing pasa al 98% de boca cerrada en reposo, PASSED en pytest), recompuestas 7 tecnicas y suites 100% verdes (28 passed, 2 xfail honestos, 297 unitarios, 104 BDD).
+- **[2026-11-03 12:06:09]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 12:11:08]** comfyui-batch | Técnica: `light-contact` (Contacto Articular Suave (Light Contact)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_light-contact_production]] (ver [historial](raw/comfyui/history/2026-11-03_light-contact_production.md))
+- **[2026-11-03 12:13:46]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 12:15:00]** audit-closure | Cierre definitivo de deuda tecnica audiovisual: Regeneracion neuronal completa a 512px para STS y Light Contact con avatar neutro (MAR 0.0000), evaluacion SyncNet (LSE-D 7.060 y 7.351), retirada de xfails en test_pipeline_integration.py (30/30 PASSED, 0 xfail), sincronizacion de /about y suites 100% verdes.
+- **[2026-11-03 12:15:35]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 12:28:00]** web-perf | Despliegue Web Optimizado: Portadas migradas a WebP (-93% de transferencia, 420 KB total), entrega de video optimizada en TechniqueVideoModal con IntersectionObserver, preload metadata, playsInline y muted, LCP medido en 940 ms (<1s) con cero descarga prematura de videos, y suites 100% verdes.
+- **[2026-11-03 12:29:10]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 12:43:04]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 12:49:53]** comfyui-batch | Técnica: `easy-onset` (Inicio Vocal Suave (Easy Onset)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_easy-onset_production]] (ver [historial](raw/comfyui/history/2026-11-03_easy-onset_production.md))
+- **[2026-11-03 12:54:57]** comfyui-batch | Técnica: `light-contact` (Contacto Articular Suave (Light Contact)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_light-contact_production]] (ver [historial](raw/comfyui/history/2026-11-03_light-contact_production.md))
+- **[2026-11-03 13:04:09]** comfyui-batch | Técnica: `prolonged-speech` (Habla Prolongada y Fonación Continua) | Estado: ✅ Éxito | Detalle: [[2026-11-03_prolonged-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_prolonged-speech_production.md))
+- **[2026-11-03 13:28:14]** comfyui-batch | Técnica: `box-breathing` (Respiración Diafragmática (Box Breathing)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_box-breathing_production]] (ver [historial](raw/comfyui/history/2026-11-03_box-breathing_production.md))
+- **[2026-11-03 13:33:58]** comfyui-batch | Técnica: `pull-out` (Salida Suave del Bloqueo (Pull-Out)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_pull-out_production]] (ver [historial](raw/comfyui/history/2026-11-03_pull-out_production.md))
+- **[2026-11-03 13:41:09]** comfyui-batch | Técnica: `cancellation` (Cancelación Consciente Post-Bloqueo) | Estado: ✅ Éxito | Detalle: [[2026-11-03_cancellation_production]] (ver [historial](raw/comfyui/history/2026-11-03_cancellation_production.md))
+- **[2026-11-03 13:42:05]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 13:44:21]** comfyui-batch | Técnica: `syllable-timed-speech` (Habla Rítmica Silábica (STS)) | Estado: ✅ Éxito | Detalle: [[2026-11-03_syllable-timed-speech_production]] (ver [historial](raw/comfyui/history/2026-11-03_syllable-timed-speech_production.md))
+- **[2026-11-03 13:46:00]** clean-room-certification | Prueba de fuego E2E exitosa: 7 videos y audios generados desde cero absoluto, validados con SyncNet (LSE-D y LSE-C), portadas WebP generadas (-93% payload), frontend integrado en modales (preload metadata, playsInline, muted), y suites 100% verdes (30 pytest, 297 vitest, 104 BDD, static build).
+- **[2026-11-03 14:36:00]** release-candidate | Proyecto Cadensa certificado listo para producción. Clean room E2E exitoso (7 videos, SyncNet validado, 0 xfail). Creados Runbook de despliegue, Developer Handoff y Workflow CI/CD.

@@ -1,0 +1,70 @@
+{
+  "bpm": null,
+  "tts_mode": "breathing_cycle",
+  "phase_duration_sec": 4.0,
+  "total_duration": 16.0,
+  "breathing_intervals": [
+    [
+      0.0,
+      16.0
+    ]
+  ],
+  "phases": [
+    {
+      "name": "INHALAR",
+      "cue": "Inhala profundamente",
+      "start": 0.0,
+      "end": 4.0,
+      "action": "expand"
+    },
+    {
+      "name": "RETENER",
+      "cue": "Sostén el aire",
+      "start": 4.0,
+      "end": 8.0,
+      "action": "hold"
+    },
+    {
+      "name": "EXHALAR",
+      "cue": "Exhala con calma",
+      "start": 8.0,
+      "end": 12.0,
+      "action": "contract"
+    },
+    {
+      "name": "VACIAR",
+      "cue": "Mantén el vacío",
+      "start": 12.0,
+      "end": 16.0,
+      "action": "pause"
+    }
+  ],
+  "syllable_events": [
+    {
+      "syllable": "INHALAR",
+      "time": 0.0,
+      "duration": 4.0,
+      "box_index": 0
+    },
+    {
+      "syllable": "RETENER",
+      "time": 4.0,
+      "duration": 4.0,
+      "box_index": 1
+    },
+    {
+      "syllable": "EXHALAR",
+      "time": 8.0,
+      "duration": 4.0,
+      "box_index": 2
+    },
+    {
+      "syllable": "VACIAR",
+      "time": 12.0,
+      "duration": 4.0,
+      "box_index": 3
+    }
+  ],
+  "tts_engine": "gcp_neural2",
+  "audio_48k_path": "public/media/audio\\box-breathing_sample_48k.wav"
+}

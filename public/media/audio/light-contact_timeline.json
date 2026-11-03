@@ -1,0 +1,38 @@
+{
+  "bpm": 60.0,
+  "prep_silence_sec": 2.5,
+  "post_silence_sec": 2.0,
+  "total_duration": 7.5,
+  "breathing_intervals": [
+    [
+      0.0,
+      2.5
+    ],
+    [
+      5.5,
+      7.5
+    ]
+  ],
+  "syllable_events": [
+    {
+      "syllable": "PA",
+      "time": 2.5,
+      "duration": 0.254,
+      "box_index": 0
+    },
+    {
+      "syllable": "TA",
+      "time": 3.5,
+      "duration": 0.251,
+      "box_index": 1
+    },
+    {
+      "syllable": "KA",
+      "time": 4.5,
+      "duration": 0.272,
+      "box_index": 2
+    }
+  ],
+  "tts_engine": "gcp_neural2",
+  "audio_48k_path": "public/media/audio\\light-contact_sample_48k.wav"
+}

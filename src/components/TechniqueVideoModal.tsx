@@ -23,15 +23,36 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
   // Estado declarativo: rastrea qué técnica está reproduciéndose activamente
   const [playingTechniqueId, setPlayingTechniqueId] = useState<string | null>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(true);
+  const [isInViewport, setIsInViewport] = useState<boolean>(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const isPlayingVideo = Boolean(isOpen && technique && playingTechniqueId === technique.id);
+
+  // Lazy loading mediante IntersectionObserver: suspende la reproducción si el modal sale de la vista
+  useEffect(() => {
+    if (!containerRef.current || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        setIsInViewport(entry.isIntersecting);
+        if (!entry.isIntersecting && videoRef.current) {
+          videoRef.current.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [isOpen]);
 
   const handleClose = () => {
     if (videoRef.current) {
       videoRef.current.pause();
     }
     setPlayingTechniqueId(null);
+    setIsMuted(true);
     onClose();
   };
 
@@ -99,19 +120,42 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
           </button>
         </div>
 
-        {/* Reproductor o Contenedor de Video (Façade Pattern) */}
-        <div className="relative w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 aspect-video flex flex-col items-center justify-center text-center">
+        {/* Reproductor o Contenedor de Video (Façade Pattern + Lazy Loading) */}
+        <div
+          ref={containerRef}
+          className="relative w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 aspect-video flex flex-col items-center justify-center text-center"
+        >
           {technique.videoUrl ? (
-            isPlayingVideo ? (
-              <video
-                ref={videoRef}
-                src={technique.videoUrl}
-                poster={technique.thumbnailUrl}
-                autoPlay
-                controls
-                playsInline
-                className="w-full h-full object-contain bg-black rounded-2xl"
-              />
+            isPlayingVideo && isInViewport ? (
+              <div className="relative w-full h-full">
+                <video
+                  ref={videoRef}
+                  src={technique.videoUrl}
+                  poster={technique.thumbnailUrl}
+                  preload="metadata"
+                  autoPlay
+                  controls
+                  playsInline
+                  muted={isMuted}
+                  className="w-full h-full object-contain bg-black rounded-2xl"
+                />
+                {isMuted && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMuted(false);
+                      if (videoRef.current) {
+                        videoRef.current.muted = false;
+                      }
+                    }}
+                    className="absolute top-3 right-3 px-3 py-1.5 rounded-full bg-zinc-950/80 hover:bg-zinc-900 border border-emerald-500/50 text-emerald-300 text-xs font-semibold backdrop-blur-md flex items-center gap-1.5 shadow-lg transition-all cursor-pointer z-10"
+                    aria-label="Activar audio del video"
+                  >
+                    <span>🔇</span>
+                    <span>Activar audio</span>
+                  </button>
+                )}
+              </div>
             ) : (
               <div
                 onClick={() => setPlayingTechniqueId(technique.id)}

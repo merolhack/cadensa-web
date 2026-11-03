@@ -1,0 +1,58 @@
+{
+  "1": {
+    "inputs": {
+      "image": "example.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "2": {
+    "inputs": {
+      "size": 512,
+      "preprocess": "crop",
+      "still": false,
+      "enhancer": "none",
+      "batch_size": 1,
+      "expression_scale": 1,
+      "pose_style": 0,
+      "image": [
+        "1",
+        0
+      ],
+      "audio": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "SadTalkerIsolated",
+    "_meta": {
+      "title": "SadTalker (Isolated)"
+    }
+  },
+  "3": {
+    "inputs": {
+      "video": [
+        "2",
+        0
+      ],
+      "filename_prefix": "cadensa_output",
+      "format": "auto",
+      "codec": "auto"
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Save Video"
+    }
+  },
+  "4": {
+    "inputs": {
+      "audio": "example.wav"
+    },
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "Load Audio"
+    }
+  }
+}

@@ -92,6 +92,15 @@ describe('TechniqueVideoModal Component - Unit Tests', () => {
     const videoEl = screen.getByRole('dialog').querySelector('video');
     expect(videoEl).toBeInTheDocument();
     expect(videoEl).toHaveAttribute('src', stsTechnique.videoUrl);
+    expect(videoEl).toHaveAttribute('poster', stsTechnique.thumbnailUrl);
+    expect(videoEl).toHaveAttribute('preload', 'metadata');
+    expect(videoEl).toHaveProperty('muted', true);
+
+    // Debe mostrar el botón de activar audio y permitir desmutear al usuario
+    const unmuteBtn = screen.getByRole('button', { name: /activar audio del video/i });
+    expect(unmuteBtn).toBeInTheDocument();
+    fireEvent.click(unmuteBtn);
+    expect(screen.queryByRole('button', { name: /activar audio del video/i })).not.toBeInTheDocument();
   });
 
   it('permite reportar falla o duda en el video mediante onReportIssue o modal integrado', () => {

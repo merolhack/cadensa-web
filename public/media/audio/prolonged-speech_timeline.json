@@ -1,0 +1,28 @@
+{
+  "bpm": null,
+  "tts_mode": "guided_phrase",
+  "prep_silence_sec": 2.5,
+  "post_silence_sec": 2.0,
+  "total_duration": 8.139,
+  "breathing_intervals": [
+    [
+      0.0,
+      2.5
+    ],
+    [
+      6.139,
+      8.139
+    ]
+  ],
+  "syllable_events": [
+    {
+      "syllable": "Hoooola... cooomo......",
+      "time": 2.5,
+      "duration": 3.639,
+      "box_index": 0
+    }
+  ],
+  "script_text": "Hoooola... cooomo... eeeestaas... fonación continua sin cortes.",
+  "tts_engine": "gcp_neural2",
+  "audio_48k_path": "public/media/audio\\prolonged-speech_sample_48k.wav"
+}

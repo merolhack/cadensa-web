@@ -1,7 +1,7 @@
 # Catálogo Maestro del LLM Wiki — Cadensa
 
 > **Índice de Contenidos y Navegación Rápida**  
-> Última actualización: 2026-10-28  
+> Última actualización: 2026-11-03  
 > Esquema de gobernanza: [SCHEMA.md](SCHEMA.md) | Bitácora de operaciones: [log.md](log.md)
 
 Este catálogo resume e indexa de forma modular todas las páginas del conocimiento persistente de Cadensa. Los agentes LLM deben consultar este índice como paso previo antes de explorar páginas individuales.
@@ -14,6 +14,8 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 |---|---|---|
 | [SCHEMA.md](SCHEMA.md) | Reglas de gobierno, las 3 capas del wiki y protocolos Ingest/Query/Lint para LLMs. | `governance` |
 | [log.md](log.md) | Registro cronológico append-only de modificaciones, ingestas y auditorías. | `log` |
+| [deployment_runbook.md](operations/deployment_runbook.md) | Runbook de despliegue en Cloudflare Pages, variables de entorno y estrategia CDN/R2. | `operations`, `deployment` |
+| [developer_handoff.md](operations/developer_handoff.md) | Guía de onboarding, mapa de repositorio, comandos de prueba y regeneración audiovisual. | `operations`, `handoff` |
 
 ---
 
@@ -40,11 +42,15 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [hl7_fhir_interoperability.md](architecture/hl7_fhir_interoperability.md) | Interoperabilidad fonoaudiológica bajo estándar internacional HL7 FHIR R4 (DiagnosticReport, LOINC 77150-1, SNOMED-CT). | `fhir`, `interoperability`, `loinc`, `snomed-ct`, `ehr` |
 | [about_and_roadmap_sync.md](architecture/about_and_roadmap_sync.md) | Arquitectura de la página Acerca de (/about), perfil del autor Lenin Meza y regla mandatoria de sincronización de TODO/ROADMAP. | `about`, `roadmap`, `governance`, `author` |
 | [multimedia_and_video_facade.md](architecture/multimedia_and_video_facade.md) | Reproducción de video nativo con patrón Façade, cero CLS, lazy transfer y streaming HTTP 206. | `architecture`, `multimedia`, `video`, `player`, `performance` |
+| [ai_video_generation_mcp.md](architecture/ai_video_generation_mcp.md) | Pipeline de generación de video asistido por servidores MCP (Ollama, Gemini GenMedia y FFmpeg) para cadencia rítmica. | `architecture`, `multimedia`, `video-generation`, `mcp`, `ffmpeg`, `ollama` |
+| [video_generation_pipeline.md](architecture/video_generation_pipeline.md) | Pipeline parametrizado de video, Zero-Seam Lip-Morphing, locución fonoaudiológica y matriz de validación multimedia. | `architecture`, `multimedia`, `video-generation`, `lipsync`, `tts`, `ffmpeg`, `guardrails` |
 | [google_oauth_live_validation.md](architecture/google_oauth_live_validation.md) | Validación en vivo sin mocks de Google OAuth 2.0 (GCP cadensa-web-dev), 302 Handshake y adopción de sesiones huérfanas. | `architecture`, `auth`, `google-oauth`, `zero-trust`, `e2e` |
 | [client_error_telemetry_and_observability.md](architecture/client_error_telemetry_and_observability.md) | Arquitectura híbrida de observabilidad de cliente y telemetría de errores (GA4 exception + Supabase Zero Trust RLS). | `architecture`, `observability`, `telemetry`, `errors`, `ga4`, `supabase` |
 | [sitemap_and_gsc_indexing.md](architecture/sitemap_and_gsc_indexing.md) | Arquitectura de sitemap dinámico estático (11 URLs canónicas), robots.txt optimizado y alta en Google Search Console. | `architecture`, `seo`, `sitemap`, `search-console`, `indexing` |
 | [proactive_error_alerting.md](architecture/proactive_error_alerting.md) | Despacho de alertas proactivas en tiempo real vía Webhooks (Discord, Slack, genérico) ante incidentes críticos fatales. | `architecture`, `alerts`, `webhooks`, `discord`, `slack` |
 | [production_live_validation.md](architecture/production_live_validation.md) | Validación continua sobre Cloudflare Pages en caliente: GA4, Google OAuth y patrón PostgREST Blind-Drop (return=minimal). | `architecture`, `e2e`, `production`, `playwright`, `supabase` |
+| [comfyui_workflow_validator_and_runner.md](architecture/comfyui_workflow_validator_and_runner.md) | Validador estructural contra /object_info, auto-remediación de tipos (SadTalker vs SaveVideo), WebSockets y auditoría Wiki. | `architecture`, `comfyui`, `automation`, `validation`, `websockets` |
+| [comfyui_production_pipeline.md](architecture/comfyui_production_pipeline.md) | Pipeline secuencial de producción de alta definición (Audio Clínico GCP TTS con SSML IPA + SadTalker 512px + Wav2Lip GAN + GFPGAN 2x + Compositor 1920x1080). | `architecture`, `multimedia`, `comfyui`, `sadtalker`, `wav2lip`, `gfpgan`, `opencv`, `ffmpeg` |
 
 ---
 
@@ -87,6 +93,8 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [cloudflare_pages.md](entities/cloudflare_pages.md) | Infraestructura de edge hosting Anycast, configuración del action y distribución global. | `entities`, `cloudflare`, `hosting`, `edge` |
 | [profiles_table.md](entities/profiles_table.md) | Esquema de la tabla `public.profiles`, foreign keys en cascada, triggers y políticas RLS. | `entities`, `database`, `schema`, `profiles` |
 | [technique_media.md](entities/technique_media.md) | Estructura de activos de video y pósters (H.264/AAC, PNG/WebP 16:9), cuotas y blindaje contra archivos residuales de SO. | `entities`, `media`, `video`, `storage` |
+| [comfyui_local_environment.md](entities/comfyui_local_environment.md) | Topología de rutas híbrida (Windows ComfyUI Desktop y WSL), custom nodes (SadTalker, Wav2Lip), modelos y endpoints REST/WS. | `entities`, `comfyui`, `local-environment`, `windows`, `wsl`, `nodes` |
+| [google_cloud_tts.md](entities/google_cloud_tts.md) | Síntesis fonética silábica con Google Cloud Text-to-Speech, esquemas SSML con fonemas IPA y resiliencia offline. | `entities`, `gcp`, `tts`, `ssml`, `ipa`, `audio` |
 
 ---
 
@@ -110,3 +118,4 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [clinical_foundations.md](raw/clinical_foundations.md) | Documento original sobre la terapia del habla, técnica de metrónomo y problema de abandono. | `clinical-spec` |
 | [poc_specifications.md](raw/poc_specifications.md) | Requisitos originales de ingeniería, decisiones de stack y restricciones del PoC. | `engineering-spec` |
 | [Plan_Estratgico_y_Hoja_de_Ruta_de_Evolucin.md](raw/Plan_Estratgico_y_Hoja_de_Ruta_de_Evolucin.md) | Plan estratégico mensual detallado de 12 meses basado en el análisis maestro y Virtual SLP Agent. | `strategic-analysis` |
+| [comfyui/video-avatar.json](raw/comfyui/video-avatar.json) | Grafo API JSON de ComfyUI para la animación del Avatar Maestro con SadTalker. | `workflow-spec` |

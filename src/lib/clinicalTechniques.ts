@@ -133,8 +133,8 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     },
     exerciseGoal: 'Marcapasos auditivo-motor con compás e isocronía regular',
     recommendedCategory: 'todas',
-    videoUrl: '/media/techniques/cadensa_sts_montaje_limpio_final.mp4',
-    thumbnailUrl: '/media/techniques/cadensa_sts_portada.png',
+    videoUrl: '/media/techniques/syllable-timed-speech_avatar_final.mp4',
+    thumbnailUrl: '/media/techniques/syllable-timed-speech_portada.webp',
   },
 
   easy_onset: {
@@ -183,6 +183,8 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     },
     exerciseGoal: 'Aspiración silenciosa previa y ascenso gradual de sonoridad en vocales',
     recommendedCategory: 'vocales',
+    videoUrl: '/media/techniques/easy-onset_avatar_final.mp4',
+    thumbnailUrl: '/media/techniques/easy-onset_portada.webp',
   },
 
   light_contact: {
@@ -231,6 +233,8 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     },
     exerciseGoal: 'Tacto ligero de articuladores en consonantes oclusivas (/p, t, k, b, d, g/)',
     recommendedCategory: 'diadococinesia',
+    videoUrl: '/media/techniques/light-contact_avatar_final.mp4',
+    thumbnailUrl: '/media/techniques/light-contact_portada.webp',
   },
 
   prolonged_speech: {
@@ -279,6 +283,8 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     },
     exerciseGoal: 'Elongación vocálica elástica y ligamiento ininterrumpido entre palabras',
     recommendedCategory: 'vocales',
+    videoUrl: '/media/techniques/prolonged-speech_avatar_final.mp4',
+    thumbnailUrl: '/media/techniques/prolonged-speech_portada.webp',
   },
 
   box_breathing: {
@@ -327,6 +333,8 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     },
     exerciseGoal: 'Calma diafragmática y alivio de tensión previa a la fonación',
     recommendedCategory: 'todas',
+    videoUrl: '/media/techniques/box-breathing_avatar_final.mp4',
+    thumbnailUrl: '/media/techniques/box-breathing_portada.webp',
   },
 
   pull_out: {
@@ -375,6 +383,8 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     },
     exerciseGoal: 'Detención voluntaria de fuerza y escape suave del espasmo',
     recommendedCategory: 'frases_complejas',
+    videoUrl: '/media/techniques/pull-out_avatar_final.mp4',
+    thumbnailUrl: '/media/techniques/pull-out_portada.webp',
   },
 
   cancellation: {
@@ -423,6 +433,8 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
     },
     exerciseGoal: 'Pausa deliberada de 3 segundos post-bloqueo y reformulación motriz suave',
     recommendedCategory: 'frases_complejas',
+    videoUrl: '/media/techniques/cancellation_avatar_final.mp4',
+    thumbnailUrl: '/media/techniques/cancellation_portada.webp',
   },
 };
 

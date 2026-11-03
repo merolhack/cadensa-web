@@ -44,6 +44,9 @@ yarn-error.log*
 .env.production
 !.env.example
 !.env.local.example
+*credentials*.json
+google_credentials.json
+*.key.json
 
 # vercel
 .vercel
@@ -51,3 +54,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI model weights and large checkpoints
+gfpgan/
+*.pth
+*.onnx
+*.model
+scripts/syncnet/
+
+
+# Intermediate video processing files (keep only *_avatar_final.mp4 and portadas)
+public/media/techniques/*_wav2lip.mp4
+public/media/techniques/*_face_restored.mp4
+public/cadensa_automated_test.mp4
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/

@@ -76,15 +76,32 @@ powershell -Command "& 'C:\Users\lenin\AppData\Local\Comfy-Desktop\ComfyUI-Insta
 
 ---
 
-## 4. Estado de Certificación y Cobertura (Prueba de Fuego Clean Room)
+## 4. Pruebas de Accesibilidad (a11y) con axe-core y vitest-axe (`src/components/accessibility.test.tsx`)
+
+- **Framework:** `axe-core` + `vitest-axe` integrado con React Testing Library y Vitest.
+- **Estándar Objetivo:** WCAG 2.1 Nivel AA / AAA (Sección 508 y directrices de software médico fonoaudiológico).
+- **Alcance Auditado Automatizado:**
+  - `TechniqueVideoModal.tsx`: Verificación de ausencia total de violaciones de accesibilidad tanto en estado de póster interactivo como con video montado; verificación de trampa de foco (Focus Trap) ciclando `Tab` / `Shift+Tab` dentro del diálogo y restauración automática del elemento previo activo al cerrar; cierre con tecla `Escape`.
+  - `TechniquesCatalogHome.tsx`: Auditoría de elementos accionables de navegación fonoaudiológica con roles semánticos (`role="button"`), soporte completo de teclado (`Enter` / `Espacio`), etiquetas accesibles descriptivas (`aria-label`) y foco visible con alto contraste.
+  - `src/app/page.tsx` (Home Principal): Jerarquía estructural estricta de encabezados (`h1` → `h2` → `h3`) sin saltos de nivel (`heading-order`), etiquetas obligatorias para controles de formulario y deslizadores de BPM (`label`, `aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`).
+
+```bash
+# Ejecutar suite especializada de accesibilidad WCAG AA
+npm test -- src/components/accessibility.test.tsx
+```
+
+---
+
+## 5. Estado de Certificación y Cobertura (Prueba de Fuego Clean Room & A11y)
 
 El sistema cuenta con una cobertura integral automatizada validada en un entorno limpio sin fallos ni omisiones:
 
 | Suite de Pruebas | Entorno / Motor | Total Tests / Escenarios | Estado | Tiempo de Ejecución |
 | :--- | :--- | :--- | :--- | :--- |
 | **Pruebas Python Multimedia** | `pytest 9.2` (ComfyUI Standalone) | 30 tests (0 xfail, 0 skip) | ✅ 100% PASSED | ~31.2s |
-| **Pruebas Unitarias Frontend** | `vitest 4.1` (JSDOM + RTL) | 297 tests (66 suites) | ✅ 100% PASSED | ~9.1s |
-| **Pruebas BDD Clínicas** | `@cucumber/cucumber 11` (TSX) | 104 escenarios (403 pasos) | ✅ 100% PASSED | ~1.8s |
+| **Pruebas Unitarias Frontend** | `vitest 4.1` (JSDOM + RTL) | 313 tests (69 suites) | ✅ 100% PASSED | ~5.9s |
+| **Pruebas Accesibilidad (a11y)** | `axe-core` + `vitest-axe` (WCAG AA) | 4 suites principales (0 violaciones) | ✅ 100% PASSED | ~1.8s |
+| **Pruebas BDD Clínicas** | `@cucumber/cucumber 11` (TSX) | 104 escenarios (403 pasos) | ✅ 100% PASSED | ~2.5s |
 | **Compilación Estática Next.js** | Turbopack 16.4 | 18 rutas estáticas generadas | ✅ 100% SUCCESS | ~1.7s |
 
 ### Criterios Fonoaudiológicos Auditados en Pruebas:

@@ -54,9 +54,9 @@ export const Footer: React.FC<FooterProps> = ({
       <div className="pt-6 border-t border-zinc-900 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
         {/* Columna 1: Guías Clínicas Fonoaudiológicas */}
         <div className="space-y-3">
-          <h4 className="text-zinc-100 font-bold uppercase tracking-wider text-[11px] text-emerald-400">
+          <h3 className="text-zinc-100 font-bold uppercase tracking-wider text-[11px] text-emerald-400">
             Técnicas Fonoaudiológicas
-          </h4>
+          </h3>
           <ul className="space-y-2">
             {CLINICAL_TECHNIQUE_LINKS.map((tech) => (
               <li key={tech.id}>
@@ -74,9 +74,9 @@ export const Footer: React.FC<FooterProps> = ({
 
         {/* Columna 2: Plataforma y Aspectos Clínicos / Legales */}
         <div className="space-y-3">
-          <h4 className="text-zinc-100 font-bold uppercase tracking-wider text-[11px] text-cyan-400">
+          <h3 className="text-zinc-100 font-bold uppercase tracking-wider text-[11px] text-cyan-400">
             Plataforma & Comunidad
-          </h4>
+          </h3>
           <ul className="space-y-2">
             {PLATFORM_LINKS.map((link) => (
               <li key={link.href}>

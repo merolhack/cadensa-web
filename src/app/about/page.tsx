@@ -353,6 +353,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Runbook de Despliegue en Cloudflare Pages y Guía de Entrega (Developer Handoff):</strong> Documentación estandarizada de operaciones de producción, estrategia de escalamiento CDN/R2 sin tarifas de salida, pipeline unificado de CI/CD en GitHub Actions (`cadensa-ci.yml`) y protocolos de onboarding para desarrolladores e ingenieros de fonoaudiología.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Certificación de Accesibilidad WCAG 2.1 AA, Tolerancia a Fallos y Telemetría Zero Trust:</strong> Auditoría automatizada continua con axe-core y vitest-axe (0 violaciones de accesibilidad, focus trap con tecla Escape, jerarquía de encabezados estricta h1→h2→h3), límite de errores clínicos (ErrorBoundary) con recuperación empática, fallback resiliente de video ante códecs no soportados y telemetría privacy-first anónima sin PII basada en sesiones efímeras.</span>
+                </li>
               </ul>
             </div>
 

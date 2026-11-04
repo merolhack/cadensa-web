@@ -130,9 +130,9 @@ export function AudioSelfMonitor({ isPlaying = false }: AudioSelfMonitorProps) {
         <div className="flex items-center gap-2">
           <span className="text-base">🎧</span>
           <div>
-            <h4 className="text-xs sm:text-sm font-bold text-zinc-200">
+            <h2 className="text-xs sm:text-sm font-bold text-zinc-200">
               Auto-Escucha Fonoaudiológica (Self-Monitoring)
-            </h4>
+            </h2>
             <p className="text-[11px] text-zinc-400">
               Graba tu voz durante la práctica para evaluar propiocepción y cadencia silábica.
             </p>

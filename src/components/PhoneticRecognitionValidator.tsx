@@ -34,7 +34,7 @@ export function PhoneticRecognitionValidator({
         <div className="flex items-center gap-2">
           <span className="text-base">🎙️</span>
           <div>
-            <h4 className="font-bold text-zinc-100">Validador Fonético On-Device</h4>
+            <h2 className="font-bold text-zinc-100">Validador Fonético On-Device</h2>
             <span className="text-[10px] text-zinc-400">Verifica la fidelidad acústica en tu navegador</span>
           </div>
         </div>

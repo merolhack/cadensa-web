@@ -1093,6 +1093,10 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
               max="160"
               value={bpm}
               onChange={(e) => handleBpmChange(Number(e.target.value))}
+              aria-label="Ajustar tempo del metrónomo en pulsaciones por minuto"
+              aria-valuemin={60}
+              aria-valuemax={160}
+              aria-valuenow={bpm}
               className="w-full accent-emerald-400 cursor-pointer h-2 bg-zinc-800 rounded-lg"
             />
 

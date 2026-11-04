@@ -4,6 +4,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { ClinicalTechnique, CLINICAL_TECHNIQUES } from '@/lib/clinicalTechniques';
 import { FeedbackModal } from '@/components/FeedbackModal';
+import {
+  trackTechniqueViewed,
+  trackVideoPlayed,
+  trackPracticeStarted,
+  trackVideoPlaybackError,
+} from '@/lib/telemetry';
 
 interface TechniqueVideoModalProps {
   technique: ClinicalTechnique | null;
@@ -27,11 +33,82 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
   // Audio directo: por defecto el audio se activa al presionar Play
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isInViewport, setIsInViewport] = useState<boolean>(true);
+  const [videoError, setVideoError] = useState<boolean>(false);
+
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   const activeTech = selectedTechnique || technique;
   const isPlayingVideo = Boolean(isOpen && activeTech && playingTechniqueId === activeTech.id);
+
+  // Registro de telemetría respetuosa al abrir el modal
+  useEffect(() => {
+    if (isOpen && activeTech) {
+      trackTechniqueViewed(activeTech.id, activeTech.name, 'modal');
+    }
+  }, [isOpen, activeTech?.id]);
+
+  // Focus trap accesible (WCAG 2.1 AA) y soporte de tecla Escape
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Guardar elemento enfocado previo para restaurar al cerrar
+    const previousActiveElement = document.activeElement as HTMLElement | null;
+
+    // Enfocar el primer elemento interactivo del diálogo
+    const timer = setTimeout(() => {
+      if (dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length > 0) {
+          focusable[0].focus();
+        } else {
+          dialogRef.current.focus();
+        }
+      }
+    }, 40);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+        return;
+      }
+
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+
+        const firstElement = focusable[0];
+        const lastElement = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+      if (previousActiveElement && typeof previousActiveElement.focus === 'function') {
+        previousActiveElement.focus();
+      }
+    };
+  }, [isOpen]);
 
   // Lazy loading mediante IntersectionObserver: suspende la reproducción si el modal sale de la vista
   useEffect(() => {
@@ -52,7 +129,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
 
   // Reproducción defensiva con audio directo (gesto de usuario) y fallback a muted si el navegador lo restringe
   useEffect(() => {
-    if (isPlayingVideo && videoRef.current) {
+    if (isPlayingVideo && videoRef.current && !videoError) {
       videoRef.current.muted = isMuted;
       const playPromise = videoRef.current.play();
       if (playPromise !== undefined) {
@@ -68,12 +145,14 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
         });
       }
     }
-  }, [isPlayingVideo, isMuted, activeTech?.id]);
+  }, [isPlayingVideo, isMuted, activeTech?.id, videoError]);
 
   const handleStartPlay = () => {
     if (!activeTech) return;
+    setVideoError(false);
     setIsMuted(false);
     setPlayingTechniqueId(activeTech.id);
+    trackVideoPlayed(activeTech.id, activeTech.name, false);
   };
 
   const handleToggleMute = () => {
@@ -86,8 +165,27 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
 
   const handleSelectTechnique = (t: ClinicalTechnique) => {
     setSelectedTechnique(t);
+    setVideoError(false);
     setPlayingTechniqueId(t.id);
     setIsMuted(false);
+    trackTechniqueViewed(t.id, t.name, 'modal_selector');
+    trackVideoPlayed(t.id, t.name, false);
+  };
+
+  const handleVideoError = () => {
+    setVideoError(true);
+    if (activeTech) {
+      const errorMsg = videoRef.current?.error?.message || 'Formato o decodificador no soportado';
+      trackVideoPlaybackError(activeTech.id, errorMsg);
+    }
+  };
+
+  const handleStartPracticeAction = () => {
+    if (activeTech) {
+      trackPracticeStarted(activeTech.id, activeTech.name);
+      onStartPractice(activeTech);
+    }
+    handleClose();
   };
 
   const handleClose = () => {
@@ -97,23 +195,9 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
     setSelectedTechnique(null);
     setPlayingTechniqueId(null);
     setIsMuted(false);
+    setVideoError(false);
     onClose();
   };
-
-  // Manejador de tecla Escape para accesibilidad
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        if (videoRef.current) {
-          videoRef.current.pause();
-        }
-        setPlayingTechniqueId(null);
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
 
   if (!isOpen || !activeTech) return null;
 
@@ -126,22 +210,27 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
       onClick={handleClose}
     >
       <div
-        className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
+        ref={dialogRef}
+        tabIndex={-1}
+        className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabecera del Modal */}
         <div className="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
           <div className="flex items-center gap-3">
-            <span className="text-3xl p-2 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-inner">
+            <span
+              className="text-3xl p-2 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-inner"
+              aria-hidden="true"
+            >
               {activeTech.icon}
             </span>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold uppercase tracking-wider flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
                   <span>Avatar IA Maestro</span>
                 </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-medium">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 font-medium">
                   {activeTech.difficulty}
                 </span>
                 {activeTech.videoUrl && (
@@ -166,8 +255,8 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
         </div>
 
         {/* Selector interactivo de las 7 técnicas fonoaudiológicas del Avatar */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] text-zinc-400 font-semibold px-0.5">
+        <div className="space-y-1.5" role="region" aria-label="Selector de técnicas clínicas del Avatar">
+          <div className="flex items-center justify-between text-[11px] text-zinc-300 font-semibold px-0.5">
             <span>TÉCNICAS DISPONIBLES EN EL AVATAR IA:</span>
             <span className="text-emerald-400 font-mono">7 Técnicas Clínicas</span>
           </div>
@@ -177,25 +266,51 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                 key={t.id}
                 type="button"
                 onClick={() => handleSelectTechnique(t)}
+                aria-pressed={activeTech.id === t.id}
+                aria-label={`Ver técnica ${t.name}`}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
                   activeTech.id === t.id
                     ? 'bg-emerald-500/20 border border-emerald-500/60 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
-                    : 'bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700/50 text-zinc-400 hover:text-zinc-200'
+                    : 'bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700/50 text-zinc-300 hover:text-zinc-100'
                 }`}
               >
-                <span>{t.icon}</span>
+                <span aria-hidden="true">{t.icon}</span>
                 <span>{t.shortName}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Reproductor o Contenedor de Video (Façade Pattern + Lazy Loading) */}
+        {/* Reproductor o Contenedor de Video (Façade Pattern + Lazy Loading + Error Fallback) */}
         <div
           ref={containerRef}
           className="relative w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 aspect-video flex flex-col items-center justify-center text-center"
         >
-          {activeTech.videoUrl ? (
+          {videoError ? (
+            <div
+              role="alert"
+              aria-live="polite"
+              className="p-6 flex flex-col items-center justify-center text-center space-y-3 bg-zinc-950 rounded-2xl w-full h-full border border-amber-500/30"
+            >
+              <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl" aria-hidden="true">
+                <span>⚠️</span>
+              </div>
+              <p className="text-xs sm:text-sm text-amber-200 font-semibold max-w-md">
+                El video no está disponible en este dispositivo, por favor, usa un navegador actualizado.
+              </p>
+              <p className="text-xs text-zinc-400 max-w-sm">
+                Puedes continuar con el entrenamiento guiado siguiendo los pasos fisiológicos detallados abajo.
+              </p>
+              <button
+                type="button"
+                onClick={handleStartPracticeAction}
+                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md transition-all cursor-pointer"
+                aria-label={`Comenzar práctica guiada de ${activeTech.shortName}`}
+              >
+                Comenzar Práctica Guiada
+              </button>
+            </div>
+          ) : activeTech.videoUrl ? (
             isPlayingVideo && isInViewport ? (
               <div className="relative w-full h-full">
                 <video
@@ -207,7 +322,9 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                   controls
                   playsInline
                   muted={isMuted}
+                  onError={handleVideoError}
                   className="w-full h-full object-contain bg-black rounded-2xl"
+                  aria-label={`Video demostrativo con avatar de ${activeTech.name}`}
                 />
                 {/* Control interactivo de audio */}
                 <button
@@ -220,7 +337,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                   }`}
                   aria-label={isMuted ? 'Activar audio del video' : 'Silenciar audio del video'}
                 >
-                  <span>{isMuted ? '🔇' : '🔊'}</span>
+                  <span aria-hidden="true">{isMuted ? '🔇' : '🔊'}</span>
                   <span>{isMuted ? 'Activar audio' : 'Audio activo'}</span>
                 </button>
               </div>
@@ -240,7 +357,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
-                  <div className="w-full h-full bg-zinc-900 flex items-center justify-center text-zinc-600">
+                  <div className="w-full h-full bg-zinc-900 flex items-center justify-center text-zinc-400">
                     <span>Sin imagen de portada</span>
                   </div>
                 )}
@@ -251,12 +368,12 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                 {/* Badge de video demostrativo */}
                 <div className="absolute top-3 left-3 flex items-center gap-2 pointer-events-none">
                   <span className="px-2.5 py-1 rounded-full bg-zinc-950/80 backdrop-blur-md border border-zinc-700/80 text-[11px] font-medium text-emerald-300 flex items-center gap-1.5 shadow-md">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
                     <span>Avatar IA • Video Demostrativo de {activeTech.shortName}</span>
                   </span>
                 </div>
 
-                {/* Botón de reproducción central perfectamente centrado */}
+                {/* Botón de reproducción central */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <button
                     type="button"
@@ -264,7 +381,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                     aria-label={`Reproducir video demostrativo de ${activeTech.name}`}
                     className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 flex items-center justify-center shadow-[0_0_35px_rgba(16,185,129,0.6)] group-hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer"
                   >
-                    <span className="text-2xl sm:text-3xl font-black text-zinc-950 pl-1">▶</span>
+                    <span className="text-2xl sm:text-3xl font-black text-zinc-950 pl-1" aria-hidden="true">▶</span>
                   </button>
                 </div>
 
@@ -278,7 +395,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
             )
           ) : (
             <div className="space-y-3 max-w-md p-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 via-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 via-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(16,185,129,0.2)]" aria-hidden="true">
                 <span className="text-3xl animate-pulse">🎬</span>
               </div>
               <div className="space-y-1">
@@ -290,7 +407,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                 </p>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] text-emerald-400 font-mono">
-                <span>✓</span>
+                <span aria-hidden="true">✓</span>
                 <span>Visualizador interactivo 100% activo en la app</span>
               </div>
             </div>
@@ -305,7 +422,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
           <ul className="space-y-1.5 text-xs text-zinc-300">
             {activeTech.practicalSteps.slice(0, 3).map((step, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="text-emerald-400 font-bold mt-0.5">•</span>
+                <span className="text-emerald-400 font-bold mt-0.5" aria-hidden="true">•</span>
                 <span className="leading-snug">{step}</span>
               </li>
             ))}
@@ -324,8 +441,9 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
               }
             }}
             className="text-xs text-zinc-400 hover:text-emerald-400 transition-colors flex items-center gap-1.5 cursor-pointer py-1"
+            aria-label="Reportar falla o duda en este video"
           >
-            <span>💬</span>
+            <span aria-hidden="true">💬</span>
             <span>Reportar falla o duda en este video</span>
           </button>
 
@@ -333,17 +451,17 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
             <button
               onClick={handleClose}
               className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs transition-colors cursor-pointer"
+              aria-label="Cerrar ventana de video"
             >
               Cerrar
             </button>
             <button
-              onClick={() => {
-                onStartPractice(activeTech);
-                handleClose();
-              }}
+              type="button"
+              onClick={handleStartPracticeAction}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 font-bold text-xs shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all cursor-pointer flex items-center gap-1.5"
+              aria-label={`Comenzar práctica de ${activeTech.shortName}`}
             >
-              <span>🚀</span>
+              <span aria-hidden="true">🚀</span>
               <span>Comenzar Práctica de {activeTech.shortName}</span>
             </button>
           </div>

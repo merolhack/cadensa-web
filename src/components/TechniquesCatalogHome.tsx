@@ -363,9 +363,18 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
                   {/* Thumbnail de Video (si está disponible para la técnica) */}
                   {technique.thumbnailUrl && (
                     <div
+                      role="button"
+                      tabIndex={0}
                       onClick={() => onOpenVideoModal(technique)}
-                      className="relative w-full aspect-video rounded-2xl overflow-hidden border border-zinc-800/80 group cursor-pointer shadow-md"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onOpenVideoModal(technique);
+                        }
+                      }}
+                      className="relative w-full aspect-video rounded-2xl overflow-hidden border border-zinc-800/80 group cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-400"
                       title={`Reproducir video de ${technique.name}`}
+                      aria-label={`Reproducir video demostrativo de ${technique.name}`}
                     >
                       <Image
                         src={technique.thumbnailUrl}
@@ -378,7 +387,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
                       />
                       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                         <div className="w-11 h-11 rounded-full bg-emerald-500/90 text-zinc-950 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                          <span className="text-base font-black pl-0.5">▶</span>
+                          <span className="text-base font-black pl-0.5" aria-hidden="true">▶</span>
                         </div>
                       </div>
                       <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-zinc-950/85 text-[10px] font-mono text-emerald-300 border border-emerald-500/30 backdrop-blur-sm">
@@ -408,17 +417,19 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
                     onClick={() => onOpenVideoModal(technique)}
                     className="flex-1 px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-cyan-300 hover:text-cyan-200 text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1"
                     title={`Ver video explicativo de ${technique.shortName}`}
+                    aria-label={`Ver video explicativo de ${technique.shortName}`}
                   >
-                    <span>🎥</span>
+                    <span aria-hidden="true">🎥</span>
                     <span>Ver Video</span>
                   </button>
 
                   <button
                     onClick={() => onSelectTechnique(technique)}
                     className="flex-1 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-bold transition-all shadow-md hover:shadow-emerald-500/20 cursor-pointer flex items-center justify-center gap-1"
+                    aria-label={`Comenzar a entrenar técnica ${technique.name}`}
                   >
                     <span>Entrenar</span>
-                    <span>→</span>
+                    <span aria-hidden="true">→</span>
                   </button>
                 </div>
               </article>

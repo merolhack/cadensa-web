@@ -3,11 +3,12 @@ import * as matchers from 'vitest-axe/matchers';
 import type { AxeMatchers } from 'vitest-axe/matchers';
 import { expect } from 'vitest';
 
+/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
 declare module 'vitest' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export interface Assertion<T = any> extends AxeMatchers {}
   export interface AsymmetricMatchersContaining extends AxeMatchers {}
 }
+/* eslint-enable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
 
 expect.extend(matchers);
 

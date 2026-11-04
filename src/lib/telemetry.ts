@@ -86,7 +86,6 @@ export function trackEvent(event: TelemetryEvent, properties?: Record<string, un
   // 1. Registro en consola estructurada en modo desarrollo o diagnóstico clínico
   if (typeof window !== 'undefined') {
     if (process.env.NODE_ENV !== 'production' || window.location.hostname === 'localhost') {
-      // eslint-disable-next-line no-console
       console.info(`[Cadensa Telemetry] ${event}:`, payload);
     }
   }

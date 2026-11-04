@@ -42,6 +42,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
   private handleGoHome = (): void => {
     this.setState({ hasError: false, error: null });
     if (typeof window !== 'undefined') {
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.href = '/';
     }
   };
@@ -107,3 +108,4 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
     return this.props.children;
   }
 }
+

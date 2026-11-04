@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { ClinicalTechnique, CLINICAL_TECHNIQUES } from '@/lib/clinicalTechniques';
 import { FeedbackModal } from '@/components/FeedbackModal';
@@ -42,12 +42,23 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
   const activeTech = selectedTechnique || technique;
   const isPlayingVideo = Boolean(isOpen && activeTech && playingTechniqueId === activeTech.id);
 
+  const handleClose = useCallback(() => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+    setSelectedTechnique(null);
+    setPlayingTechniqueId(null);
+    setIsMuted(false);
+    setVideoError(false);
+    onClose();
+  }, [onClose]);
+
   // Registro de telemetría respetuosa al abrir el modal
   useEffect(() => {
     if (isOpen && activeTech) {
       trackTechniqueViewed(activeTech.id, activeTech.name, 'modal');
     }
-  }, [isOpen, activeTech?.id]);
+  }, [isOpen, activeTech]);
 
   // Focus trap accesible (WCAG 2.1 AA) y soporte de tecla Escape
   useEffect(() => {
@@ -108,7 +119,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
         previousActiveElement.focus();
       }
     };
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   // Lazy loading mediante IntersectionObserver: suspende la reproducción si el modal sale de la vista
   useEffect(() => {
@@ -139,7 +150,7 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
             if (videoRef.current) {
               videoRef.current.muted = true;
               setIsMuted(true);
-              videoRef.current.play().catch(() => {});
+              videoRef.current.play().catch(() => { });
             }
           }
         });
@@ -186,17 +197,6 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
       onStartPractice(activeTech);
     }
     handleClose();
-  };
-
-  const handleClose = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
-    setSelectedTechnique(null);
-    setPlayingTechniqueId(null);
-    setIsMuted(false);
-    setVideoError(false);
-    onClose();
   };
 
   if (!isOpen || !activeTech) return null;
@@ -268,11 +268,10 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                 onClick={() => handleSelectTechnique(t)}
                 aria-pressed={activeTech.id === t.id}
                 aria-label={`Ver técnica ${t.name}`}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
-                  activeTech.id === t.id
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${activeTech.id === t.id
                     ? 'bg-emerald-500/20 border border-emerald-500/60 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
                     : 'bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700/50 text-zinc-300 hover:text-zinc-100'
-                }`}
+                  }`}
               >
                 <span aria-hidden="true">{t.icon}</span>
                 <span>{t.shortName}</span>
@@ -330,11 +329,10 @@ export const TechniqueVideoModal: React.FC<TechniqueVideoModalProps> = ({
                 <button
                   type="button"
                   onClick={handleToggleMute}
-                  className={`absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md flex items-center gap-1.5 shadow-lg transition-all cursor-pointer z-10 ${
-                    isMuted
+                  className={`absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md flex items-center gap-1.5 shadow-lg transition-all cursor-pointer z-10 ${isMuted
                       ? 'bg-zinc-950/85 hover:bg-zinc-900 border border-amber-500/60 text-amber-300'
                       : 'bg-zinc-950/85 hover:bg-zinc-900 border border-emerald-500/60 text-emerald-300'
-                  }`}
+                    }`}
                   aria-label={isMuted ? 'Activar audio del video' : 'Silenciar audio del video'}
                 >
                   <span aria-hidden="true">{isMuted ? '🔇' : '🔊'}</span>

@@ -82,3 +82,4 @@ Implementada en `src/lib/telemetry.ts` bajo la arquitectura Zero Trust del proye
   - El control deslizante de tempo incluye `aria-valuemin`, `aria-valuemax` y `aria-valuenow`.
   - Las miniaturas del catálogo fonoaudiológico operan como botones accesibles de teclado (`role="button"`, `tabIndex={0}`, eventos `Enter` / `Espacio`).
 - **Contraste de Color:** Paleta esmeralda (`#10b981`), cian (`#06b6d4`) y zinc (`#fafafa` sobre `#09090b`), superando la razón mínima de contraste de 4.5:1 para texto normal y 3.0:1 para elementos de interfaz.
+

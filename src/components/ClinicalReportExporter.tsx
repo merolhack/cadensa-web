@@ -14,6 +14,8 @@ interface ClinicalReportExporterProps {
   sessions?: CompletedSession[];
   streak?: StreakSummary;
   patientId?: string;
+  buttonLabel?: string;
+  className?: string;
 }
 
 export function ClinicalReportExporter({
@@ -26,15 +28,45 @@ export function ClinicalReportExporter({
     xp_points: 50,
   },
   patientId = 'paciente-local',
+  buttonLabel,
+  className,
 }: ClinicalReportExporterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [patientIdent, setPatientIdent] = useState(patientId);
   const [clinicianNotes, setClinicianNotes] = useState('');
-  const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'txt' | 'json' | 'fhir'>('pdf');
+  const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'csv' | 'txt' | 'json' | 'fhir'>('pdf');
   const [isExporting, setIsExporting] = useState(false);
   const [exportSuccess, setExportSuccess] = useState(false);
 
-  const metrics = computeClinicalMetrics(sessions, streak);
+  // Inicialización de sesiones desde localStorage si no se proveen por props (cero cascading renders)
+  const [storedSessions] = useState<CompletedSession[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const stored = localStorage.getItem('cadensa_sessions');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((item: unknown) => {
+            const s = (item && typeof item === 'object') ? (item as Record<string, unknown>) : {};
+            return {
+              id: typeof s.id === 'string' ? s.id : undefined,
+              bpm: typeof s.bpm === 'number' ? s.bpm : 80,
+              duration_seconds: typeof s.durationSeconds === 'number' ? s.durationSeconds : (typeof s.duration_seconds === 'number' ? s.duration_seconds : 60),
+              syllable_count: typeof s.syllableCount === 'number' ? s.syllableCount : (typeof s.syllable_count === 'number' ? s.syllable_count : 10),
+              accuracy_score: typeof s.accuracyScore === 'number' ? s.accuracyScore : (typeof s.accuracy_score === 'number' ? s.accuracy_score : 85),
+              completed_at: typeof s.completedAt === 'string' ? s.completedAt : (typeof s.completed_at === 'string' ? s.completed_at : new Date().toISOString()),
+            };
+          });
+        }
+      }
+    } catch {
+      return [];
+    }
+    return [];
+  });
+
+  const activeSessions = sessions.length > 0 ? sessions : storedSessions;
+  const metrics = computeClinicalMetrics(activeSessions, streak);
 
   const handleExport = () => {
     setIsExporting(true);
@@ -42,7 +74,7 @@ export function ClinicalReportExporter({
 
     try {
       const report = generateClinicalReport(
-        sessions,
+        activeSessions,
         streak,
         patientIdent.trim() || 'paciente-local',
         clinicianNotes.trim() || undefined
@@ -66,16 +98,18 @@ export function ClinicalReportExporter({
     }
   };
 
+  const defaultBtnText = buttonLabel || 'Exportar Informe Clínico (PDF / CSV)';
+
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600/30 to-cyan-600/30 hover:from-emerald-600/50 hover:to-cyan-600/50 border border-emerald-500/40 text-emerald-200 text-xs font-semibold shadow-sm transition-all duration-150 cursor-pointer"
+        className={className || "inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600/30 to-cyan-600/30 hover:from-emerald-600/50 hover:to-cyan-600/50 border border-emerald-500/40 text-emerald-200 text-xs font-semibold shadow-sm transition-all duration-150 cursor-pointer"}
         title="Generar y descargar informe fonoaudiológico con métricas clínicas"
-        aria-label="Exportar Informe Clínico"
+        aria-label={defaultBtnText}
       >
         <span>📄</span>
-        <span>Exportar Informe Clínico (PDF)</span>
+        <span>{defaultBtnText}</span>
       </button>
 
       {isOpen && (
@@ -154,7 +188,7 @@ export function ClinicalReportExporter({
 
               <div>
                 <span className="block text-zinc-300 font-semibold mb-1.5">Formato de Exportación</span>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   <button
                     type="button"
                     onClick={() => setSelectedFormat('pdf')}
@@ -166,6 +200,18 @@ export function ClinicalReportExporter({
                   >
                     <span>🖨️</span>
                     <span>PDF</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedFormat('csv')}
+                    className={`px-2.5 py-2 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                      selectedFormat === 'csv'
+                        ? 'bg-teal-500/20 border-teal-500 text-teal-300'
+                        : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                    }`}
+                  >
+                    <span>📊</span>
+                    <span>CSV</span>
                   </button>
                   <button
                     type="button"
@@ -189,7 +235,7 @@ export function ClinicalReportExporter({
                     }`}
                   >
                     <span>⚙️</span>
-                    <span>JSON Raw</span>
+                    <span>JSON</span>
                   </button>
                   <button
                     type="button"
@@ -201,7 +247,7 @@ export function ClinicalReportExporter({
                     }`}
                   >
                     <span>🏥</span>
-                    <span>HL7 FHIR</span>
+                    <span>FHIR</span>
                   </button>
                 </div>
               </div>

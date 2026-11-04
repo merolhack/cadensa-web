@@ -79,3 +79,39 @@ src/
 └── types/
     └── supabase.ts          # Interfaces de base de datos autogeneradas
 ```
+
+
+---
+
+## 5. Arquitectura PWA v2.5.0, Capacidades Offline y Módulos Clínicos
+
+La versión 2.5.0 consolida la aplicación como una Progressive Web App (PWA) optimizada para entornos clínicos, priorizando la disponibilidad offline de recursos multimedia pesados, la privacidad de los datos del paciente y la usabilidad móvil.
+
+### 1. Consolidación de Versión
+Se ha implementado un sistema de versionado unificado para garantizar la coherencia entre el despliegue y la ejecución:
+- **`package.json` & `package-lock.json`:** Versión canónica `2.5.0`.
+- **Badges Frontend:** Indicadores visuales en landing, header de práctica y página de información (`/about`).
+- **Tipado Estricto:** Sincronización en TypeScript sin uso de `any` en utilitarios clínicos y exportadores.
+
+### 2. Manifiesto y Adaptabilidad Móvil
+Para garantizar una experiencia nativa en dispositivos móviles, se ha configurado el archivo `public/manifest.json`:
+- **Iconos Adaptativos:** Soporte para resoluciones de 192x192px y 512x512px (incluyendo variantes maskable).
+- **Display Mode:** Configurado como `standalone` con fondo `#09090b` para maximizar el área de trabajo clínica sin barras del navegador.
+
+### 3. Estrategia de Service Worker (`public/sw.js` - v2.5.0)
+El Service Worker (`cadensa-v2.5.0`) gestiona el ciclo de vida y la persistencia de activos críticos:
+- **Precaching Multimedia:** Descarga anticipada y almacenamiento en caché de los 7 videos MP4 fonoaudiológicos y portadas WebP.
+- **Estrategia Cache-First:** Para rutas `/media/techniques/*`, garantizando reproducción instantánea sin conexión ni consumo de datos móviles repetitivo.
+- **Estrategia Network-First:** Con fallback offline para vistas HTML y navegación SPA.
+
+### 4. Exportador de Progreso Local-First (CSV / Fonoaudiológico)
+- **Formato CSV con BOM UTF-8 (`\uFEFF`):** Generado mediante Blob API en `src/lib/clinicalReport.ts`, garantizando compatibilidad con acentos y caracteres especiales en Excel y hojas de cálculo.
+- **Privacidad Absoluta (Zero Trust):** Los datos se extraen de `localStorage` (`cadensa_sessions`) y se descargan localmente mediante el botón *"Descargar Reporte para mi Fonoaudiólogo"*, sin enviar información a servidores ni requerir cuenta activa.
+
+### 5. Feedback Háptico en el Metrónomo
+- **Vibration API:** Disparo de pulsos micro-táctiles (50 ms) sincronizados con cada pulso rítmico del metrónomo.
+- **Toggle Configurable:** Control interactivo en la barra de opciones de práctica con persistencia en el dispositivo.
+
+### 6. Navegación Unificada de Demostración Fonoaudiológica
+- Se eliminó la duplicidad previa entre botones de "Video" y "Avatar IA".
+- Se consolidó un único acceso interactivo destacado: **🤖 Avatar IA 1080p**, que despliega el modal de alta resolución con avatar fotorrealista y widgets de biofeedback sincronizados.

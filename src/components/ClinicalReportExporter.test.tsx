@@ -28,14 +28,24 @@ describe('ClinicalReportExporter Component', () => {
     const txtButton = screen.getByRole('button', { name: /texto/i });
     fireEvent.click(txtButton);
 
-    const fhirButton = screen.getByRole('button', { name: /hl7 fhir/i });
+    const fhirButton = screen.getByRole('button', { name: /fhir/i });
     fireEvent.click(fhirButton);
     expect(fhirButton.className).toContain('ring-purple-500');
+
+    const csvButton = screen.getByRole('button', { name: /📊\s*csv/i });
+    fireEvent.click(csvButton);
+    expect(csvButton.className).toContain('border-teal-500');
 
     const closeBtn = screen.getByLabelText('Cerrar modal');
     fireEvent.click(closeBtn);
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('debe admitir un botón personalizado como "Descargar Reporte para mi Fonoaudiólogo"', () => {
+    render(<ClinicalReportExporter buttonLabel="Descargar Reporte para mi Fonoaudiólogo" />);
+    const customButton = screen.getByRole('button', { name: /descargar reporte para mi fonoaudiólogo/i });
+    expect(customButton).toBeInTheDocument();
   });
 });
 

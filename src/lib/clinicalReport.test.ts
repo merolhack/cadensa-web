@@ -5,6 +5,7 @@ import {
   formatClinicalNotesText,
   generatePrintableClinicalHtml,
   downloadClinicalReport,
+  generateClinicalCsv,
   CompletedSession,
   StreakSummary,
 } from './clinicalReport';
@@ -144,6 +145,20 @@ describe('clinicalReport generator', () => {
     const resultJson = downloadClinicalReport(report, 'json');
     expect(resultJson).toBe(true);
 
+    // CSV
+    const resultCsv = downloadClinicalReport(report, 'csv');
+    expect(resultCsv).toBe(true);
+
     vi.unstubAllGlobals();
+  });
+
+  it('debe estructurar el archivo CSV fonoaudiológico con BOM UTF-8 y encabezados clínicos', () => {
+    const report = generateClinicalReport(dummySessions, dummyStreak, 'paciente-csv');
+    const csv = generateClinicalCsv(report);
+
+    expect(csv.startsWith('\uFEFF')).toBe(true);
+    expect(csv).toContain('Fecha,ID_Sesion,BPM,Precision_Porcentaje,Duracion_Segundos,Silabas,Paciente,Adherencia');
+    expect(csv).toContain('sess-1,80,92,60,80,paciente-csv,Óptimo');
+    expect(csv).toContain('sess-2,85,88,120,170,paciente-csv,Óptimo');
   });
 });

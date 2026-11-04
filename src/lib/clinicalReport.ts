@@ -332,16 +332,70 @@ export function generatePrintableClinicalHtml(report: ClinicalReportPayload): st
 }
 
 /**
+ * Genera el contenido CSV estructurado fonoaudiológico con BOM UTF-8 para Excel.
+ */
+export function generateClinicalCsv(report: ClinicalReportPayload): string {
+  const headers = ['Fecha', 'ID_Sesion', 'BPM', 'Precision_Porcentaje', 'Duracion_Segundos', 'Silabas', 'Paciente', 'Adherencia'];
+  const escapeCSV = (value: unknown): string => {
+    const str = value === null || value === undefined ? '' : String(value);
+    if (/[",\n\r]/.test(str)) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
+
+  const rows = report.recentSessions.map((session, index) => {
+    return [
+      session.completed_at || report.exportDate,
+      session.id || `sesion-${index + 1}`,
+      session.bpm,
+      session.accuracy_score !== null ? session.accuracy_score : 'N/A',
+      session.duration_seconds,
+      session.syllable_count,
+      report.patientId,
+      report.metrics.rhythmAdherenceLevel,
+    ].map(escapeCSV).join(',');
+  });
+
+  if (rows.length === 0) {
+    rows.push([
+      report.exportDate,
+      'resumen-agregado',
+      report.metrics.averageBpm,
+      report.metrics.averageAccuracy,
+      report.metrics.totalMinutes * 60,
+      report.metrics.totalSyllables,
+      report.patientId,
+      report.metrics.rhythmAdherenceLevel,
+    ].map(escapeCSV).join(','));
+  }
+
+  return '\uFEFF' + [headers.join(','), ...rows].join('\n');
+}
+
+/**
  * Dispara la descarga del informe fonoaudiológico en el formato especificado.
  */
 export function downloadClinicalReport(
   report: ClinicalReportPayload,
-  format: 'pdf' | 'json' | 'txt' = 'pdf'
+  format: 'pdf' | 'json' | 'txt' | 'csv' = 'pdf'
 ): boolean {
   if (typeof window === 'undefined') return false;
 
   const dateSlug = report.exportDate.split('T')[0];
   const filename = `cadensa_informe_${report.patientId}_${dateSlug}`;
+
+  if (format === 'csv') {
+    const csv = generateClinicalCsv(report);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    return true;
+  }
 
   if (format === 'json') {
     const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });

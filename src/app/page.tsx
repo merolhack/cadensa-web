@@ -39,6 +39,7 @@ import { FluencyCertificateModal } from '@/components/FluencyCertificateModal';
 import { VirtualSLPAvatarModal } from '@/components/VirtualSLPAvatarModal';
 import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionValidator';
 import { LiveAudioVUMeter } from '@/components/LiveAudioVUMeter';
+import { ClinicalReportExporter } from '@/components/ClinicalReportExporter';
 import { setupAudioContextUnlock } from '@/lib/audioUnlock';
 import { initGlobalErrorTracking } from '@/lib/errorTracker';
 
@@ -123,6 +124,19 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [lastAccuracy, setLastAccuracy] = useState<AccuracyResult | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [voiceModeActive, setVoiceModeActive] = useState(false);
+  const [hapticEnabled, setHapticEnabled] = useState<boolean>(true);
+  const hapticEnabledRef = useRef<boolean>(true);
+
+  useEffect(() => {
+    hapticEnabledRef.current = hapticEnabled;
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('cadensa_haptic_enabled', String(hapticEnabled));
+      } catch {
+        // Ignorar excepciones de localStorage
+      }
+    }
+  }, [hapticEnabled]);
 
   // Sincronización asíncrona de datos locales tras el montaje para cero desajustes de hidratación
   useEffect(() => {
@@ -254,6 +268,11 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
       setCurrentBeat(beat);
       setIsPulsing(true);
       lastBeatTimeRef.current = time;
+
+      // Disparar micro-vibración háptica en móviles compatibles si está habilitado
+      if (hapticEnabledRef.current) {
+        triggerHapticFeedback(50);
+      }
 
       // Calcular avance cíclico de la sílaba
       setActiveSyllableIndex((prev) => (prev + 1) % totalSyllablesRef.current);
@@ -787,7 +806,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             Cadensa
           </span>
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-mono">
-            v0.4.0
+            v2.5.0
           </span>
           <LiveAudioVUMeter isActive={isPlaying} />
         </div>
@@ -1030,6 +1049,12 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             🌬️ Respirar
           </button>
 
+          {/* Módulo de Exportación de Progreso Clínico Local-First */}
+          <ClinicalReportExporter
+            buttonLabel="Descargar Reporte para mi Fonoaudiólogo"
+            className="px-3.5 py-3 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+          />
+
           {sessionSeconds > 5 && (
             <button
               onClick={handleFinishSession}
@@ -1148,6 +1173,21 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
               title="Silencia 2 compases cada 4 compases para reto interno"
             >
               {fadingEnabled ? '🎯 Reto Activo' : '🎯 Fading'}
+            </button>
+
+            {/* Interruptor de Feedback Háptico para móviles */}
+            <button
+              onClick={() => setHapticEnabled(!hapticEnabled)}
+              className={`px-2 py-0.5 rounded-lg border cursor-pointer flex items-center gap-1 ${
+                hapticEnabled
+                  ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
+                  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+              }`}
+              title={hapticEnabled ? 'Vibración táctil activada en cada pulso rítmico' : 'Vibración táctil desactivada'}
+              aria-label={hapticEnabled ? 'Desactivar vibración háptica' : 'Activar vibración háptica'}
+            >
+              <span>📳</span>
+              <span>{hapticEnabled ? 'Háptico On' : 'Háptico Off'}</span>
             </button>
 
             {/* Escala de Fuente */}

@@ -1,18 +1,44 @@
 {
   "name": "Cadensa - Encuentra el ritmo de tu voz",
   "short_name": "Cadensa",
-  "description": "Plataforma diaria que entrena tu ritmo al hablar para superar bloqueos y comunicarte con total seguridad.",
+  "version": "2.5.0",
+  "description": "Plataforma clínica diaria que entrena el ritmo y la fluidez del habla con Habla Rítmica Silábica (STS), metrónomo visual y avatar fonoaudiológico.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#09090b",
   "orientation": "portrait-primary",
   "icons": [
     {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }
   ],
-  "categories": ["medical", "education", "health", "lifestyle"]
+  "categories": ["medical", "health", "education", "lifestyle"]
 }

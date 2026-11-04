@@ -145,7 +145,7 @@ export default function AboutPage() {
                   <span>Hitos Completados y Operativos</span>
                 </h3>
                 <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
-                  Producción v2.0
+                  Producción v2.5.0
                 </span>
               </div>
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
@@ -356,6 +356,10 @@ export default function AboutPage() {
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Certificación de Accesibilidad WCAG 2.1 AA, Tolerancia a Fallos y Telemetría Zero Trust:</strong> Auditoría automatizada continua con axe-core y vitest-axe (0 violaciones de accesibilidad, focus trap con tecla Escape, jerarquía de encabezados estricta h1→h2→h3), límite de errores clínicos (ErrorBoundary) con recuperación empática, fallback resiliente de video ante códecs no soportados y telemetría privacy-first anónima sin PII basada en sesiones efímeras.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>PWA Offline-First v2.5.0, Precache de Videos Clínicos, Reporte CSV Fonoaudiológico y Feedback Háptico:</strong> Despliegue de la versión 2.5.0 con soporte de instalación móvil (PWA manifest con iconos de 192px y 512px), Service Worker con precarga y disponibilidad 100% offline de los 7 videos fonoaudiológicos y portadas WebP, exportación clínica local-first en formato CSV con BOM UTF-8 (&quot;Descargar Reporte para mi Fonoaudiólogo&quot;), feedback háptico táctil en cada beat del metrónomo y consolidación de la barra de navegación con botón unificado de Avatar IA 1080p.</span>
                 </li>
               </ul>
             </div>

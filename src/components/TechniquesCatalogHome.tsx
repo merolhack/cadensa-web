@@ -78,7 +78,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             Cadensa
           </span>
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono">
-            v0.4.0
+            v2.5.0
           </span>
         </div>
 

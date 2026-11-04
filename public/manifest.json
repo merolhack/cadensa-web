@@ -40,5 +40,10 @@
       "type": "image/x-icon"
     }
   ],
-  "categories": ["medical", "health", "education", "lifestyle"]
+  "categories": [
+    "medical",
+    "health",
+    "education",
+    "lifestyle"
+  ]
 }

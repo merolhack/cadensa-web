@@ -165,4 +165,55 @@ describe('Home Page - Unit Tests', () => {
 
     expect(screen.getByText('Mis Frases de Desafío')).toBeInTheDocument();
   });
+
+  it('sincroniza el metrónomo y detiene la práctica cuando se detiene la grabación en el monitor de auto-escucha', async () => {
+    // Mock MediaRecorder y getUserMedia para este test
+    class MockMediaRecorder {
+      start = vi.fn();
+      stop = vi.fn(() => {
+        if (this.onstop) this.onstop();
+      });
+      ondataavailable = null;
+      onstop: (() => void) | null = null;
+    }
+    // @ts-expect-error Mocking MediaRecorder
+    global.MediaRecorder = MockMediaRecorder;
+    Object.defineProperty(global.navigator, 'mediaDevices', {
+      value: {
+        getUserMedia: vi.fn().mockResolvedValue({
+          getTracks: () => [{ stop: vi.fn() }],
+        }),
+      },
+      writable: true,
+      configurable: true,
+    });
+    global.URL.createObjectURL = vi.fn(() => 'blob:mock-url');
+    global.URL.revokeObjectURL = vi.fn();
+
+    render(<Home initialView="practice" />);
+
+    // Iniciar la práctica con el botón principal
+    const startPracticeBtn = screen.getByRole('button', { name: /comenzar práctica rítmica/i });
+    await act(async () => {
+      fireEvent.click(startPracticeBtn);
+    });
+
+    // La práctica ahora está en curso
+    expect(screen.getByRole('button', { name: /pausar ritmo sts/i })).toBeInTheDocument();
+
+    // Iniciar la grabación de la práctica en el monitor de auto-escucha
+    const recordBtn = screen.getByRole('button', { name: /grabar práctica/i });
+    await act(async () => {
+      fireEvent.click(recordBtn);
+    });
+
+    // Detener la grabación desde el monitor de auto-escucha
+    const stopRecordingBtn = screen.getByRole('button', { name: /detener/i });
+    await act(async () => {
+      fireEvent.click(stopRecordingBtn);
+    });
+
+    // El metrónomo y la práctica deben haberse detenido de forma sincronizada
+    expect(screen.getByRole('button', { name: /comenzar práctica rítmica/i })).toBeInTheDocument();
+  });
 });

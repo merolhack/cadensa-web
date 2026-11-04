@@ -57,3 +57,4 @@ describe('PWA Manifest & Asset Verification', () => {
     expect(swContent).toContain('/media/techniques/box-breathing_avatar_final.mp4');
   });
 });
+

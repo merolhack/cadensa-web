@@ -327,32 +327,31 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
     }
   };
 
-  const handleTogglePlay = () => {
+  const handleStopPractice = useCallback(() => {
+    if (metronomeRef.current) {
+      metronomeRef.current.stop();
+    }
+    setIsPlaying(false);
+    setIsPulsing(false);
+    trackClinicalEvent('metronome_stop', { technique_id: activeTechnique.id, bpm });
+  }, [activeTechnique.id, bpm]);
+
+  const handleStartPractice = useCallback(() => {
     if (activeTechnique.isRhythmic) {
       if (!metronomeRef.current) return;
-      const playing = metronomeRef.current.toggle();
-      setIsPlaying(playing);
-      if (playing) {
-        trackClinicalEvent('metronome_start', { technique_id: activeTechnique.id, bpm });
-      } else {
-        trackClinicalEvent('metronome_stop', { technique_id: activeTechnique.id, bpm });
-        setIsPulsing(false);
-      }
-    } else {
-      // Técnica no rítmica: animación/temporizador especializado sin metrónomo sonoro invasivo
-      if (metronomeRef.current && isPlaying) {
-        metronomeRef.current.stop();
-      }
-      setIsPlaying((prev) => {
-        const next = !prev;
-        if (next) {
-          trackClinicalEvent('metronome_start', { technique_id: activeTechnique.id, bpm });
-        }
-        return next;
-      });
-      setIsPulsing(false);
+      metronomeRef.current.start();
     }
-  };
+    setIsPlaying(true);
+    trackClinicalEvent('metronome_start', { technique_id: activeTechnique.id, bpm });
+  }, [activeTechnique.id, activeTechnique.isRhythmic, bpm]);
+
+  const handleTogglePlay = useCallback(() => {
+    if (isPlaying) {
+      handleStopPractice();
+    } else {
+      handleStartPractice();
+    }
+  }, [isPlaying, handleStopPractice, handleStartPractice]);
 
   const handleSelectTechnique = (tech: ClinicalTechnique) => {
     // Detener de inmediato la reproducción si la técnica previa estaba ejecutándose
@@ -1000,7 +999,20 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           />
 
           {/* Módulo de Auto-Escucha Fonoaudiológica Zero Trust */}
-          <AudioSelfMonitor isPlaying={isPlaying} />
+          <AudioSelfMonitor
+            isPlaying={isPlaying}
+            onRecordingStart={() => {
+              if (!isPlaying) {
+                handleStartPractice();
+              }
+            }}
+            onRecordingStop={() => {
+              handleStopPractice();
+            }}
+            onPlaybackStart={() => {
+              handleStopPractice();
+            }}
+          />
 
           {/* Validador Fonético On-Device Zero Trust */}
           <PhoneticRecognitionValidator targetPhrase={currentPhrase} />

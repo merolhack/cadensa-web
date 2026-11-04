@@ -1,12 +1,20 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 interface AudioSelfMonitorProps {
   isPlaying?: boolean;
+  onRecordingStart?: () => void;
+  onRecordingStop?: () => void;
+  onPlaybackStart?: () => void;
 }
 
-export function AudioSelfMonitor({ isPlaying = false }: AudioSelfMonitorProps) {
+export function AudioSelfMonitor({
+  isPlaying = false,
+  onRecordingStart,
+  onRecordingStop,
+  onPlaybackStart,
+}: AudioSelfMonitorProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -63,6 +71,7 @@ export function AudioSelfMonitor({ isPlaying = false }: AudioSelfMonitorProps) {
       recorder.start();
       setIsRecording(true);
       setRecordingSeconds(0);
+      onRecordingStart?.();
 
       timerRef.current = setInterval(() => {
         setRecordingSeconds((prev) => prev + 1);
@@ -72,7 +81,7 @@ export function AudioSelfMonitor({ isPlaying = false }: AudioSelfMonitorProps) {
     }
   };
 
-  const stopRecording = () => {
+  const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
@@ -80,8 +89,18 @@ export function AudioSelfMonitor({ isPlaying = false }: AudioSelfMonitorProps) {
         clearInterval(timerRef.current);
         timerRef.current = null;
       }
+      onRecordingStop?.();
     }
-  };
+  }, [isRecording, onRecordingStop]);
+
+  // Si la práctica se detiene externamente mientras se estaba grabando, detener la grabación
+  const prevIsPlayingRef = useRef(isPlaying);
+  useEffect(() => {
+    if (prevIsPlayingRef.current && !isPlaying && isRecording) {
+      stopRecording();
+    }
+    prevIsPlayingRef.current = isPlaying;
+  }, [isPlaying, isRecording, stopRecording]);
 
   const handleTogglePlayback = () => {
     if (!audioUrl) return;
@@ -98,6 +117,7 @@ export function AudioSelfMonitor({ isPlaying = false }: AudioSelfMonitorProps) {
       setIsPlayingBack(false);
     } else {
       audioElementRef.current.src = audioUrl;
+      onPlaybackStart?.();
       audioElementRef.current.play().then(() => {
         setIsPlayingBack(true);
       }).catch(() => {

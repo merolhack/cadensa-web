@@ -133,4 +133,65 @@ describe('AudioSelfMonitor', () => {
       screen.getByText(/No se pudo acceder al micrófono/i)
     ).toBeInTheDocument();
   });
+
+  it('notifica onRecordingStart y onRecordingStop al iniciar y detener la grabación para sincronizar el metrónomo', async () => {
+    const onStart = vi.fn();
+    const onStop = vi.fn();
+
+    render(<AudioSelfMonitor onRecordingStart={onStart} onRecordingStop={onStop} isPlaying={true} />);
+
+    // Iniciar grabación
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /Grabar Práctica/i }));
+    });
+    expect(onStart).toHaveBeenCalledTimes(1);
+
+    // Detener grabación
+    const stopBtn = screen.getByRole('button', { name: /Detener/i });
+    await act(async () => {
+      fireEvent.click(stopBtn);
+    });
+    expect(onStop).toHaveBeenCalledTimes(1);
+  });
+
+  it('notifica onPlaybackStart al escuchar la grabación para evitar interferencia acústica', async () => {
+    const onPlayback = vi.fn();
+
+    render(<AudioSelfMonitor onPlaybackStart={onPlayback} />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /Grabar Práctica/i }));
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /Detener/i }));
+    });
+
+    const listenBtn = screen.getByRole('button', { name: /Escucharme/i });
+    await act(async () => {
+      fireEvent.click(listenBtn);
+    });
+
+    expect(onPlayback).toHaveBeenCalledTimes(1);
+  });
+
+  it('detiene la grabación automáticamente si la práctica se detiene externamente', async () => {
+    const onStop = vi.fn();
+    const { rerender } = render(<AudioSelfMonitor isPlaying={true} onRecordingStop={onStop} />);
+
+    // Iniciar grabación
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /Grabar Práctica/i }));
+    });
+    expect(activeRecorderInstance?.start).toHaveBeenCalled();
+
+    // La práctica se detiene externamente (isPlaying cambia de true a false)
+    await act(async () => {
+      rerender(<AudioSelfMonitor isPlaying={false} onRecordingStop={onStop} />);
+    });
+
+    expect(activeRecorderInstance?.stop).toHaveBeenCalled();
+    expect(onStop).toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: /Escucharme/i })).toBeInTheDocument();
+  });
 });

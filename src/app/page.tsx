@@ -793,22 +793,12 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Botón para ver video explicativo de la técnica activa */}
-          <button
-            onClick={() => handleOpenVideoModal(activeTechnique)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 text-xs font-semibold transition-colors cursor-pointer"
-            title={`Ver video explicativo de ${activeTechnique.shortName}`}
-          >
-            <span>🎥</span>
-            <span className="hidden sm:inline">Video</span>
-          </button>
-
-          {/* Botón Agente Avatar IA Fonoaudiológico Maestro (Reemplazo Directo) */}
+          {/* Botón Unificado: Avatar IA Fonoaudiológico 1080p */}
           <button
             onClick={() => handleOpenVideoModal(activeTechnique)}
             className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-emerald-950/80 to-cyan-950/80 border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 text-xs font-semibold transition-all cursor-pointer shadow-sm hover:shadow-[0_0_12px_rgba(16,185,129,0.3)]"
-            title={`Abrir Avatar IA Fonoaudiológico: ${activeTechnique.shortName}`}
-            aria-label={`Abrir Avatar IA Fonoaudiológico: ${activeTechnique.shortName}`}
+            title={`Ver video explicativo del Avatar IA: ${activeTechnique.shortName}`}
+            aria-label={`Ver video explicativo del Avatar IA: ${activeTechnique.shortName}`}
           >
             <span>🤖</span>
             <span>Avatar IA</span>

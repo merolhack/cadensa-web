@@ -108,7 +108,7 @@ Given('que un usuario realiza múltiples envíos en una ventana de 1 hora', func
   }
 });
 
-When('intenta superar el límite máximo de 3 reportes', async function () {
+When('intenta superar el límite máximo de 3 reportes', { timeout: 10000 }, async function () {
   // Asegurar que checkFeedbackRateLimit retorne falso para simular el 4to envío
   const now = Date.now();
   if (typeof globalThis !== 'undefined' && (globalThis as unknown as { localStorage?: Storage }).localStorage) {

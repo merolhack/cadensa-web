@@ -71,16 +71,27 @@ export function getOfflineFeedbackQueue(): Record<string, unknown>[] {
   }
 }
 
+function getStorage(): Storage | null {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    return window.localStorage;
+  }
+  if (typeof globalThis !== 'undefined' && (globalThis as unknown as { localStorage?: Storage }).localStorage) {
+    return (globalThis as unknown as { localStorage: Storage }).localStorage;
+  }
+  return null;
+}
+
 /**
  * Consulta el estado actual de límite de envíos en el navegador.
  */
 export function checkFeedbackRateLimit(): { allowed: boolean; remainingSubmissions: number; waitMinutes?: number } {
-  if (typeof window === 'undefined' || !window.localStorage) {
+  const storage = getStorage();
+  if (!storage) {
     return { allowed: true, remainingSubmissions: RATE_LIMIT_MAX_SUBMISSIONS };
   }
 
   try {
-    const raw = window.localStorage.getItem(RATE_LIMIT_STORAGE_KEY);
+    const raw = storage.getItem(RATE_LIMIT_STORAGE_KEY);
     if (!raw) {
       return { allowed: true, remainingSubmissions: RATE_LIMIT_MAX_SUBMISSIONS };
     }
@@ -106,17 +117,18 @@ export function checkFeedbackRateLimit(): { allowed: boolean; remainingSubmissio
  * Registra una marca de tiempo tras un envío exitoso.
  */
 export function recordFeedbackSubmission(): void {
-  if (typeof window === 'undefined' || !window.localStorage) {
+  const storage = getStorage();
+  if (!storage) {
     return;
   }
 
   try {
-    const raw = window.localStorage.getItem(RATE_LIMIT_STORAGE_KEY);
+    const raw = storage.getItem(RATE_LIMIT_STORAGE_KEY);
     const timestamps: number[] = raw ? JSON.parse(raw) : [];
     const now = Date.now();
     const recent = timestamps.filter(t => now - t < RATE_LIMIT_WINDOW_MS);
     recent.push(now);
-    window.localStorage.setItem(RATE_LIMIT_STORAGE_KEY, JSON.stringify(recent));
+    storage.setItem(RATE_LIMIT_STORAGE_KEY, JSON.stringify(recent));
   } catch {
     // Silencioso en caso de storage lleno o modo privado restringido
   }
@@ -126,8 +138,9 @@ export function recordFeedbackSubmission(): void {
  * Limpia el historial de rate limit (utilizado principalmente para pruebas unitarias).
  */
 export function clearFeedbackRateLimit(): void {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    window.localStorage.removeItem(RATE_LIMIT_STORAGE_KEY);
+  const storage = getStorage();
+  if (storage) {
+    storage.removeItem(RATE_LIMIT_STORAGE_KEY);
   }
 }
 
@@ -210,8 +223,13 @@ export async function submitFeedbackReport(payload: FeedbackPayload): Promise<Fe
       status: 'pending',
     };
 
-    // 7. Inserción con Zero Trust RLS en Supabase
-    const { error } = await supabase.from('feedback_reports').insert(reportPayload);
+    // 7. Inserción con Zero Trust RLS en Supabase (con timeout de protección para offline-first)
+    const insertPromise = supabase.from('feedback_reports').insert(reportPayload);
+    const timeoutPromise = new Promise<{ error: { message: string } }>((resolve) =>
+      setTimeout(() => resolve({ error: { message: 'Timeout de red al conectar con Supabase (fallback offline)' } }), 2500)
+    );
+
+    const { error } = await Promise.race([insertPromise, timeoutPromise]);
 
     if (error) {
       console.warn('Falla de red en Supabase, guardando en cola offline:', error.message);

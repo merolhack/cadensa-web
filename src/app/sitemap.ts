@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { CLINICAL_TECHNIQUES } from '@/lib/clinicalTechniques';
+import { CLINICAL_TECHNIQUES, CANONICAL_TECHNIQUE_SLUGS } from '@/lib/clinicalTechniques';
 
 export const dynamic = 'force-static';
 
@@ -41,13 +41,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const techniqueRoutes: MetadataRoute.Sitemap = Object.keys(CLINICAL_TECHNIQUES).map((id) => ({
+  // Rutas reales e indexables de las 7 técnicas fonoaudiológicas (/techniques/[slug])
+  const techniqueSeoRoutes: MetadataRoute.Sitemap = Object.values(CANONICAL_TECHNIQUE_SLUGS).map(
+    (slug) => ({
+      url: `${BASE_URL}/techniques/${slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    })
+  );
+
+  // Retrocompatibilidad con rutas en español (/tecnicas/[id])
+  const legacyTechniqueRoutes: MetadataRoute.Sitemap = Object.keys(CLINICAL_TECHNIQUES).map((id) => ({
     url: `${BASE_URL}/tecnicas/${id}`,
     lastModified: now,
     changeFrequency: 'weekly',
-    priority: 0.85,
+    priority: 0.8,
   }));
 
-  return [...staticRoutes, ...techniqueRoutes];
+  return [...staticRoutes, ...techniqueSeoRoutes, ...legacyTechniqueRoutes];
 }
-

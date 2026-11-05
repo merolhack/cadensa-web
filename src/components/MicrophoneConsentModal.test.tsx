@@ -44,3 +44,4 @@ describe('MicrophoneConsentModal Component - Unit Tests', () => {
     expect(handleCancel).toHaveBeenCalledTimes(1);
   });
 });
+

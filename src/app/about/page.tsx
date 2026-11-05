@@ -365,6 +365,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Onboarding Guiado FTUE, Consentimiento de Micrófono y Blindaje Legal Zero Trust:</strong> Experiencia de primer uso empática (WelcomeTour modal en 4 pasos con instrucciones adaptativas PWA para iOS y Android/Desktop), banner de consentimiento de micrófono previo a captura de audio explicando el procesamiento en memoria local sin servidores, y actualización estricta de términos legales y descargo médico fonoaudiológico (/privacy y /terms).</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Rutas Indexables SEO por Técnica (/techniques/[slug]), Sitemap Dinámico XML y Robots.txt:</strong> Pre-renderizado estático SSG de las 7 páginas fonoaudiológicas individuales con metadatos OpenGraph, Twitter Cards, marcado Schema.org JSON-LD (MedicalWebPage y VideoObject), reproductor de alta definición con biofeedback, mapa del sitio dinámico (sitemap.xml) y directivas canónicas en robots.txt para indexación en Google y Bing.</span>
+                </li>
               </ul>
             </div>
 

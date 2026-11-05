@@ -8,6 +8,7 @@ import {
   ClinicalTechnique,
   TECHNIQUE_FAMILIES,
   TechniqueFamilyId,
+  getSlugByTechniqueId,
 } from '@/lib/clinicalTechniques';
 import { PwaInstallButton } from './PwaInstallButton';
 import { Footer } from './Footer';
@@ -352,7 +353,13 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
                       {family?.name}
                     </span>
                     <h3 className="text-base sm:text-lg font-bold text-zinc-100 leading-snug">
-                      {technique.name}
+                      <Link
+                        href={`/techniques/${getSlugByTechniqueId(technique.id)}`}
+                        className="hover:text-emerald-400 transition-colors"
+                        title={`Ver página oficial de ${technique.name}`}
+                      >
+                        {technique.name}
+                      </Link>
                     </h3>
                   </div>
 
@@ -405,12 +412,12 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
                 {/* Botones de Acción de la Tarjeta */}
                 <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between gap-2">
                   <Link
-                    href={`/tecnicas/${technique.id}`}
+                    href={`/techniques/${getSlugByTechniqueId(technique.id)}`}
                     className="flex-1 px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1"
-                    title={`Leer guía clínica completa de ${technique.name}`}
+                    title={`Leer guía clínica completa y ver video de ${technique.name}`}
                   >
                     <span>📖</span>
-                    <span>Guía</span>
+                    <span>Guía & Video</span>
                   </Link>
 
                   <button

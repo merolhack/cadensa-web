@@ -71,3 +71,4 @@ export function MicrophoneConsentModal({
     </div>
   );
 }
+

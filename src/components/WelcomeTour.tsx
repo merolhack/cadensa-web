@@ -64,7 +64,7 @@ export function WelcomeTour({ forceOpen = false, onClose, onComplete }: WelcomeT
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in"
     >
       <div className="relative w-full max-w-lg rounded-3xl bg-zinc-950 border border-emerald-500/40 p-6 sm:p-8 shadow-[0_0_50px_rgba(16,185,129,0.25)] space-y-6 text-zinc-100 flex flex-col justify-between max-h-[90vh] overflow-y-auto">
-        
+
         {/* Cabecera del Tour */}
         <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
           <div className="flex items-center gap-2">
@@ -88,9 +88,8 @@ export function WelcomeTour({ forceOpen = false, onClose, onComplete }: WelcomeT
           {[1, 2, 3, 4].map((s) => (
             <div
               key={s}
-              className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-                s <= step ? 'bg-gradient-to-r from-emerald-400 to-cyan-400' : 'bg-zinc-800'
-              }`}
+              className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${s <= step ? 'bg-gradient-to-r from-emerald-400 to-cyan-400' : 'bg-zinc-800'
+                }`}
             />
           ))}
         </div>

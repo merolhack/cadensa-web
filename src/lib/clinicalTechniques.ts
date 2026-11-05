@@ -439,6 +439,54 @@ export const CLINICAL_TECHNIQUES: Record<TechniqueId, ClinicalTechnique> = {
 };
 
 /**
+ * Mapeo canónico de IDs a slugs amigables con SEO (URL friendly).
+ */
+export const CANONICAL_TECHNIQUE_SLUGS: Record<TechniqueId, string> = {
+  sts: 'syllable-timed-speech',
+  easy_onset: 'easy-onset',
+  light_contact: 'light-contact',
+  prolonged_speech: 'prolonged-speech',
+  box_breathing: 'box-breathing',
+  pull_out: 'pull-out',
+  cancellation: 'cancellation',
+};
+
+/**
+ * Mapeo bidireccional y tolerante de slugs a IDs de técnica.
+ */
+export const TECHNIQUE_SLUG_MAP: Record<string, TechniqueId> = {
+  'syllable-timed-speech': 'sts',
+  'sts': 'sts',
+  'easy-onset': 'easy_onset',
+  'easy_onset': 'easy_onset',
+  'light-contact': 'light_contact',
+  'light_contact': 'light_contact',
+  'prolonged-speech': 'prolonged_speech',
+  'prolonged_speech': 'prolonged_speech',
+  'box-breathing': 'box_breathing',
+  'box_breathing': 'box_breathing',
+  'pull-out': 'pull_out',
+  'pull_out': 'pull_out',
+  'cancellation': 'cancellation',
+};
+
+/**
+ * Obtiene la técnica correspondiente a partir de un slug SEO.
+ */
+export function getTechniqueBySlug(slug: string): ClinicalTechnique | null {
+  const techniqueId = TECHNIQUE_SLUG_MAP[slug];
+  if (!techniqueId) return null;
+  return CLINICAL_TECHNIQUES[techniqueId] ?? null;
+}
+
+/**
+ * Obtiene el slug SEO canónico correspondiente a un ID de técnica.
+ */
+export function getSlugByTechniqueId(id: TechniqueId): string {
+  return CANONICAL_TECHNIQUE_SLUGS[id] ?? id;
+}
+
+/**
  * Obtiene las técnicas agrupadas por familia para alimentar el menú modular.
  */
 export function getTechniquesByFamily() {

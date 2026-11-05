@@ -504,7 +504,8 @@ def main() -> int:
 
     # 4. Notificación IndexNow (Bing / Yandex / Seznam)
     host_domain = urllib.parse.urlparse(args.site_url).netloc or "cadensa-web.pages.dev"
-    notify_indexnow(all_urls, host=host_domain, key=args.indexnow_key, dry_run=args.dry_run)
+    indexnow_key = (args.indexnow_key or "").strip() or os.getenv("INDEXNOW_KEY") or DEFAULT_INDEXNOW_KEY
+    notify_indexnow(all_urls, host=host_domain, key=indexnow_key, dry_run=args.dry_run)
 
     logger.info("=" * 65)
     logger.info("🎉 Notificaciones SEO procesadas exitosamente.")

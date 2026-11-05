@@ -4,3 +4,4 @@ Disallow: /admin
 
 Sitemap: https://cadensa-web.pages.dev/sitemap.xml
 Host: https://cadensa-web.pages.dev
+

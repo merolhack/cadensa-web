@@ -369,6 +369,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Rutas Indexables SEO por Técnica (/techniques/[slug]), Sitemap Dinámico XML y Robots.txt:</strong> Pre-renderizado estático SSG de las 7 páginas fonoaudiológicas individuales con metadatos OpenGraph, Twitter Cards, marcado Schema.org JSON-LD (MedicalWebPage y VideoObject), reproductor de alta definición con biofeedback, mapa del sitio dinámico (sitemap.xml) y directivas canónicas en robots.txt para indexación en Google y Bing.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Automatización de Notificación SEO Post-Despliegue (Google Search Console, Indexing API &amp; Bing):</strong> Script automatizado (`submit_seo_changes.py`) integrado en el pipeline de CI/CD para re-enviar el sitemap.xml a Google Search Console, notificar las 7 técnicas fonoaudiológicas como URL_UPDATED a Google Indexing API, registrar el feed en Bing Webmaster Tools API y despachar actualizaciones masivas vía protocolo IndexNow inmediatamente tras cada despliegue exitoso.</span>
+                </li>
               </ul>
             </div>
 

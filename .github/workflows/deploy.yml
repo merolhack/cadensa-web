@@ -70,3 +70,23 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy out --project-name=cadensa-web
+
+      - name: Setup Python for SEO Notification
+        if: steps.cf_check.outputs.has_cf_secrets == 'true' && github.ref == 'refs/heads/main'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install SEO Notification Dependencies
+        if: steps.cf_check.outputs.has_cf_secrets == 'true' && github.ref == 'refs/heads/main'
+        run: |
+          pip install cryptography
+
+      - name: Notify Search Engines (Google & Bing SEO)
+        if: steps.cf_check.outputs.has_cf_secrets == 'true' && github.ref == 'refs/heads/main'
+        run: |
+          python3 scripts/submit_seo_changes.py
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON || secrets.GCP_SA_METRICS_KEY }}
+          BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY || secrets.BING_API_KEY }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}

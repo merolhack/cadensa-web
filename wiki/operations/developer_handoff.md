@@ -53,6 +53,7 @@ cadensa-web/
 │   ├── generate_all_techniques.py # Orquestador maestro de lote (SadTalker + Wav2Lip + GFPGAN)
 │   ├── compose_cadensa_video.py   # Compositor Full HD 1080p con widgets y sellado labial
 │   ├── evaluate_syncnet.py        # Evaluador formal de Lip-Sync Error (LSE-D y LSE-C)
+│   ├── submit_seo_changes.py      # Notificador automatizado post-despliegue (Google & Bing SEO)
 │   └── techniques_media_catalog.json # Fuente de verdad clínica de textos y widgets
 ├── src/
 │   ├── app/                    # Next.js 16 App Router (Rutas estáticas SPA)

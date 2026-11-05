@@ -2,12 +2,13 @@
 title: "Runbook de Despliegue en Cloudflare Pages y Gestión de Medios (Producción)"
 category: "operations"
 tags: [operations, deployment, runbook, cloudflare-pages, nextjs, turbopack, r2, cdn]
-last_updated: "2026-11-03"
+last_updated: "2026-11-04"
 sources:
   - "next.config.ts"
   - "package.json"
   - ".github/workflows/deploy.yml"
   - "scripts/compose_cadensa_video.py"
+  - "scripts/submit_seo_changes.py"
 related:
   - "wiki/architecture/cicd_deployment.md"
   - "wiki/architecture/video_generation_pipeline.md"
@@ -169,4 +170,70 @@ Inmediatamente después de cada despliegue:
    Debe responder `HTTP/2 206 Partial Content` y `accept-ranges: bytes`.
 3. **Panel de Salud Interno:**
    Acceder a `https://cadensa-web.pages.dev/stats` y `https://cadensa-web.pages.dev/admin` para confirmar telemetría activa.
+
+---
+
+## 7. Notificación SEO Post-Despliegue (Google Search Console, Google Indexing & Bing)
+
+Para acelerar la indexación en motores de búsqueda de las nuevas rutas canónicas de técnicas fonoaudiológicas (`/techniques/[slug]`), el sitemap (`sitemap.xml`) y el archivo `robots.txt`, el pipeline de CI/CD ejecuta automáticamente el script:
+
+```bash
+python3 scripts/submit_seo_changes.py
+```
+
+### 7.1 Motores y Protocolos Notificados
+1. **Google Search Console API:**
+   - **Acción:** Re-envío automatizado del feed del sitemap XML mediante `PUT https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/sitemaps/{sitemapUrl}`.
+   - **Alcance OAuth 2.0:** `https://www.googleapis.com/auth/webmasters`.
+2. **Google Indexing API:**
+   - **Acción:** Notificación de cada una de las 7 URLs de técnicas fonoaudiológicas con el evento `URL_UPDATED` vía `POST https://indexing.googleapis.com/v3/urlNotifications:publish`.
+   - **Alcance OAuth 2.0:** `https://www.googleapis.com/auth/indexing`.
+3. **Bing Webmaster Tools API:**
+   - **Acción:** Registro del sitemap (`SubmitFeed`) y envío en lote de URLs actualizadas (`SubmitUrlbatch`) mediante la API oficial de Bing.
+4. **Protocolo IndexNow (Bing / Yandex / Seznam / Naver):**
+   - **Acción:** Despacho instantáneo vía `POST https://api.indexnow.org/indexnow` utilizando la clave verificada en `public/856757614ffc2c5582fbcb81b1b4e4ca.txt`.
+
+### 7.2 Guía de Generación de Credenciales
+
+#### A. Cuenta de Servicio de Google Cloud (GCP)
+1. **Crear o Seleccionar Proyecto:** Accede a [Google Cloud Console](https://console.cloud.google.com/) y selecciona tu proyecto (ej. `cadensa-web-dev`).
+2. **Habilitar APIs Requeridas:**
+   - [Google Search Console API](https://console.developers.google.com/apis/api/webmasters.googleapis.com/overview)
+   - [Web Search Indexing API](https://console.developers.google.com/apis/api/indexing.googleapis.com/overview)
+3. **Crear Cuenta de Servicio (Service Account):**
+   - Ve a **IAM y Administración** → **Cuentas de servicio** → **Crear cuenta de servicio** (ej. `cadensa-seo-notifier`).
+   - Asigna el rol básico de lectura/invocador.
+   - En la pestaña **Claves**, crea una nueva clave en formato **JSON** y descárgala.
+4. **Autorizar en Google Search Console:**
+   - Accede a [Google Search Console](https://search.google.com/search-console).
+   - Selecciona la propiedad `https://cadensa-web.pages.dev/`.
+   - Ve a **Ajustes** → **Usuarios y permisos** → **Añadir usuario**.
+   - Ingresa el correo de la cuenta de servicio (ej. `cadensa-tts-service@cadensa-web-dev.iam.gserviceaccount.com`) con permiso de **Propietario** (Owner).
+5. **Configurar Secreto en GitHub Actions:**
+   - Copia el contenido íntegro del archivo JSON descargado.
+   - En GitHub (`Settings` → `Secrets and variables` → `Actions`), añade el secreto:
+     `GOOGLE_APPLICATION_CREDENTIALS_JSON = {"type": "service_account", ...}`
+
+#### B. API Key de Bing Webmaster Tools
+1. **Acceder a Bing Webmaster:** Inicia sesión en [Bing Webmaster Tools](https://www.bing.com/webmasters) con tu cuenta y selecciona la propiedad `https://cadensa-web.pages.dev/`.
+2. **Generar API Key:**
+   - Ve al icono de engrane (**Configuración**) en la esquina superior derecha.
+   - Selecciona **Acceso a la API** → **Clave de API**.
+   - Haz clic en **Generar Clave de API** y copia el valor hexadecimal de 32 caracteres.
+3. **Configurar Secreto en GitHub Actions:**
+   - En GitHub (`Settings` → `Secrets and variables` → `Actions`), añade el secreto:
+     `BING_WEBMASTER_API_KEY = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### 7.3 Ejecución Manual y Modo Dry-Run
+
+Para probar o simular el proceso de notificación localmente sin realizar llamadas HTTP externas:
+
+```bash
+# Simulación sin mutaciones externas (Dry-Run)
+python3 scripts/submit_seo_changes.py --dry-run
+
+# Ejecución real en caliente
+python3 scripts/submit_seo_changes.py
+```
+
 

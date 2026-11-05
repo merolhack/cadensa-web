@@ -309,3 +309,31 @@ python3 scripts/check_indexing_status.py --verify-setup
 * **Si falta delegación (HTTP 403):** Imprimirá el correo exacto de la Service Account y la ruta de configuración en GSC.
 * **Si está autorizado (HTTP 200):** Imprimirá `✅ Permisos configurados correctamente. El script de auditoría puede proceder.`
 
+### 7.6 Auditoría de Rendimiento SEO (`scripts/audit_seo_performance.py`)
+
+Para medir el rendimiento de búsqueda orgánico (clics, impresiones, CTR y posición media) de las rutas canónicas `/techniques/*` en Google Search Console Search Analytics API:
+
+```bash
+# Simulación / Previsualización de métricas (Dry-Run)
+python3 scripts/audit_seo_performance.py --dry-run
+
+# Consulta en vivo de los últimos 28 días
+python3 scripts/audit_seo_performance.py
+
+# Exportación a archivo CSV compatible con Excel (BOM UTF-8)
+python3 scripts/audit_seo_performance.py --dry-run --export-csv reports/seo_performance_report.csv
+
+# Consulta en vivo con exportación automática
+python3 scripts/audit_seo_performance.py --export-csv
+
+# Salida estructurada en JSON
+python3 scripts/audit_seo_performance.py --json
+```
+
+**Métricas Reportadas:**
+* **Clics (Clicks):** Número de visitas orgánicas recibidas desde resultados de búsqueda.
+* **Impresiones (Impressions):** Veces que la URL apareció en la pantalla de un usuario en Google.
+* **CTR (Click-Through Rate):** Porcentaje de conversión de impresión a clic (`clics / impresiones × 100`).
+* **Posición Media (Average Position):** Ranking promedio en los resultados orgánicos de Googlebot.
+* **Compatibilidad Excel:** La exportación CSV incluye Byte Order Mark UTF-8 (`\ufeff`) para garantizar que acentos, caracteres especiales y números se muestren correctamente en Windows y macOS.
+

@@ -377,6 +377,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Auditoría Automatizada de Indexación, Validación IndexNow y Diagnóstico GSC (Google Search Console &amp; Bing):</strong> Script de monitoreo y auditoría periódica (`check_indexing_status.py`) con modo de verificación rápida de permisos (`--verify-setup`) y salida JSON, suite de pruebas unitarias para la clave raíz de IndexNow (`856757614ffc2c5582fbcb81b1b4e4ca.txt`), diagnóstico accionable de errores 403 con guía de delegación de propietario en GSC y consulta en cola de Bingbot para las 7 técnicas fonoaudiológicas.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Auditoría de Rendimiento SEO (Search Analytics API), Exportación Excel y Protocolo UAT Clínico:</strong> Script de telemetría de rendimiento orgánico (`audit_seo_performance.py`) con cálculo de clics, impresiones, CTR y posición media para las 7 técnicas fonoaudiológicas, exportación de reportes a CSV con BOM UTF-8 para análisis en Microsoft Excel, y Protocolo de Pruebas de Aceptación de Usuario (`uat_protocol.md`) con 8 escenarios clínicos en dispositivos reales (iOS/Android PWA, audio de video, auto-escucha, accesibilidad WCAG AA y modo offline).</span>
+                </li>
               </ul>
             </div>
 

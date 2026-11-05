@@ -375,7 +375,7 @@ export default function AboutPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 font-bold">✓</span>
-                  <span><strong>Auditoría Automatizada de Indexación y Validación IndexNow (Google Search Console &amp; Bing Webmaster):</strong> Script de monitoreo y auditoría periódica (`check_indexing_status.py`) con soporte de simulación (--dry-run) y salida JSON para observabilidad, verificación formal y suite de pruebas unitarias para la clave raíz de IndexNow (`856757614ffc2c5582fbcb81b1b4e4ca.txt`), y consulta de cobertura de indexación en Googlebot y Bingbot para las 7 técnicas fonoaudiológicas.</span>
+                  <span><strong>Auditoría Automatizada de Indexación, Validación IndexNow y Diagnóstico GSC (Google Search Console &amp; Bing):</strong> Script de monitoreo y auditoría periódica (`check_indexing_status.py`) con modo de verificación rápida de permisos (`--verify-setup`) y salida JSON, suite de pruebas unitarias para la clave raíz de IndexNow (`856757614ffc2c5582fbcb81b1b4e4ca.txt`), diagnóstico accionable de errores 403 con guía de delegación de propietario en GSC y consulta en cola de Bingbot para las 7 técnicas fonoaudiológicas.</span>
                 </li>
               </ul>
             </div>

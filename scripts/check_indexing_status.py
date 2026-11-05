@@ -316,6 +316,68 @@ def print_ascii_table(rows: List[Dict[str, str]]) -> None:
     print(sep)
 
 
+def verify_setup(site_url: str, dry_run: bool = False) -> int:
+    """Verifica si la cuenta de servicio de GCP cuenta con permisos de Propietario en Google Search Console."""
+    load_env_file()
+    clean_site = site_url.rstrip("/") + "/"
+    test_url = clean_site
+
+    logger.info("?? Verificando configuraci?n y permisos de Google Search Console...")
+    logger.info(f"   Sitio / Propiedad: {site_url}")
+    logger.info(f"   URL de prueba:     {test_url}")
+
+    if dry_run:
+        print("✅ [DRY-RUN] Permisos simulados correctamente. El script de auditor?a puede proceder.")
+        return 0
+
+    google_sa_info = get_google_credentials_info()
+    if not google_sa_info:
+        print("ERROR: No se encontraron credenciales de Google Cloud Service Account en el entorno.")
+        return 1
+
+    client_email = google_sa_info.get("client_email", "la cuenta de servicio")
+    token = get_google_access_token(google_sa_info)
+    if not token:
+        print(f"ERROR: No se pudo generar el token de acceso para la cuenta de servicio {client_email}.")
+        return 1
+
+    endpoint = "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect"
+    payload = {
+        "inspectionUrl": test_url,
+        "siteUrl": site_url,
+    }
+
+    try:
+        import urllib.request
+        req = urllib.request.Request(
+            endpoint,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json; charset=utf-8",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            if resp.status == 200:
+                print("✅ Permisos configurados correctamente. El script de auditor?a puede proceder.")
+                return 0
+            else:
+                print(f"Respuesta inesperada de Search Console: HTTP {resp.status}")
+                return 1
+    except urllib.error.HTTPError as e:
+        if e.code == 403:
+            print(f"ERROR: La cuenta de servicio no tiene permisos. Ve a Search Console → Configuración → Usuarios y permisos y añade {client_email} como Propietario.")
+            return 1
+        else:
+            body = e.read().decode("utf-8", errors="ignore")
+            print(f"ERROR: Error al consultar Search Console API: HTTP {e.code} - {body}")
+            return 1
+    except Exception as e:
+        print(f"ERROR: Fallo de conexión con Google Search Console API: {e}")
+        return 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Auditoría del Estado de Indexación en Google y Bing (URL Inspection API)."
@@ -331,6 +393,11 @@ def main() -> int:
         help="Ruta local del sitemap.xml para extraer URLs.",
     )
     parser.add_argument(
+        "--verify-setup",
+        action="store_true",
+        help="Verifica los permisos de la cuenta de servicio en Google Search Console con una petición de prueba.",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Simula la consulta a las APIs de Google y Bing con datos representativos.",
@@ -344,6 +411,9 @@ def main() -> int:
     args = parser.parse_args()
 
     load_env_file()
+
+    if args.verify_setup:
+        return verify_setup(args.site_url, dry_run=args.dry_run)
 
     if not args.json_output:
         print("\n" + "=" * 80)

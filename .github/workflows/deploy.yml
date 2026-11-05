@@ -82,6 +82,14 @@ jobs:
         run: |
           pip install cryptography
 
+      - name: Verify Search Console Permissions Setup
+        if: steps.cf_check.outputs.has_cf_secrets == 'true' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        run: |
+          python3 scripts/check_indexing_status.py --verify-setup || echo "⚠️ Advertencia: La notificación a Google fallará hasta que se configuren los permisos en Search Console."
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON || secrets.GCP_SA_METRICS_KEY }}
+
       - name: Notify Search Engines (Google & Bing SEO)
         if: steps.cf_check.outputs.has_cf_secrets == 'true' && github.ref == 'refs/heads/main'
         run: |

@@ -263,5 +263,44 @@ python3 scripts/check_indexing_status.py --json
 
 **Frecuencia recomendada:** Ejecutar semanalmente como parte de la rutina de mantenimiento de SEO Técnico o integrarlo en flujos de auditoría periódica (`weekly-metrics.yml`).
 
+### 7.5 Resolución de Errores 403 en Search Console
 
+Al ejecutar `python3 scripts/check_indexing_status.py --verify-setup` o consultar la URL Inspection API en producción, si se obtiene el error:
+```text
+ERROR: La cuenta de servicio no tiene permisos. Ve a Search Console → Configuración → Usuarios y permisos y añade cadensa-tts-service@cadensa-web-dev.iam.gserviceaccount.com como Propietario.
+```
+significa que la Service Account de Google Cloud aún no ha sido delegada formalmente en la consola web de Google Search Console para la propiedad de Cadensa.
+
+Para resolver este error de permisos y habilitar la inspección y notificación automatizada, deben seguirse los dos pasos críticos:
+
+#### Paso 1: Delegar Permisos en Google Search Console
+1. Abre [Google Search Console](https://search.google.com/search-console).
+2. Selecciona la propiedad de Cadensa (`https://cadensa-web.pages.dev/` o `sc-domain:cadensa-web.pages.dev`).
+3. En el menú lateral izquierdo, haz clic en **Configuración** (`Settings`) → **Usuarios y permisos** (`Users and permissions`).
+4. Haz clic en el botón superior **Añadir usuario** (`Add user`).
+5. En el campo de correo electrónico, introduce el `client_email` de la cuenta de servicio de GCP:
+   `cadensa-tts-service@cadensa-web-dev.iam.gserviceaccount.com`
+6. En el selector de permisos, selecciona **Propietario** (`Owner`) o **Completo** (`Full`).
+   > ⚠️ **Advertencia Crítica:** El rol "Restringido" (`Restricted`) **no sirve** para la URL Inspection API ni para la Google Indexing API; Google exige permisos de propietario delegado o administración completa para inspeccionar URLs a través de la API.
+7. Guarda los cambios. La propagación de permisos en los servidores de Google toma habitualmente entre 1 y 5 minutos.
+
+#### Paso 2: Coincidencia Exacta del Tipo de Propiedad (`siteUrl`)
+Verifica que el parámetro `siteUrl` que se envía en el script coincida con el tipo de propiedad registrada en Google Search Console:
+* **Propiedad con Prefijo de URL (Recomendada para Cloudflare Pages):**
+  * Debe incluir el esquema HTTPS y la barra final: `https://cadensa-web.pages.dev/`.
+  * Si la propiedad fue dada de alta con prefijo `https://`, el parámetro `siteUrl` debe ser idéntico con la barra al final.
+* **Propiedad de Nivel Dominio (DNS TXT):**
+  * Si la propiedad fue registrada a nivel de dominio mediante registro DNS, el `siteUrl` debe llevar el prefijo `sc-domain:` (por ejemplo, `sc-domain:cadensa-web.pages.dev`).
+  * En ese caso, invoca el script pasando el flag correspondiente:
+    ```bash
+    python3 scripts/check_indexing_status.py --site-url sc-domain:cadensa-web.pages.dev --verify-setup
+    ```
+
+#### Comprobación Rápida con `--verify-setup`
+Para verificar en segundos si los permisos ya están operativos sin esperar a auditar todas las páginas:
+```bash
+python3 scripts/check_indexing_status.py --verify-setup
+```
+* **Si falta delegación (HTTP 403):** Imprimirá el correo exacto de la Service Account y la ruta de configuración en GSC.
+* **Si está autorizado (HTTP 200):** Imprimirá `✅ Permisos configurados correctamente. El script de auditoría puede proceder.`
 

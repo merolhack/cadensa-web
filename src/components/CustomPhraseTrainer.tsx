@@ -7,6 +7,8 @@ import {
   CustomPhraseItem,
   loadLocalCustomPhrases,
   saveLocalCustomPhrases,
+  saveCustomPhraseToCloud,
+  deleteCustomPhraseFromCloud,
   syncCustomPhrasesWithCloud,
 } from '@/lib/customPhraseService';
 
@@ -215,18 +217,28 @@ export function CustomPhraseTrainer({
     setFeedbackMsg('¡Frase guardada en tu repertorio personal!');
     setTimeout(() => setFeedbackMsg(null), 2500);
 
-    // Auto-sincronizar con Supabase si está logueado
+    // Si el usuario está autenticado, persistir directamente en Supabase (tabla custom_phrases)
     if (userId) {
-      syncCustomPhrasesWithCloud(updated, userId).then(({ syncedPhrases }) => {
-        setPhrases(syncedPhrases);
+      saveCustomPhraseToCloud(
+        { phrase: clean, bpm: inputBpm, category: 'personalizado' },
+        userId
+      ).then(({ savedItem }) => {
+        if (savedItem) {
+          setPhrases((prev) => [savedItem, ...prev.filter((p) => p.phrase !== clean)]);
+        }
       });
     }
   };
 
-  const handleDeletePhrase = (id: string) => {
+  const handleDeletePhrase = (id: string, phraseText?: string) => {
     const updated = phrases.filter((p) => p.id !== id);
     setPhrases(updated);
     saveLocalCustomPhrases(updated);
+
+    // Si está autenticado, eliminar de la base de datos de Supabase
+    if (userId) {
+      deleteCustomPhraseFromCloud(id || phraseText || '', userId);
+    }
   };
 
   const handleApplyTemplate = (templatePhrase: string, bpm: number) => {

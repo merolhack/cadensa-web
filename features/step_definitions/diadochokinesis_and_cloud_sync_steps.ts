@@ -160,16 +160,26 @@ When('se ejecuta la sincronización multi-dispositivo', async function () {
         }),
       }),
       insert: () => ({
-        select: async () => ({
-          data: localPhrasesList.map((p, i) => ({
-            id: `inserted-cloud-${i}`,
-            phrase: p.phrase,
-            bpm_recommended: p.bpm,
-            category: 'personalizado',
-            created_at: new Date().toISOString(),
-          })),
-          error: null,
-        }),
+        select: () => {
+          const result = {
+            data: localPhrasesList.map((p, i) => ({
+              id: `inserted-cloud-${i}`,
+              phrase: p.phrase,
+              bpm_recommended: p.bpm,
+              category: 'personalizado',
+              created_at: new Date().toISOString(),
+            })),
+            error: null,
+          };
+          return {
+            ...Promise.resolve(result),
+            single: async () => ({
+              data: result.data[0],
+              error: null,
+            }),
+            then: (resolve: (arg: typeof result) => unknown) => Promise.resolve(result).then(resolve),
+          };
+        },
       }),
     }),
   };

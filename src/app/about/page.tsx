@@ -385,6 +385,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Entrenador de Frases Personalizadas (Web Speech API Offline) y Reportes Operativos CI/CD:</strong> Módulo &quot;Mis Frases de Desafío&quot; con campo de texto, botón de silabación automática fonoaudiológica, reproducción rítmica con síntesis de voz en el navegador (`window.speechSynthesis`) sincronizada beat a beat con el metrónomo, cajas visuales de sílabas iluminadas en tiempo real y workflow semanal automatizado en GitHub Actions (`weekly-ops-report.yml`) para generación y subida de reportes CSV de rendimiento SEO orgánico.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Suite E2E Playwright Multi-Navegador y Autenticación de Pacientes en Supabase (/login y /register):</strong> Validación continua automatizada en navegadores reales (Chromium, Firefox y WebKit headless) en CI/CD cubriendo carga de técnicas, video avatar, silabación fonética y registro del Service Worker; y arquitectura de autenticación Zero Trust con Supabase Auth (contraseña, Google OAuth, Magic Link) y sincronización de frases de desafío con RLS por usuario.</span>
+                </li>
               </ul>
             </div>
 

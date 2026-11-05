@@ -3,6 +3,8 @@ import { supabase } from './supabaseClient';
 import {
   loadLocalCustomPhrases,
   saveLocalCustomPhrases,
+  saveCustomPhraseToCloud,
+  deleteCustomPhraseFromCloud,
   syncCustomPhrasesWithCloud,
   CustomPhraseItem,
 } from './customPhraseService';
@@ -54,17 +56,18 @@ describe('customPhraseService', () => {
 
     // La llamada a insert devuelve la frase local recién subida
     mockClient.from().insert.mockReturnValue({
-      select: vi.fn().mockResolvedValue({
-        data: [
-          {
+      select: vi.fn().mockReturnValue({
+        single: vi.fn().mockResolvedValue({
+          data: {
             id: 'cloud-2',
             phrase: 'Frase local nueva',
+            bpm: 90,
             bpm_recommended: 90,
             category: 'personalizado',
             created_at: '2026-10-28T00:01:00Z',
           },
-        ],
-        error: null,
+          error: null,
+        }),
       }),
     });
 
@@ -84,6 +87,58 @@ describe('customPhraseService', () => {
     const phrases = result.syncedPhrases.map((p) => p.phrase);
     expect(phrases).toContain('Frase local nueva');
     expect(phrases).toContain('Frase en nube');
+  });
+
+  it('debe guardar frase individual en la nube con saveCustomPhraseToCloud', async () => {
+    const mockClient = {
+      from: vi.fn().mockReturnValue({
+        insert: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({
+              data: {
+                id: 'cloud-item-1',
+                phrase: 'Quiero agua fresca',
+                bpm: 80,
+                category: 'personalizado',
+                created_at: '2026-11-05T00:00:00Z',
+              },
+              error: null,
+            }),
+          }),
+        }),
+      }),
+    };
+
+    const res = await saveCustomPhraseToCloud(
+      { phrase: 'Quiero agua fresca', bpm: 80, category: 'personalizado' },
+      'user-123',
+      mockClient as unknown as typeof supabase
+    );
+
+    expect(res.success).toBe(true);
+    expect(res.savedItem?.phrase).toBe('Quiero agua fresca');
+    expect(mockClient.from).toHaveBeenCalledWith('custom_phrases');
+  });
+
+  it('debe eliminar frase en la nube con deleteCustomPhraseFromCloud', async () => {
+    const mockClient = {
+      from: vi.fn().mockReturnValue({
+        delete: vi.fn().mockReturnValue({
+          or: vi.fn().mockReturnValue({
+            eq: vi.fn().mockResolvedValue({ error: null }),
+          }),
+        }),
+      }),
+    };
+
+    const success = await deleteCustomPhraseFromCloud(
+      'cloud-item-1',
+      'user-123',
+      mockClient as unknown as typeof supabase
+    );
+
+    expect(success).toBe(true);
+    expect(mockClient.from).toHaveBeenCalledWith('custom_phrases');
   });
 });
 

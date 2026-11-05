@@ -567,6 +567,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           currentUserEmail={currentUserEmail}
           onOpenAuthModal={() => setIsAuthModalOpen(true)}
           onOpenDashboard={() => setIsDashboardOpen(true)}
+          onLogout={handleLogout}
         />
 
         {/* Modal de Dashboard / Métricas */}

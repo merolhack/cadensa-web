@@ -337,3 +337,53 @@ python3 scripts/audit_seo_performance.py --json
 * **Posición Media (Average Position):** Ranking promedio en los resultados orgánicos de Googlebot.
 * **Compatibilidad Excel:** La exportación CSV incluye Byte Order Mark UTF-8 (`\ufeff`) para garantizar que acentos, caracteres especiales y números se muestren correctamente en Windows y macOS.
 
+---
+
+## 8. Pruebas End-to-End (E2E) con Playwright y Configuración de Supabase Auth
+
+### 8.1 Ejecución Local de Playwright E2E
+
+Cadensa utiliza **Playwright** (`@playwright/test`) para validar los flujos clínicos, multimedia y de navegación sobre motores de navegador reales (Chromium, Firefox y WebKit):
+
+```bash
+# 1. Compilar el export estático de Next.js
+npm run build
+
+# 2. Ejecutar la suite E2E completa en headless mode (Chromium, Firefox y WebKit)
+npx playwright test tests/e2e/cadensa.spec.ts
+
+# 3. Ejecutar solo en un motor específico (ej. Chromium)
+npx playwright test tests/e2e/cadensa.spec.ts --project=chromium
+
+# 4. Ver reporte interactivo HTML en caso de fallos
+npx playwright show-report
+```
+
+**Flujos Verificados en `tests/e2e/cadensa.spec.ts`:**
+1. Carga de la plataforma y registro activo del Service Worker (`public/sw.js`).
+2. Apertura del modal interactivo de la técnica STS y acoplamiento del reproductor de video.
+3. Apertura de `CustomPhraseTrainer`, silabación fonoaudiológica con `src/lib/syllables.ts` y renderizado de cajas visuales.
+4. Navegación y renderizado de las páginas públicas de autenticación `/login` y `/register`.
+
+### 8.2 Configuración de Variables de Entorno de Supabase Auth
+
+La autenticación de pacientes y la persistencia de frases personalizadas en la nube operan bajo el modelo **Zero Trust RLS** con `@supabase/supabase-js`.
+
+**Variables Requeridas en `.env` local y GitHub Actions Secrets:**
+```bash
+# URL del proyecto Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://kddeejyhnxrnmkmiwjxp.supabase.co
+
+# Clave pública anónima (Segura para frontend con RLS activo)
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# Token de despliegue para migraciones automatizadas en CI (opcional para desarrollo local)
+SUPABASE_ACCESS_TOKEN=sbp_...
+```
+
+**Modelo de Datos y Seguridad RLS:**
+* Las frases personalizadas se persisten en la tabla `public.custom_phrases` con la política `auth.uid() = user_id`.
+* Si el paciente no ha iniciado sesión, las frases se resguardan de forma local en `localStorage['cadensa_custom_phrases']`.
+* Al iniciar sesión en `/login` o mediante el modal `AuthModal`, las frases locales se sincronizan y respaldan bidireccionalmente en Supabase sin duplicados.
+
+

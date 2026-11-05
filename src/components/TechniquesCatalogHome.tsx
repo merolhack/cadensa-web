@@ -33,6 +33,7 @@ interface TechniquesCatalogHomeProps {
   currentUserEmail: string | null;
   onOpenAuthModal: () => void;
   onOpenDashboard: () => void;
+  onLogout?: () => void;
 }
 
 export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
@@ -55,6 +56,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   currentUserEmail,
   onOpenAuthModal,
   onOpenDashboard,
+  onLogout,
 }) => {
   const [selectedFamilyFilter, setSelectedFamilyFilter] = useState<TechniqueFamilyId | 'todas'>('todas');
   const mounted = useSyncExternalStore(
@@ -121,16 +123,28 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             <span className="hidden sm:inline">Estadísticas</span>
           </Link>
 
-          {/* Botón de Acceso / Perfil */}
+          {/* Botón de Acceso / Perfil y Cerrar Sesión */}
           {mounted && currentUserEmail ? (
-            <button
-              onClick={onOpenDashboard}
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold hover:bg-emerald-500/25 transition-all cursor-pointer flex items-center gap-1.5"
-              suppressHydrationWarning
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="max-w-[120px] truncate">{currentUserEmail.split('@')[0]}</span>
-            </button>
+            <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-1 text-xs" suppressHydrationWarning>
+              <button
+                onClick={onOpenDashboard}
+                className="text-emerald-300 font-semibold hover:underline flex items-center gap-1.5 cursor-pointer"
+                title="Ver Dashboard"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="max-w-[100px] truncate">{currentUserEmail.split('@')[0]}</span>
+              </button>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="text-zinc-400 hover:text-red-400 transition-colors ml-1 cursor-pointer font-semibold"
+                  title="Cerrar Sesión"
+                  aria-label="Cerrar Sesión"
+                >
+                  ⎋ Salir
+                </button>
+              )}
+            </div>
           ) : (
             <button
               onClick={onOpenAuthModal}

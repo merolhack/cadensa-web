@@ -236,4 +236,32 @@ python3 scripts/submit_seo_changes.py --dry-run
 python3 scripts/submit_seo_changes.py
 ```
 
+### 7.4 Auditoría Periódica del Estado de Indexación (`scripts/check_indexing_status.py`)
+
+Para cerrar el ciclo y verificar si Google y Bing han procesado e indexado las nuevas rutas de técnicas (`/techniques/[slug]`), se dispone del script de auditoría:
+
+```bash
+# Simulación / Verificación rápida de conexión (Dry-Run)
+python3 scripts/check_indexing_status.py --dry-run
+
+# Auditoría en vivo contra Google URL Inspection y Bing GetUrlInfo
+python3 scripts/check_indexing_status.py
+
+# Salida estructurada en JSON (para pipelines de observabilidad o telemetría)
+python3 scripts/check_indexing_status.py --json
+```
+
+**Métricas Reportadas:**
+* **Google Search Console (URL Inspection API):**
+  * `verdict`: Veredicto global de indexabilidad (`PASS`, `NEUTRAL`, `FAIL`).
+  * `coverageState`: Estado de cobertura en el índice de Google (ej. *"Enviada e indexada"*, *"Rastreada - actualmente no indexada"*, *"Descubierta: actualmente no indexada"*).
+  * `lastCrawlTime`: Marca de tiempo ISO del último rastreo por Googlebot Smartphone.
+  * `robotsTxtState` e `indexingState`: Validación de bloqueos o directivas noindex.
+* **Bing Webmaster Tools (GetUrlInfo API):**
+  * `isIndexed`: Confirmación booleana de presencia en el índice de Bing (`✅ Indexada` o `⏳ En cola`).
+  * `lastCrawl`: Fecha del último rastreo registrado por Bingbot.
+
+**Frecuencia recomendada:** Ejecutar semanalmente como parte de la rutina de mantenimiento de SEO Técnico o integrarlo en flujos de auditoría periódica (`weekly-metrics.yml`).
+
+
 

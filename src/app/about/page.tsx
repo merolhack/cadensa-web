@@ -373,6 +373,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Automatización de Notificación SEO Post-Despliegue (Google Search Console, Indexing API &amp; Bing):</strong> Script automatizado (`submit_seo_changes.py`) integrado en el pipeline de CI/CD para re-enviar el sitemap.xml a Google Search Console, notificar las 7 técnicas fonoaudiológicas como URL_UPDATED a Google Indexing API, registrar el feed en Bing Webmaster Tools API y despachar actualizaciones masivas vía protocolo IndexNow inmediatamente tras cada despliegue exitoso.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Auditoría Automatizada de Indexación y Validación IndexNow (Google Search Console &amp; Bing Webmaster):</strong> Script de monitoreo y auditoría periódica (`check_indexing_status.py`) con soporte de simulación (--dry-run) y salida JSON para observabilidad, verificación formal y suite de pruebas unitarias para la clave raíz de IndexNow (`856757614ffc2c5582fbcb81b1b4e4ca.txt`), y consulta de cobertura de indexación en Googlebot y Bingbot para las 7 técnicas fonoaudiológicas.</span>
+                </li>
               </ul>
             </div>
 

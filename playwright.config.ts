@@ -15,23 +15,33 @@ export default defineConfig({
     baseURL: process.env.BASE_URL || 'http://localhost:3000',
     headless: true,
     trace: 'on-first-retry',
-    permissions: ['microphone'],
-    launchOptions: {
-      args: [
-        '--use-fake-ui-for-media-stream',
-        '--use-fake-device-for-media-stream',
-        '--autoplay-policy=no-user-gesture-required',
-      ],
-    },
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        permissions: ['microphone'],
+        launchOptions: {
+          args: [
+            '--use-fake-ui-for-media-stream',
+            '--use-fake-device-for-media-stream',
+            '--autoplay-policy=no-user-gesture-required',
+          ],
+        },
+      },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        launchOptions: {
+          firefoxUserPrefs: {
+            'media.navigator.permission.disabled': true,
+            'media.navigator.streams.fake': true,
+          },
+        },
+      },
     },
     {
       name: 'webkit',

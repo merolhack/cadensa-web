@@ -115,3 +115,12 @@ El Service Worker (`cadensa-v2.5.0`) gestiona el ciclo de vida y la persistencia
 ### 6. Navegación Unificada de Demostración Fonoaudiológica
 - Se eliminó la duplicidad previa entre botones de "Video" y "Avatar IA".
 - Se consolidó un único acceso interactivo destacado: **🤖 Avatar IA 1080p**, que despliega el modal de alta resolución con avatar fotorrealista y widgets de biofeedback sincronizados.
+
+### 7. Experiencia de Primer Uso (FTUE) y Consentimiento de Hardware (Zero Trust)
+- **Modal de Onboarding Empático (`src/components/WelcomeTour.tsx`):** Se despliega automáticamente a visitantes nuevos mediante flag local (`localStorage.getItem('cadensa_ftue_completed')`). Estructurado en 4 etapas:
+  1. Propósito terapéutico de Cadensa (isocronía rítmica sin tecnicismos).
+  2. Uso del metrónomo visual y botón Avatar IA 1080p con demostraciones clínicas.
+  3. Guía interactiva de instalación PWA con detección dinámica de plataforma (instrucciones Safari/iOS ⎋ vs. Chrome/Android ⋮).
+  4. Garantía de privacidad Zero Trust con botón directo "¡Comenzar mi práctica!".
+- **Consentimiento Previo de Micrófono (`src/components/MicrophoneConsentModal.tsx`):** Antes de invocar `getUserMedia`, se despliega una advertencia transparente explicando que el micrófono se usa únicamente para biofeedback en memoria local sin transmisiones a la nube (`cadensa_mic_consent`).
+- **Páginas Legales y Medical Disclaimer (`/privacy` y `/terms`):** Declaración explícita de privacidad local-first ("Tus datos de voz y tus resultados de práctica nunca salen de tu dispositivo...") y descargo fonoaudiológico formal YMYL ("Cadensa es una herramienta de apoyo y no sustituye el diagnóstico o tratamiento de un fonoaudiólogo certificado.").

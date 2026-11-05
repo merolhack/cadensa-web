@@ -361,6 +361,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>PWA Offline-First v2.5.0, Precache de Videos Clínicos, Reporte CSV Fonoaudiológico y Feedback Háptico:</strong> Despliegue de la versión 2.5.0 con soporte de instalación móvil (PWA manifest con iconos de 192px y 512px), Service Worker con precarga y disponibilidad 100% offline de los 7 videos fonoaudiológicos y portadas WebP, exportación clínica local-first en formato CSV con BOM UTF-8 (&quot;Descargar Reporte para mi Fonoaudiólogo&quot;), feedback háptico táctil en cada beat del metrónomo y consolidación de la barra de navegación con botón unificado de Avatar IA 1080p.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Onboarding Guiado FTUE, Consentimiento de Micrófono y Blindaje Legal Zero Trust:</strong> Experiencia de primer uso empática (WelcomeTour modal en 4 pasos con instrucciones adaptativas PWA para iOS y Android/Desktop), banner de consentimiento de micrófono previo a captura de audio explicando el procesamiento en memoria local sin servidores, y actualización estricta de términos legales y descargo médico fonoaudiológico (/privacy y /terms).</span>
+                </li>
               </ul>
             </div>
 

@@ -40,6 +40,7 @@ import { VirtualSLPAvatarModal } from '@/components/VirtualSLPAvatarModal';
 import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionValidator';
 import { LiveAudioVUMeter } from '@/components/LiveAudioVUMeter';
 import { ClinicalReportExporter } from '@/components/ClinicalReportExporter';
+import { WelcomeTour } from '@/components/WelcomeTour';
 import { setupAudioContextUnlock } from '@/lib/audioUnlock';
 import { initGlobalErrorTracking } from '@/lib/errorTracker';
 
@@ -778,6 +779,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           isOpen={isCertificatesOpen}
           onClose={() => setIsCertificatesOpen(false)}
         />
+
+        {/* Tour de Bienvenida y Onboarding para Primerizos (FTUE) */}
+        <WelcomeTour />
       </>
     );
   }
@@ -1354,6 +1358,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           }
         }}
       />
+
+      {/* Tour de Bienvenida y Onboarding para Primerizos (FTUE) */}
+      <WelcomeTour />
     </main>
   );
 }

@@ -46,9 +46,23 @@ export default function PrivacyPage() {
             Política de Privacidad y Procesamiento Zero Trust
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400">
-            Última actualización: 28 de octubre de 2026 • Responsable: Lenin Meza (Cadensa Project)
+            Última actualización: 4 de noviembre de 2026 • Responsable: Lenin Meza (Cadensa Project)
           </p>
         </section>
+
+        {/* Declaración Destacada de Confianza y Privacidad Zero Trust */}
+        <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/60 to-cyan-950/60 border border-emerald-500/40 space-y-3 shadow-lg">
+          <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm sm:text-base">
+            <span className="text-xl">🛡️</span>
+            <span>Garantía de Privacidad Absoluta (Zero Trust Local-First)</span>
+          </div>
+          <p className="text-sm sm:text-base font-medium text-zinc-100 leading-relaxed">
+            &ldquo;Tus datos de voz y tus resultados de práctica nunca salen de tu dispositivo. No usamos la nube para almacenar tu voz. El reporte CSV es 100% local.&rdquo;
+          </p>
+          <p className="text-xs text-zinc-400">
+            Cadensa está concebida bajo la filosofía de privacidad médica por diseño: todo el análisis espectro-temporal, biofeedback y grabaciones se ejecutan exclusivamente en la memoria de tu navegador.
+          </p>
+        </div>
 
         <div className="space-y-6 text-xs sm:text-sm text-zinc-300 leading-relaxed">
           <section className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 space-y-2">

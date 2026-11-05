@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { MicrophoneConsentModal } from './MicrophoneConsentModal';
 
 interface AudioSelfMonitorProps {
   isPlaying?: boolean;
@@ -20,6 +21,7 @@ export function AudioSelfMonitor({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlayingBack, setIsPlayingBack] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isConsentModalOpen, setIsConsentModalOpen] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -102,6 +104,25 @@ export function AudioSelfMonitor({
     prevIsPlayingRef.current = isPlaying;
   }, [isPlaying, isRecording, stopRecording]);
 
+  const handleRequestRecord = () => {
+    if (typeof window !== 'undefined') {
+      const hasConsent = localStorage.getItem('cadensa_mic_consent') === 'granted';
+      if (!hasConsent) {
+        setIsConsentModalOpen(true);
+        return;
+      }
+    }
+    startRecording();
+  };
+
+  const handleConfirmConsent = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cadensa_mic_consent', 'granted');
+    }
+    setIsConsentModalOpen(false);
+    startRecording();
+  };
+
   const handleTogglePlayback = () => {
     if (!audioUrl) return;
 
@@ -162,7 +183,7 @@ export function AudioSelfMonitor({
         <div className="flex items-center gap-2 self-start sm:self-auto">
           {!isRecording ? (
             <button
-              onClick={startRecording}
+              onClick={handleRequestRecord}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
                 isPlaying
                   ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30'
@@ -225,6 +246,12 @@ export function AudioSelfMonitor({
           <strong>Privacidad Zero Trust:</strong> Tu voz se graba y reproduce únicamente en la memoria local de tu dispositivo. Nunca se envía ni almacena en la nube.
         </span>
       </div>
+
+      <MicrophoneConsentModal
+        isOpen={isConsentModalOpen}
+        onConfirm={handleConfirmConsent}
+        onCancel={() => setIsConsentModalOpen(false)}
+      />
     </div>
   );
 }

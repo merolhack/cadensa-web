@@ -51,11 +51,14 @@ export default function TermsPage() {
         </section>
 
         {/* Medical Disclaimer Destacado */}
-        <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2 text-xs sm:text-sm text-amber-200">
+        <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-3 text-xs sm:text-sm text-amber-200 shadow-md">
           <h2 className="text-base font-bold text-amber-300 flex items-center gap-2">
             <span>⚕️</span>
             <span>Descargo de Responsabilidad Fonoaudiológica y Médica (Medical Disclaimer)</span>
           </h2>
+          <p className="text-sm sm:text-base font-semibold text-amber-100 bg-amber-500/15 p-3 rounded-xl border border-amber-500/30">
+            &ldquo;Cadensa es una herramienta de apoyo y no sustituye el diagnóstico o tratamiento de un fonoaudiólogo certificado.&rdquo;
+          </p>
           <p className="leading-relaxed">
             <strong>Cadensa es una herramienta tecnológica educativa y de entrenamiento de hábitos de fluidez del habla.</strong> La información, metrónomos rítmicos, ejercicios de Habla Rítmica Silábica (STS), Inicio Vocal Suave (Easy Onset), técnicas de Van Riper y guías de respiración diafragmática provistos en este sitio web <strong>NO constituyen consejo médico, diagnóstico clínico ni sustituyen el tratamiento personalizado de un fonoaudiólogo, logopeda o terapeuta del lenguaje certificado.</strong>
           </p>

@@ -55,9 +55,12 @@ describe('AudioSelfMonitor', () => {
       src = '';
       onended: (() => void) | null = null;
     };
+
+    localStorage.setItem('cadensa_mic_consent', 'granted');
   });
 
   afterEach(() => {
+    localStorage.clear();
     vi.useRealTimers();
     vi.clearAllMocks();
   });
@@ -193,5 +196,28 @@ describe('AudioSelfMonitor', () => {
     expect(activeRecorderInstance?.stop).toHaveBeenCalled();
     expect(onStop).toHaveBeenCalled();
     expect(screen.getByRole('button', { name: /Escucharme/i })).toBeInTheDocument();
+  });
+
+  it('solicita consentimiento de micrófono la primera vez antes de acceder al hardware', async () => {
+    localStorage.removeItem('cadensa_mic_consent');
+    render(<AudioSelfMonitor />);
+
+    // Al hacer clic sin consentimiento, debe abrirse el modal informativo
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /Grabar Práctica/i }));
+    });
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText(/Permiso de Micrófono/i)).toBeInTheDocument();
+
+    // Confirmar consentimiento
+    const confirmBtn = screen.getByRole('button', { name: /Entendido, activar micrófono/i });
+    await act(async () => {
+      fireEvent.click(confirmBtn);
+    });
+
+    expect(localStorage.getItem('cadensa_mic_consent')).toBe('granted');
+    expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalledWith({ audio: true });
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });

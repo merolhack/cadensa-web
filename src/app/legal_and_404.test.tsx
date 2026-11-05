@@ -11,6 +11,9 @@ describe('Páginas Legales y Error 404 (Fase A y C)', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/política de privacidad/i);
     expect(screen.getByText(/procesamiento local de voz/i)).toBeInTheDocument();
     expect(screen.getByText(/ca-pub-2700240339792942/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Tus datos de voz y tus resultados de práctica nunca salen de tu dispositivo/i)
+    ).toBeInTheDocument();
   });
 
   it('TermsPage debe renderizar el Descargo Médico / Medical Disclaimer (YMYL)', () => {
@@ -19,6 +22,9 @@ describe('Páginas Legales y Error 404 (Fase A y C)', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/términos de uso/i);
     expect(screen.getByText(/descargo de responsabilidad fonoaudiológica/i)).toBeInTheDocument();
     expect(screen.getByText(/no constituyen consejo médico/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Cadensa es una herramienta de apoyo y no sustituye el diagnóstico o tratamiento de un fonoaudiólogo certificado/i)
+    ).toBeInTheDocument();
   });
 
   it('NotFound (404) debe renderizar mensaje empático y enlaces de retorno', () => {

@@ -1,8 +1,25 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import Home from './page';
 
 describe('Home Page - Unit Tests', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('cadensa_ftue_completed', 'true');
+    localStorage.setItem('cadensa_mic_consent', 'granted');
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    vi.clearAllMocks();
+  });
+
+  it('renderiza el tour de bienvenida (WelcomeTour) para usuarios primerizos', () => {
+    localStorage.removeItem('cadensa_ftue_completed');
+    render(<Home />);
+    expect(screen.getByText(/Bienvenida a Cadensa • Paso 1 de 4/i)).toBeInTheDocument();
+  });
+
   it('debe renderizar la página de inicio con la marca Cadensa y el lema principal por defecto', () => {
     render(<Home />);
     expect(screen.getAllByText(/cadensa/i).length).toBeGreaterThan(0);

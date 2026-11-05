@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { User, Session, AuthError } from '@supabase/supabase-js';
 import LoginPage from './login/page';
 import RegisterPage from './register/page';
 import { supabase } from '@/lib/supabaseClient';
@@ -33,8 +34,8 @@ describe('Authentication Pages (Login & Register)', () => {
     it('debe iniciar sesión con contraseña e invocar router.push', async () => {
       vi.spyOn(supabase.auth, 'signInWithPassword').mockResolvedValueOnce({
         data: {
-          user: { id: 'usr-123', email: 'paciente@cadensa.com' } as any,
-          session: {} as any,
+          user: { id: 'usr-123', email: 'paciente@cadensa.com' } as unknown as User,
+          session: {} as unknown as Session,
         },
         error: null,
       });
@@ -63,7 +64,7 @@ describe('Authentication Pages (Login & Register)', () => {
     it('debe mostrar mensaje de error si falla la autenticación', async () => {
       vi.spyOn(supabase.auth, 'signInWithPassword').mockResolvedValueOnce({
         data: { user: null, session: null },
-        error: { message: 'Credenciales inválidas' } as any,
+        error: { message: 'Credenciales inválidas' } as unknown as AuthError,
       });
 
       render(<LoginPage />);
@@ -84,7 +85,7 @@ describe('Authentication Pages (Login & Register)', () => {
 
     it('debe permitir alternar a modo Magic Link y enviar OTP', async () => {
       vi.spyOn(supabase.auth, 'signInWithOtp').mockResolvedValueOnce({
-        data: {} as any,
+        data: { user: null, session: null },
         error: null,
       });
 
@@ -138,8 +139,8 @@ describe('Authentication Pages (Login & Register)', () => {
     it('debe registrar exitosamente y guardar usuario en local', async () => {
       vi.spyOn(supabase.auth, 'signUp').mockResolvedValueOnce({
         data: {
-          user: { id: 'usr-new-456', email: 'registro@cadensa.com' } as any,
-          session: {} as any,
+          user: { id: 'usr-new-456', email: 'registro@cadensa.com' } as unknown as User,
+          session: {} as unknown as Session,
         },
         error: null,
       });

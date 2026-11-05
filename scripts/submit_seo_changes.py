@@ -408,7 +408,38 @@ def notify_indexnow(urls: List[str], host: str = "cadensa-web.pages.dev", key: s
         return False
 
 
+def find_indexnow_key() -> str:
+    """Descubre dinámicamente la clave IndexNow desde variables de entorno o archivos de validación en disco."""
+    env_key = (os.getenv("INDEXNOW_KEY") or "").strip()
+    if env_key:
+        return env_key
+
+    candidate_dirs = [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "public"),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "out"),
+        "public",
+        "out",
+    ]
+    for c_dir in candidate_dirs:
+        if os.path.exists(c_dir):
+            for fname in os.listdir(c_dir):
+                if fname.endswith(".txt") and len(fname) == 36:
+                    stem = fname[:-4]
+                    if all(c in "0123456789abcdefABCDEF" for c in stem):
+                        file_path = os.path.join(c_dir, fname)
+                        try:
+                            with open(file_path, "r", encoding="utf-8") as f:
+                                file_val = f.read().strip()
+                                if file_val.lower() == stem.lower():
+                                    return file_val
+                        except Exception:
+                            pass
+    return DEFAULT_INDEXNOW_KEY
+
+
 def main() -> int:
+    load_env_file()
+
     parser = argparse.ArgumentParser(
         description="Notificador Automatizado de Cambios SEO para Google Search Console, Google Indexing y Bing."
     )
@@ -429,7 +460,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--indexnow-key",
-        default=os.getenv("INDEXNOW_KEY", DEFAULT_INDEXNOW_KEY),
+        default=None,
         help="Clave para autenticación con el protocolo IndexNow.",
     )
     parser.add_argument(
@@ -438,9 +469,6 @@ def main() -> int:
         help="Falla con código != 0 si alguna API no puede autenticarse o falla.",
     )
     args = parser.parse_args()
-
-    # Cargar variables de .env local si existe
-    load_env_file()
 
     logger.info("=" * 65)
     logger.info("🔍 Cadensa - Notificación Automatizada de Cambios SEO")
@@ -504,7 +532,7 @@ def main() -> int:
 
     # 4. Notificación IndexNow (Bing / Yandex / Seznam)
     host_domain = urllib.parse.urlparse(args.site_url).netloc or "cadensa-web.pages.dev"
-    indexnow_key = (args.indexnow_key or "").strip() or os.getenv("INDEXNOW_KEY") or DEFAULT_INDEXNOW_KEY
+    indexnow_key = (args.indexnow_key or "").strip() or find_indexnow_key()
     notify_indexnow(all_urls, host=host_domain, key=indexnow_key, dry_run=args.dry_run)
 
     logger.info("=" * 65)

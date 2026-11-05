@@ -296,6 +296,11 @@ Verifica que el parámetro `siteUrl` que se envía en el script coincida con el 
     python3 scripts/check_indexing_status.py --site-url sc-domain:cadensa-web.pages.dev --verify-setup
     ```
 
+#### Paso 3: Habilitar la Web Search Indexing API en Google Cloud
+Si además se utiliza la Google Indexing API para notificaciones en lote (`URL_UPDATED`), la API debe estar habilitada en el proyecto de GCP correspondiente:
+1. Abre [Google Cloud Console - Web Search Indexing API](https://console.developers.google.com/apis/api/indexing.googleapis.com/overview?project=cadensa-web-dev).
+2. Haz clic en **Habilitar** (`Enable`).
+
 #### Comprobación Rápida con `--verify-setup`
 Para verificar en segundos si los permisos ya están operativos sin esperar a auditar todas las páginas:
 ```bash

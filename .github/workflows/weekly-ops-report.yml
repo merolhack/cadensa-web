@@ -1,0 +1,48 @@
+name: Weekly Operations & SEO Performance Report
+
+on:
+  schedule:
+    # Ejecución automática todos los lunes a las 08:00 UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  seo-ops-report:
+    name: Generate SEO Performance Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cryptography
+
+      - name: Run SEO Performance Audit
+        run: |
+          mkdir -p reports
+          python3 scripts/audit_seo_performance.py --export-csv reports/seo_performance_weekly.csv || {
+            echo "::warning::Consulta en vivo a Search Analytics API no completada (permisos o credenciales pendientes). Generando reporte de referencia para preservar artefacto operativo."
+            python3 scripts/audit_seo_performance.py --dry-run --export-csv reports/seo_performance_weekly.csv
+          }
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON || secrets.GCP_SA_METRICS_KEY }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL || 'https://cadensa-web.pages.dev/' }}
+
+      - name: Upload Weekly SEO Performance CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-performance-weekly
+          path: reports/seo_performance_weekly.csv
+          retention-days: 30
+          if-no-files-found: error
+

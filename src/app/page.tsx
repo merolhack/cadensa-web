@@ -560,6 +560,7 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onOpenCertificates={() => setIsCertificatesOpen(true)}
           onOpenAcousticAi={() => setIsAcousticAiOpen(true)}
           onOpenAvatar={() => handleOpenVideoModal(activeTechnique)}
+          onOpenCustomPhrases={() => setIsCustomPhraseOpen(true)}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -973,9 +974,11 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsCustomPhraseOpen(true)}
-                className="text-cyan-400 hover:text-cyan-300 underline cursor-pointer"
+                aria-label="+ Mis Frases Desafío (TTS)"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 hover:text-cyan-200 border border-cyan-800/60 text-xs font-semibold shadow-sm transition-all cursor-pointer"
               >
-                + Mis Frases Desafío
+                <span>🎯</span>
+                <span>+ Mis Frases Desafío (TTS)</span>
               </button>
               <button
                 onClick={nextPhrase}

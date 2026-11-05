@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { flattenSentenceSyllables } from '@/lib/syllables';
 import { supabase } from '@/lib/supabaseClient';
 import {
@@ -59,9 +59,15 @@ export function CustomPhraseTrainer({
   const [phrases, setPhrases] = useState<CustomPhraseItem[]>(loadLocalCustomPhrases);
   const [inputText, setInputText] = useState('');
   const [inputBpm, setInputBpm] = useState(currentBpm);
+  const [syllables, setSyllables] = useState<string[]>([]);
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
+
+  // Estados de reproducción rítmica con Web Speech API (TTS)
+  const [isTtsPlaying, setIsTtsPlaying] = useState(false);
+  const [activeTtsIndex, setActiveTtsIndex] = useState(-1);
+  const playbackTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Detectar usuario autenticado para habilitar respaldo en la nube
   useEffect(() => {
@@ -90,10 +96,101 @@ export function CustomPhraseTrainer({
     }
   }, [isOpen]);
 
+  // Detener TTS si el modal se cierra o se desmonta
+  const handleStopTts = useCallback(() => {
+    if (playbackTimerRef.current) {
+      clearInterval(playbackTimerRef.current);
+      playbackTimerRef.current = null;
+    }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsTtsPlaying(false);
+    setActiveTtsIndex(-1);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      handleStopTts();
+    }
+  }, [isOpen, handleStopTts]);
+
+  useEffect(() => {
+    return () => {
+      handleStopTts();
+    };
+  }, [handleStopTts]);
+
   if (!isOpen) return null;
 
-  // Cálculo en tiempo real de sílabas para la frase que se escribe
-  const liveSyllables = inputText.trim() ? flattenSentenceSyllables(inputText.trim()) : [];
+  // Ejecuta la silabación de la frase en edición
+  const handleSyllabify = () => {
+    const clean = inputText.trim();
+    if (!clean) {
+      setSyllables([]);
+      return;
+    }
+    const extracted = flattenSentenceSyllables(clean);
+    setSyllables(extracted);
+    handleStopTts();
+  };
+
+  // Vocaliza una sílaba individual mediante Web Speech API (100% on-device y offline)
+  const speakSyllable = (syl: string, tempo: number) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(syl);
+      utterance.lang = 'es-ES';
+      // Ajustar la velocidad ligeramente acorde al BPM para articulación natural
+      utterance.rate = Math.min(1.8, Math.max(0.7, tempo / 75));
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      // Ignorar excepciones en entornos sin soporte de audio
+    }
+  };
+
+  // Reproducción secuencial de cada sílaba en sincronía estricta con el metrónomo
+  const handlePlayTts = () => {
+    const clean = inputText.trim();
+    const targetSyllables = syllables.length > 0 ? syllables : flattenSentenceSyllables(clean);
+
+    if (targetSyllables.length === 0) {
+      setFeedbackMsg('Escribe una frase y pulsa "Silabizar" para escucharla.');
+      setTimeout(() => setFeedbackMsg(null), 2500);
+      return;
+    }
+
+    if (syllables.length === 0) {
+      setSyllables(targetSyllables);
+    }
+
+    handleStopTts();
+    setIsTtsPlaying(true);
+    setActiveTtsIndex(0);
+    speakSyllable(targetSyllables[0], inputBpm);
+
+    const stepMs = Math.round((60 / inputBpm) * 1000);
+    let currentStep = 0;
+
+    const timer = setInterval(() => {
+      currentStep += 1;
+      if (currentStep < targetSyllables.length) {
+        setActiveTtsIndex(currentStep);
+        speakSyllable(targetSyllables[currentStep], inputBpm);
+      } else {
+        clearInterval(timer);
+        playbackTimerRef.current = null;
+        setTimeout(() => {
+          setIsTtsPlaying(false);
+          setActiveTtsIndex(-1);
+        }, stepMs);
+      }
+    }, stepMs);
+
+    playbackTimerRef.current = timer;
+  };
 
   const handleSavePhrase = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,6 +210,8 @@ export function CustomPhraseTrainer({
     saveLocalCustomPhrases(updated);
 
     setInputText('');
+    setSyllables([]);
+    handleStopTts();
     setFeedbackMsg('¡Frase guardada en tu repertorio personal!');
     setTimeout(() => setFeedbackMsg(null), 2500);
 
@@ -131,13 +230,51 @@ export function CustomPhraseTrainer({
   };
 
   const handleApplyTemplate = (templatePhrase: string, bpm: number) => {
+    handleStopTts();
     setInputText(templatePhrase);
     setInputBpm(bpm);
+    const extracted = flattenSentenceSyllables(templatePhrase);
+    setSyllables(extracted);
   };
 
   const handleTrainNow = (phrase: string, bpm: number) => {
+    handleStopTts();
     onSelectPhrase(phrase, bpm);
     onClose();
+  };
+
+  const handleLoadAndPlayTts = (phrase: string, bpm: number) => {
+    handleStopTts();
+    setInputText(phrase);
+    setInputBpm(bpm);
+    const extracted = flattenSentenceSyllables(phrase);
+    setSyllables(extracted);
+
+    setTimeout(() => {
+      setIsTtsPlaying(true);
+      setActiveTtsIndex(0);
+      speakSyllable(extracted[0], bpm);
+
+      const stepMs = Math.round((60 / bpm) * 1000);
+      let currentStep = 0;
+
+      const timer = setInterval(() => {
+        currentStep += 1;
+        if (currentStep < extracted.length) {
+          setActiveTtsIndex(currentStep);
+          speakSyllable(extracted[currentStep], bpm);
+        } else {
+          clearInterval(timer);
+          playbackTimerRef.current = null;
+          setTimeout(() => {
+            setIsTtsPlaying(false);
+            setActiveTtsIndex(-1);
+          }, stepMs);
+        }
+      }, stepMs);
+
+      playbackTimerRef.current = timer;
+    }, 50);
   };
 
   const handleManualSync = async () => {
@@ -176,16 +313,24 @@ export function CustomPhraseTrainer({
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">🎯</span>
             <div>
-              <h2 id="custom-phrases-title" className="text-base sm:text-lg font-bold text-zinc-100">
-                Mis Frases de Desafío
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 id="custom-phrases-title" className="text-base sm:text-lg font-bold text-zinc-100">
+                  Mis Frases de Desafío
+                </h2>
+                <span className="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono font-bold">
+                  TTS
+                </span>
+              </div>
               <p className="text-xs text-zinc-400">
-                Personaliza palabras temidas o situaciones reales con silabación automática.
+                Entrena oraciones personalizadas con metrónomo y síntesis de voz silábica on-device.
               </p>
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => {
+              handleStopTts();
+              onClose();
+            }}
             className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-100 text-sm flex items-center justify-center transition-colors cursor-pointer"
             aria-label="Cerrar modal"
           >
@@ -228,43 +373,119 @@ export function CustomPhraseTrainer({
           </div>
         </div>
 
-        {/* Formulario de Nueva Frase */}
+        {/* Formulario de Entrada y Silabación */}
         <form onSubmit={handleSavePhrase} className="space-y-3 bg-zinc-950/40 p-4 rounded-2xl border border-zinc-800/60">
           <div>
             <label htmlFor="custom-phrase-input" className="block text-xs font-semibold text-zinc-300 mb-1">
               Escribe tu propia frase personalizada
             </label>
-            <textarea
-              id="custom-phrase-input"
-              rows={2}
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ej: Tengo una cita médica el jueves por la mañana..."
-              className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-100 placeholder:text-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500"
-            />
+            <div className="flex gap-2">
+              <input
+                id="custom-phrase-input"
+                type="text"
+                value={inputText}
+                onChange={(e) => {
+                  setInputText(e.target.value);
+                  if (e.target.value.trim()) {
+                    setSyllables(flattenSentenceSyllables(e.target.value.trim()));
+                  } else {
+                    setSyllables([]);
+                  }
+                }}
+                placeholder="Ej: Quiero un café con leche por favor..."
+                className="flex-1 px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-100 placeholder:text-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500"
+              />
+              <button
+                type="button"
+                onClick={handleSyllabify}
+                disabled={!inputText.trim()}
+                className="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-xs font-semibold text-emerald-300 border border-zinc-700 transition cursor-pointer shrink-0"
+              >
+                ✂️ Silabizar
+              </button>
+            </div>
           </div>
 
-          {/* Silabación interactiva previa */}
-          {liveSyllables.length > 0 && (
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-[11px] text-zinc-400">
-                <span>Silabación Fonoaudiológica en tiempo real:</span>
-                <span className="font-mono text-emerald-400">{liveSyllables.length} sílabas métricas</span>
-              </div>
-              <div className="flex flex-wrap gap-1 items-center">
-                {liveSyllables.map((syl, idx) => (
-                  <span
-                    key={`${syl}-${idx}`}
-                    className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-mono text-xs border border-emerald-500/30"
-                  >
-                    {syl}
+          {/* Cajas Visuales de Sílabas y Reproductor Rítmico TTS */}
+          {syllables.length > 0 && (
+            <div className="space-y-2.5 p-3.5 rounded-2xl bg-zinc-950/70 border border-zinc-800/90 animate-fade-in">
+              <div className="flex items-center justify-between text-xs text-zinc-400">
+                <span className="font-semibold text-zinc-300">
+                  Cajas Visuales de Sílabas ({syllables.length} métricas)
+                </span>
+                {isTtsPlaying && (
+                  <span className="text-emerald-400 font-mono font-bold animate-pulse text-[11px]">
+                    ● Beat {activeTtsIndex + 1}/{syllables.length} ({inputBpm} BPM)
                   </span>
-                ))}
+                )}
+              </div>
+
+              {/* Cajas visuales con renderizado y sombreado fonoaudiológico */}
+              <div className="flex flex-wrap items-center justify-center gap-2 p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl min-h-[60px]">
+                {syllables.map((syl, idx) => {
+                  const isActive = isTtsPlaying && activeTtsIndex === idx;
+                  return (
+                    <React.Fragment key={`${syl}-${idx}`}>
+                      <span
+                        className={`px-3 py-1.5 rounded-xl font-mono text-sm sm:text-base font-bold transition-all duration-150 ${
+                          isActive
+                            ? 'bg-gradient-to-r from-emerald-500 to-cyan-400 text-zinc-950 scale-110 shadow-[0_0_15px_rgba(52,211,153,0.7)] border-transparent'
+                            : 'bg-zinc-950/80 text-zinc-200 border border-zinc-800 hover:border-zinc-700'
+                        }`}
+                      >
+                        {syl}
+                      </span>
+                      {idx < syllables.length - 1 && (
+                        <span className="text-zinc-600 font-light select-none">·</span>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+
+              {/* Controles de reproducción con metrónomo y Web Speech API */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-zinc-800/60">
+                <div className="flex items-center gap-2 text-xs text-zinc-400">
+                  <span>Tempo:</span>
+                  <input
+                    type="range"
+                    min="50"
+                    max="140"
+                    value={inputBpm}
+                    onChange={(e) => setInputBpm(Number(e.target.value))}
+                    className="w-20 sm:w-28 accent-emerald-400"
+                    aria-label="Ajustar tempo del metrónomo TTS"
+                  />
+                  <span className="text-emerald-400 font-mono font-bold">{inputBpm} BPM</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {isTtsPlaying ? (
+                    <button
+                      type="button"
+                      onClick={handleStopTts}
+                      className="px-3 py-1.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span>⏹</span>
+                      <span>Detener</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handlePlayTts}
+                      className="px-3.5 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span>🔊</span>
+                      <span>Reproducir con Metrónomo TTS</span>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           )}
 
-          <div className="flex items-center justify-between gap-3 pt-1">
+          {/* Ajuste de velocidad y botones principales */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
             <div className="flex items-center gap-2 text-xs text-zinc-400">
               <span>Velocidad:</span>
               <input
@@ -285,7 +506,7 @@ export function CustomPhraseTrainer({
                 onClick={() => handleTrainNow(inputText.trim(), inputBpm)}
                 className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-xs text-zinc-200 font-medium transition-colors cursor-pointer"
               >
-                Entrenar Ya
+                ▶ Practicar en Estación
               </button>
               <button
                 type="submit"
@@ -345,9 +566,17 @@ export function CustomPhraseTrainer({
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       type="button"
+                      onClick={() => handleLoadAndPlayTts(item.phrase, item.bpm)}
+                      className="px-2.5 py-1 text-xs rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 font-semibold border border-cyan-500/30 transition-colors cursor-pointer"
+                      title="Escuchar sílabas con TTS"
+                    >
+                      🔊 TTS
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => handleTrainNow(item.phrase, item.bpm)}
                       className="px-2.5 py-1 text-xs rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold border border-emerald-500/30 transition-colors cursor-pointer"
-                      title="Entrenar esta frase"
+                      title="Entrenar esta frase en la estación"
                     >
                       ▶ Practicar
                     </button>

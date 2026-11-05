@@ -124,3 +124,10 @@ El Service Worker (`cadensa-v2.5.0`) gestiona el ciclo de vida y la persistencia
   4. Garantía de privacidad Zero Trust con botón directo "¡Comenzar mi práctica!".
 - **Consentimiento Previo de Micrófono (`src/components/MicrophoneConsentModal.tsx`):** Antes de invocar `getUserMedia`, se despliega una advertencia transparente explicando que el micrófono se usa únicamente para biofeedback en memoria local sin transmisiones a la nube (`cadensa_mic_consent`).
 - **Páginas Legales y Medical Disclaimer (`/privacy` y `/terms`):** Declaración explícita de privacidad local-first ("Tus datos de voz y tus resultados de práctica nunca salen de tu dispositivo...") y descargo fonoaudiológico formal YMYL ("Cadensa es una herramienta de apoyo y no sustituye el diagnóstico o tratamiento de un fonoaudiólogo certificado.").
+
+### 8. Entrenador de Frases Personalizadas con Web Speech API On-Device (`CustomPhraseTrainer.tsx`)
+- **Silabación Fonoaudiológica en Tiempo Real:** Entrada de texto libre (`<input>`) y botón de silabación asistida (`src/lib/syllables.ts`) que desglosa oraciones complejas respetando diptongos e hiatos.
+- **Síntesis Vocal Rítmica (Web Speech API):** Articulación sonora de cada sílaba individual mediante `SpeechSynthesisUtterance` (`es-ES`) sincronizada al ritmo exacto del metrónomo configurable (50 a 160 BPM), 100% on-device y sin llamadas de red.
+- **Cajas Visuales de Sílabas:** Contenedores dinámicos idénticos a los del lector y modal de video, iluminando la sílaba activa en cada beat con gradientes de alto contraste y sombra reactiva.
+- **Persistencia Local Zero Trust y Nube Opcional:** Almacenamiento local en `localStorage['cadensa_custom_phrases']` con opción de respaldo autenticado en Supabase PostgreSQL Zero Trust RLS.
+

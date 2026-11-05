@@ -26,6 +26,7 @@ interface TechniquesCatalogHomeProps {
   onOpenCertificates?: () => void;
   onOpenAcousticAi?: () => void;
   onOpenAvatar?: () => void;
+  onOpenCustomPhrases?: () => void;
   streakDays: number;
   totalMinutes: number;
   xpPoints: number;
@@ -47,6 +48,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onOpenCertificates,
   onOpenAcousticAi,
   onOpenAvatar,
+  onOpenCustomPhrases,
   streakDays,
   totalMinutes,
   xpPoints,
@@ -276,6 +278,17 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
             >
               <span>🤖</span>
               <span>Avatar IA</span>
+            </button>
+          )}
+
+          {onOpenCustomPhrases && (
+            <button
+              onClick={onOpenCustomPhrases}
+              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-900/50 to-blue-900/50 hover:from-cyan-900/70 hover:to-blue-900/70 border border-cyan-500/40 text-cyan-200 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
+              aria-label="Abrir Entrenador de Frases Personalizadas con TTS"
+            >
+              <span>🎯</span>
+              <span>Frases Desafío (TTS)</span>
             </button>
           )}
         </div>

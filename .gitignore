@@ -73,3 +73,7 @@ __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+
+# Operations reports
+reports/*.csv
+

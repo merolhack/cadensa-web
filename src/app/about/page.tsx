@@ -381,6 +381,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Auditoría de Rendimiento SEO (Search Analytics API), Exportación Excel y Protocolo UAT Clínico:</strong> Script de telemetría de rendimiento orgánico (`audit_seo_performance.py`) con cálculo de clics, impresiones, CTR y posición media para las 7 técnicas fonoaudiológicas, exportación de reportes a CSV con BOM UTF-8 para análisis en Microsoft Excel, y Protocolo de Pruebas de Aceptación de Usuario (`uat_protocol.md`) con 8 escenarios clínicos en dispositivos reales (iOS/Android PWA, audio de video, auto-escucha, accesibilidad WCAG AA y modo offline).</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Entrenador de Frases Personalizadas (Web Speech API Offline) y Reportes Operativos CI/CD:</strong> Módulo &quot;Mis Frases de Desafío&quot; con campo de texto, botón de silabación automática fonoaudiológica, reproducción rítmica con síntesis de voz en el navegador (`window.speechSynthesis`) sincronizada beat a beat con el metrónomo, cajas visuales de sílabas iluminadas en tiempo real y workflow semanal automatizado en GitHub Actions (`weekly-ops-report.yml`) para generación y subida de reportes CSV de rendimiento SEO orgánico.</span>
+                </li>
               </ul>
             </div>
 

@@ -110,16 +110,16 @@ export function CustomPhraseTrainer({
   }, []);
 
   useEffect(() => {
-    if (!isOpen) {
-      handleStopTts();
-    }
-  }, [isOpen, handleStopTts]);
-
-  useEffect(() => {
     return () => {
-      handleStopTts();
+      if (playbackTimerRef.current) {
+        clearInterval(playbackTimerRef.current);
+        playbackTimerRef.current = null;
+      }
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
     };
-  }, [handleStopTts]);
+  }, []);
 
   if (!isOpen) return null;
 

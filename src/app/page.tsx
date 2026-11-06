@@ -43,6 +43,7 @@ import { ClinicalReportExporter } from '@/components/ClinicalReportExporter';
 import { WelcomeTour } from '@/components/WelcomeTour';
 import { setupAudioContextUnlock } from '@/lib/audioUnlock';
 import { initGlobalErrorTracking } from '@/lib/errorTracker';
+import { Toggle, Disclosure, Collapsible } from '@/components/ui';
 
 const TRAINING_PHRASES = [
   'Ca mi no des pa cio ca da ma ña na',
@@ -1006,24 +1007,37 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
             fontScale={fontScale}
           />
 
-          {/* Módulo de Auto-Escucha Fonoaudiológica Zero Trust */}
-          <AudioSelfMonitor
-            isPlaying={isPlaying}
-            onRecordingStart={() => {
-              if (!isPlaying) {
-                handleStartPractice();
-              }
-            }}
-            onRecordingStop={() => {
-              handleStopPractice();
-            }}
-            onPlaybackStart={() => {
-              handleStopPractice();
-            }}
-          />
+          {/* Panel Colapsable de Herramientas de Auto-Escucha y Validación Fonética */}
+          <div className="pt-2 text-left">
+            <Collapsible
+              title="Herramientas de Auto-Escucha y Validación Fonética"
+              subtitle="Grabadora fonoaudiológica local y análisis fonético en el navegador"
+              icon="🎙️"
+              defaultOpen={false}
+              className="bg-zinc-950/40 border-zinc-800/80"
+            >
+              <div className="space-y-3 pt-2">
+                {/* Módulo de Auto-Escucha Fonoaudiológica Zero Trust */}
+                <AudioSelfMonitor
+                  isPlaying={isPlaying}
+                  onRecordingStart={() => {
+                    if (!isPlaying) {
+                      handleStartPractice();
+                    }
+                  }}
+                  onRecordingStop={() => {
+                    handleStopPractice();
+                  }}
+                  onPlaybackStart={() => {
+                    handleStopPractice();
+                  }}
+                />
 
-          {/* Validador Fonético On-Device Zero Trust */}
-          <PhoneticRecognitionValidator targetPhrase={currentPhrase} />
+                {/* Validador Fonético On-Device Zero Trust */}
+                <PhoneticRecognitionValidator targetPhrase={currentPhrase} />
+              </div>
+            </Collapsible>
+          </div>
         </div>
 
         {/* BOTONES DE ACCIÓN PRINCIPAL DIFERENCIADOS POR TÉCNICA */}
@@ -1104,155 +1118,182 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           </div>
         )}
 
-        {/* Controles de Configuración de Audio & Compás (Pestañas Rápidas) */}
-        <div className="space-y-2 pt-1 border-t border-zinc-800/60">
-          <div className="flex items-center justify-between text-xs text-zinc-300">
-            <span className="font-medium">Velocidad de Cadencia</span>
-            <span className="font-mono text-emerald-400 text-sm font-bold bg-zinc-950 px-2.5 py-0.5 rounded-lg border border-zinc-800">
-              {bpm} BPM
-            </span>
-          </div>
+        {/* Panel Colapsable de Configuración de Audio, Tempo y Toggles */}
+        <div className="pt-2 text-left">
+          <Collapsible
+            title="Ajustes de Cadencia, Sonido y Accesibilidad"
+            subtitle={`Tempo: ${bpm} BPM • Compás: ${timeSignature}/4 • Timbre: ${soundPreset}`}
+            icon="⚙️"
+            defaultOpen={false}
+            className="bg-zinc-950/40 border-zinc-800/80"
+          >
+            <div className="space-y-3.5 pt-2">
+              {/* Slider de Tempo BPM con botones +/- */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs text-zinc-300">
+                  <span className="font-medium">Velocidad de Cadencia</span>
+                  <span className="font-mono text-emerald-400 text-sm font-bold bg-zinc-950 px-2.5 py-0.5 rounded-lg border border-zinc-800">
+                    {bpm} BPM
+                  </span>
+                </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => handleBpmChange(bpm - 5)}
-              className="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-base flex items-center justify-center transition-colors cursor-pointer"
-              title="Reducir 5 BPM"
-            >
-              -
-            </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => handleBpmChange(bpm - 5)}
+                    className="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-base flex items-center justify-center transition-colors cursor-pointer"
+                    title="Reducir 5 BPM"
+                  >
+                    -
+                  </button>
 
-            <input
-              type="range"
-              min="60"
-              max="160"
-              value={bpm}
-              onChange={(e) => handleBpmChange(Number(e.target.value))}
-              aria-label="Ajustar tempo del metrónomo en pulsaciones por minuto"
-              aria-valuemin={60}
-              aria-valuemax={160}
-              aria-valuenow={bpm}
-              className="w-full accent-emerald-400 cursor-pointer h-2 bg-zinc-800 rounded-lg"
-            />
+                  <input
+                    type="range"
+                    min="60"
+                    max="160"
+                    value={bpm}
+                    onChange={(e) => handleBpmChange(Number(e.target.value))}
+                    aria-label="Ajustar tempo del metrónomo en pulsaciones por minuto"
+                    aria-valuemin={60}
+                    aria-valuemax={160}
+                    aria-valuenow={bpm}
+                    className="w-full accent-emerald-400 cursor-pointer h-2 bg-zinc-800 rounded-lg"
+                  />
 
-            <button
-              onClick={() => handleBpmChange(bpm + 5)}
-              className="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-base flex items-center justify-center transition-colors cursor-pointer"
-              title="Aumentar 5 BPM"
-            >
-              +
-            </button>
-          </div>
+                  <button
+                    onClick={() => handleBpmChange(bpm + 5)}
+                    className="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-base flex items-center justify-center transition-colors cursor-pointer"
+                    title="Aumentar 5 BPM"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
 
-          {/* Opciones Avanzadas: Compás, Timbre y Tamaño */}
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-zinc-400">
-            {/* Selector de Compás */}
-            <div className="flex items-center gap-1">
-              <span className="text-zinc-500">Compás:</span>
-              {([2, 3, 4] as TimeSignature[]).map((sig) => (
-                <button
-                  key={sig}
-                  onClick={() => handleTimeSignatureChange(sig)}
-                  className={`px-2 py-0.5 rounded-lg border cursor-pointer ${
-                    timeSignature === sig
-                      ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
-                      : 'bg-zinc-900 border-zinc-800 hover:text-zinc-200'
-                  }`}
-                >
-                  {sig}/4
-                </button>
-              ))}
+              {/* Toggles de Audio, Vibración y Fading */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800/70">
+                <Toggle
+                  checked={!isMuted}
+                  onChange={handleToggleMute}
+                  label="Sonido Acústico"
+                  description={!isMuted ? 'Pulso audible activo' : 'Modo visual silencioso'}
+                  icon={!isMuted ? '🔊' : '🔇'}
+                  activeColor="cyan"
+                  size="sm"
+                />
+
+                <Toggle
+                  checked={hapticEnabled}
+                  onChange={setHapticEnabled}
+                  label="Vibración Háptica"
+                  description={hapticEnabled ? 'Pulso táctil en móviles' : 'Vibración desactivada'}
+                  icon="📳"
+                  activeColor="emerald"
+                  size="sm"
+                />
+
+                <Toggle
+                  checked={fadingEnabled}
+                  onChange={handleFadingToggle}
+                  label="Reto Silencio Fading"
+                  description={fadingEnabled ? 'Silencia 2 de cada 4 compases' : 'Metrónomo continuo'}
+                  icon="🎯"
+                  activeColor="purple"
+                  size="sm"
+                />
+              </div>
+
+              {/* Opciones Avanzadas: Compás, Timbre y Tamaño de Texto */}
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-zinc-400">
+                {/* Selector de Compás */}
+                <div className="flex items-center gap-1">
+                  <span className="text-zinc-500 font-medium">Compás:</span>
+                  {([2, 3, 4] as TimeSignature[]).map((sig) => (
+                    <button
+                      key={sig}
+                      onClick={() => handleTimeSignatureChange(sig)}
+                      className={`px-2 py-0.5 rounded-lg border cursor-pointer font-semibold ${
+                        timeSignature === sig
+                          ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
+                          : 'bg-zinc-900 border-zinc-800 hover:text-zinc-200'
+                      }`}
+                    >
+                      {sig}/4
+                    </button>
+                  ))}
+                </div>
+
+                {/* Selector de Timbre */}
+                <div className="flex items-center gap-1">
+                  <span className="text-zinc-500 font-medium">Timbre:</span>
+                  {(['clasico', 'madera', 'digital'] as SoundPreset[]).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => handleSoundPresetChange(t)}
+                      className={`px-2 py-0.5 rounded-lg border capitalize cursor-pointer font-semibold ${
+                        soundPreset === t
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold'
+                          : 'bg-zinc-900 border-zinc-800 hover:text-zinc-200'
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Escala de Fuente */}
+                <div className="flex items-center gap-1">
+                  <span className="text-zinc-500 font-medium">Texto:</span>
+                  {(['normal', 'grande', 'extragrande'] as SyllableFontScale[]).map((scale) => (
+                    <button
+                      key={scale}
+                      onClick={() => setFontScale(scale)}
+                      className={`px-2 py-0.5 rounded-lg border cursor-pointer font-semibold ${
+                        fontScale === scale
+                          ? 'bg-zinc-700 border-zinc-500 text-zinc-100 font-bold'
+                          : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                      }`}
+                    >
+                      {scale === 'normal' ? 'A' : scale === 'grande' ? 'A+' : 'A++'}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-
-            {/* Selector de Timbre */}
-            <div className="flex items-center gap-1">
-              <span className="text-zinc-500">Timbre:</span>
-              {(['clasico', 'madera', 'digital'] as SoundPreset[]).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => handleSoundPresetChange(t)}
-                  className={`px-2 py-0.5 rounded-lg border capitalize cursor-pointer ${
-                    soundPreset === t
-                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold'
-                      : 'bg-zinc-900 border-zinc-800 hover:text-zinc-200'
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-
-            {/* Reto Silencio Rítmico Fading */}
-            <button
-              onClick={handleFadingToggle}
-              className={`px-2 py-0.5 rounded-lg border cursor-pointer ${
-                fadingEnabled
-                  ? 'bg-purple-500/20 border-purple-400 text-purple-300 font-bold'
-                  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
-              }`}
-              title="Silencia 2 compases cada 4 compases para reto interno"
-            >
-              {fadingEnabled ? '🎯 Reto Activo' : '🎯 Fading'}
-            </button>
-
-            {/* Interruptor de Feedback Háptico para móviles */}
-            <button
-              onClick={() => setHapticEnabled(!hapticEnabled)}
-              className={`px-2 py-0.5 rounded-lg border cursor-pointer flex items-center gap-1 ${
-                hapticEnabled
-                  ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
-                  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
-              }`}
-              title={hapticEnabled ? 'Vibración táctil activada en cada pulso rítmico' : 'Vibración táctil desactivada'}
-              aria-label={hapticEnabled ? 'Desactivar vibración háptica' : 'Activar vibración háptica'}
-            >
-              <span>📳</span>
-              <span>{hapticEnabled ? 'Háptico On' : 'Háptico Off'}</span>
-            </button>
-
-            {/* Escala de Fuente */}
-            <div className="flex items-center gap-1">
-              <span className="text-zinc-500">Texto:</span>
-              {(['normal', 'grande', 'extragrande'] as SyllableFontScale[]).map((scale) => (
-                <button
-                  key={scale}
-                  onClick={() => setFontScale(scale)}
-                  className={`px-1.5 py-0.5 rounded-lg border cursor-pointer ${
-                    fontScale === scale
-                      ? 'bg-zinc-700 border-zinc-500 text-zinc-100 font-bold'
-                      : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  {scale === 'normal' ? 'A' : scale === 'grande' ? 'A+' : 'A++'}
-                </button>
-              ))}
-            </div>
-          </div>
+          </Collapsible>
         </div>
       </section>
 
-      {/* Tarjetas Clínicas de Base Científica (max-w-4xl) */}
-      <section className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-3 gap-3.5 text-left my-2">
-        <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-1">
-          <div className="text-emerald-400 text-sm font-bold">01. {activeTechnique.badge}</div>
-          <p className="text-xs text-zinc-400 leading-relaxed">
-            {activeTechnique.neurobiologicalBasis}
-          </p>
-        </div>
+      {/* Tarjetas Clínicas de Base Científica con Divulgación (Disclosure) */}
+      <section className="max-w-4xl w-full my-2">
+        <Disclosure
+          summary="💡 Base Neurobiológica y Respaldo Clínico AMTTM"
+          badge="Evidencia A"
+          defaultOpen={false}
+          className="bg-zinc-900/40 border-zinc-800/80"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-left pt-2">
+            <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-1">
+              <div className="text-emerald-400 text-sm font-bold">01. {activeTechnique.badge}</div>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                {activeTechnique.neurobiologicalBasis}
+              </p>
+            </div>
 
-        <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-1">
-          <div className="text-cyan-400 text-sm font-bold">02. {activeTechnique.shortName}</div>
-          <p className="text-xs text-zinc-400 leading-relaxed">
-            {activeTechnique.clinicalObjective}
-          </p>
-        </div>
+            <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-1">
+              <div className="text-cyan-400 text-sm font-bold">02. {activeTechnique.shortName}</div>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                {activeTechnique.clinicalObjective}
+              </p>
+            </div>
 
-        <div className="p-3.5 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-1">
-          <div className="text-emerald-400 text-sm font-bold">03. Respaldo AMTTM</div>
-          <p className="text-xs text-zinc-400 leading-relaxed">
-            Acompañamiento integral y comunidad respaldada por la Asociación Mexicana de la Tartamudez.
-          </p>
-        </div>
+            <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-1">
+              <div className="text-emerald-400 text-sm font-bold">03. Respaldo AMTTM</div>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Acompañamiento integral y comunidad respaldada por la Asociación Mexicana de la Tartamudez.
+              </p>
+            </div>
+          </div>
+        </Disclosure>
       </section>
 
       {/* Guía Interactiva de Botones (FAQ) y Fundamento Clínico STS */}

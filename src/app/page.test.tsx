@@ -218,6 +218,10 @@ describe('Home Page - Unit Tests', () => {
     // La práctica ahora está en curso
     expect(screen.getByRole('button', { name: /pausar ritmo sts/i })).toBeInTheDocument();
 
+    // Abrir el panel de herramientas de auto-escucha y validación fonética
+    const toolsBtn = screen.getByRole('button', { name: /herramientas de auto-escucha/i });
+    fireEvent.click(toolsBtn);
+
     // Iniciar la grabación de la práctica en el monitor de auto-escucha
     const recordBtn = screen.getByRole('button', { name: /grabar práctica/i });
     await act(async () => {

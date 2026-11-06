@@ -12,6 +12,7 @@ import {
 } from '@/lib/clinicalTechniques';
 import { PwaInstallButton } from './PwaInstallButton';
 import { Footer } from './Footer';
+import { Disclosure, Collapsible } from './ui';
 
 interface TechniquesCatalogHomeProps {
   onSelectTechnique: (technique: ClinicalTechnique) => void;
@@ -59,6 +60,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
   onLogout,
 }) => {
   const [selectedFamilyFilter, setSelectedFamilyFilter] = useState<TechniqueFamilyId | 'todas'>('todas');
+  const [isLabOpen, setIsLabOpen] = useState(false);
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -182,129 +184,155 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
           Cadensa reúne las 7 técnicas fonoaudiológicas con mayor respaldo clínico para la tartamudez y desregulación motriz. Elige la técnica adecuada para tu tipo de desafío o inicia tu entrenamiento guiado.
         </p>
 
+        {/* Acciones Nucleares Principales (Estilo Duolingo: Foco y Simplicidad) */}
         <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
           <button
             onClick={() => onSelectTechnique(CLINICAL_TECHNIQUES.sts)}
-            className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 font-bold text-sm shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all transform hover:scale-102 cursor-pointer flex items-center gap-2"
+            className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-zinc-950 font-black text-sm sm:text-base shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all transform hover:scale-102 cursor-pointer flex items-center gap-2"
           >
             <span>⚡</span>
             <span>Comenzar Práctica Guiada Directa</span>
           </button>
 
-          {onOpenQuickRoutine && (
-            <button
-              onClick={onOpenQuickRoutine}
-              className="px-5 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 font-semibold text-sm transition-all cursor-pointer flex items-center gap-2"
-            >
-              <span>⏱️</span>
-              <span>Rutina 5 Min</span>
-            </button>
-          )}
-
-          {onOpenSimulator && (
-            <button
-              onClick={onOpenSimulator}
-              className="px-5 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 font-semibold text-sm transition-all cursor-pointer flex items-center gap-2"
-            >
-              <span>🎭</span>
-              <span>Simulador Real</span>
-            </button>
-          )}
-
-          {onOpenDDK && (
-            <button
-              onClick={onOpenDDK}
-              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5"
-            >
-              <span>⚡</span>
-              <span>Prueba DDK</span>
-            </button>
-          )}
-
-          {onOpenFormants && (
-            <button
-              onClick={onOpenFormants}
-              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5"
-            >
-              <span>📊</span>
-              <span>Formantes F1/F2</span>
-            </button>
-          )}
-
-          {onOpenTelehealth && (
-            <button
-              onClick={onOpenTelehealth}
-              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-indigo-500/40 text-indigo-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5"
-            >
-              <span>📡</span>
-              <span>Telesalud P2P</span>
-            </button>
-          )}
-
           {onOpenKids && (
             <button
               onClick={onOpenKids}
-              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-900/60 to-pink-900/60 hover:from-purple-900/80 hover:to-pink-900/80 border border-purple-500/40 text-amber-300 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
+              className="px-5 py-3 rounded-2xl bg-gradient-to-r from-purple-900/60 to-pink-900/60 hover:from-purple-900/80 hover:to-pink-900/80 border border-purple-500/40 text-amber-300 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
             >
               <span>✨</span>
               <span>Cadensa Kids</span>
             </button>
           )}
 
-          {onOpenDAF && (
+          {onOpenQuickRoutine && (
             <button
-              onClick={onOpenDAF}
-              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-teal-900/60 to-cyan-900/60 hover:from-teal-900/80 hover:to-cyan-900/80 border border-teal-500/40 text-teal-200 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
-              aria-label="Abrir Feedback Auditivo Alterado DAF y FAF"
+              onClick={onOpenQuickRoutine}
+              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2"
             >
-              <span>🎧</span>
-              <span>Feedback DAF/FAF</span>
+              <span>⏱️</span>
+              <span>Rutina 5 Min</span>
             </button>
           )}
 
-          {onOpenCertificates && (
-            <button
-              onClick={onOpenCertificates}
-              className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 font-semibold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
-              aria-label="Abrir Diplomas de Mérito y Fluidez"
-            >
-              <span>🏆</span>
-              <span>Diplomas</span>
-            </button>
-          )}
+          {/* Botón de acceso al Laboratorio Clínico y Herramientas Especializadas */}
+          <button
+            type="button"
+            onClick={() => setIsLabOpen(!isLabOpen)}
+            className="px-4 py-3 rounded-2xl bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-300 font-medium text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2"
+            aria-expanded={isLabOpen}
+          >
+            <span>🧪</span>
+            <span>{isLabOpen ? 'Ocultar Laboratorio' : 'Laboratorio y Herramientas Clínicas ▾'}</span>
+          </button>
+        </div>
 
-          {onOpenAcousticAi && (
-            <button
-              onClick={onOpenAcousticAi}
-              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-900/50 to-emerald-900/50 hover:from-cyan-900/70 hover:to-emerald-900/70 border border-cyan-500/40 text-cyan-200 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
-              aria-label="Abrir Biofeedback Acústico On-Device"
-            >
-              <span>🧠</span>
-              <span>IA Acústica</span>
-            </button>
-          )}
+        {/* Panel Colapsable de Herramientas Clínicas Especializadas */}
+        <div className="max-w-4xl w-full mx-auto text-left pt-2">
+          <Collapsible
+            title="Laboratorio Clínico y Herramientas Especializadas"
+            subtitle="Simuladores, pruebas diagnósticas, telesalud y biofeedback acústico"
+            icon="🧪"
+            badge={<span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono">9 Módulos</span>}
+            isOpen={isLabOpen}
+            onToggle={setIsLabOpen}
+          >
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2">
+              {onOpenSimulator && (
+                <button
+                  onClick={onOpenSimulator}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <span className="text-base">🎭</span>
+                  <span>Simulador Real</span>
+                </button>
+              )}
 
-          {onOpenAvatar && (
-            <button
-              onClick={onOpenAvatar}
-              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-900/50 via-teal-900/50 to-cyan-900/50 hover:from-emerald-900/70 hover:to-cyan-900/70 border border-emerald-500/40 text-emerald-200 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
-              aria-label="Abrir Agente Avatar de IA Fonoaudiológico"
-            >
-              <span>🤖</span>
-              <span>Avatar IA</span>
-            </button>
-          )}
+              {onOpenDDK && (
+                <button
+                  onClick={onOpenDDK}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <span className="text-base">⚡</span>
+                  <span>Prueba DDK</span>
+                </button>
+              )}
 
-          {onOpenCustomPhrases && (
-            <button
-              onClick={onOpenCustomPhrases}
-              className="px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-900/50 to-blue-900/50 hover:from-cyan-900/70 hover:to-blue-900/70 border border-cyan-500/40 text-cyan-200 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 shadow-sm min-h-[44px]"
-              aria-label="Abrir Entrenador de Frases Personalizadas con TTS"
-            >
-              <span>🎯</span>
-              <span>Frases Desafío (TTS)</span>
-            </button>
-          )}
+              {onOpenFormants && (
+                <button
+                  onClick={onOpenFormants}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <span className="text-base">📊</span>
+                  <span>Formantes F1/F2</span>
+                </button>
+              )}
+
+              {onOpenTelehealth && (
+                <button
+                  onClick={onOpenTelehealth}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-zinc-800 hover:border-indigo-500/40 text-indigo-300 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <span className="text-base">📡</span>
+                  <span>Telesalud P2P</span>
+                </button>
+              )}
+
+              {onOpenDAF && (
+                <button
+                  onClick={onOpenDAF}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-teal-500/40 text-teal-200 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                  aria-label="Abrir Feedback Auditivo Alterado DAF y FAF"
+                >
+                  <span className="text-base">🎧</span>
+                  <span>Feedback DAF/FAF</span>
+                </button>
+              )}
+
+              {onOpenCertificates && (
+                <button
+                  onClick={onOpenCertificates}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                  aria-label="Abrir Diplomas de Mérito y Fluidez"
+                >
+                  <span className="text-base">🏆</span>
+                  <span>Diplomas</span>
+                </button>
+              )}
+
+              {onOpenAcousticAi && (
+                <button
+                  onClick={onOpenAcousticAi}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-cyan-500/40 text-cyan-200 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                  aria-label="Abrir Biofeedback Acústico On-Device"
+                >
+                  <span className="text-base">🧠</span>
+                  <span>IA Acústica</span>
+                </button>
+              )}
+
+              {onOpenAvatar && (
+                <button
+                  onClick={onOpenAvatar}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-emerald-500/40 text-emerald-200 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                  aria-label="Abrir Agente Avatar de IA Fonoaudiológico"
+                >
+                  <span className="text-base">🤖</span>
+                  <span>Avatar IA</span>
+                </button>
+              )}
+
+              {onOpenCustomPhrases && (
+                <button
+                  onClick={onOpenCustomPhrases}
+                  className="p-3 rounded-xl bg-zinc-950/80 hover:bg-zinc-800/80 border border-cyan-500/40 text-cyan-200 font-semibold text-xs transition-all cursor-pointer flex items-center gap-2"
+                  aria-label="Abrir Entrenador de Frases Personalizadas con TTS"
+                >
+                  <span className="text-base">🎯</span>
+                  <span>Frases Desafío (TTS)</span>
+                </button>
+              )}
+            </div>
+          </Collapsible>
         </div>
       </section>
 
@@ -430,10 +458,24 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
                     </div>
                   )}
 
-                  <div className="p-2 rounded-xl bg-zinc-950/70 border border-zinc-900 text-[11px] text-zinc-400">
-                    <strong className="text-emerald-400">Objetivo: </strong>
-                    {technique.exerciseGoal}
-                  </div>
+                  {/* Divulgación progresiva del objetivo clínico y base científica */}
+                  <Disclosure
+                    summary="Fundamento Clínico y Objetivo"
+                    icon="💡"
+                    badge={technique.badge}
+                    className="text-xs"
+                  >
+                    <div className="space-y-1 pt-1 text-xs">
+                      <p className="text-zinc-300">
+                        <strong className="text-emerald-400">Objetivo: </strong>
+                        {technique.exerciseGoal}
+                      </p>
+                      <p className="text-zinc-400">
+                        <strong className="text-cyan-400">Neurobiología: </strong>
+                        {technique.neurobiologicalBasis}
+                      </p>
+                    </div>
+                  </Disclosure>
                 </div>
 
                 {/* Botones de Acción de la Tarjeta */}

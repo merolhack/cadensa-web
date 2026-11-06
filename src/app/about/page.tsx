@@ -351,6 +351,10 @@ export default function AboutPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Simplificación de Interfaz y Ergonomía Estilo Duolingo (Disclosures, Collapsibles y Toggles):</strong> Rediseño profundo de experiencia de usuario (CX/UX) para eliminar sobrecarga cognitiva en niños y adultos con tartamudez. Unificación de acciones principales en pantalla de inicio, panel colapsable del laboratorio clínico (9 módulos), divulgación progresiva (&lt;Disclosure&gt;) de objetivos neurobiológicos en las 7 tarjetas de técnicas, y estación de práctica hiper-limpia con panel de ajustes colapsable (&lt;Collapsible&gt;) e interruptores accesibles (&lt;Toggle role=&quot;switch&quot;&gt;) para control de audio, vibración háptica y reto de silencio.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Runbook de Despliegue en Cloudflare Pages y Guía de Entrega (Developer Handoff):</strong> Documentación estandarizada de operaciones de producción, estrategia de escalamiento CDN/R2 sin tarifas de salida, pipeline unificado de CI/CD en GitHub Actions (`cadensa-ci.yml`) y protocolos de onboarding para desarrolladores e ingenieros de fonoaudiología.</span>
                 </li>
                 <li className="flex items-start gap-2">

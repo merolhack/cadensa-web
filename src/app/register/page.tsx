@@ -47,8 +47,8 @@ export default function RegisterPage() {
         err instanceof Error
           ? err.message
           : typeof err === 'object' && err !== null && 'message' in err
-          ? String((err as { message: unknown }).message)
-          : 'Error al registrar usuario';
+            ? String((err as { message: unknown }).message)
+            : 'Error al registrar usuario';
       setErrorMessage(msg);
     } finally {
       setLoading(false);

@@ -89,6 +89,10 @@ describe('TechniquesCatalogHome Component - Unit Tests', () => {
       />
     );
 
+    // Abrir el panel de Laboratorio Clínico y Herramientas Especializadas
+    const labBtn = screen.getByRole('button', { name: /laboratorio y herramientas clínicas/i });
+    fireEvent.click(labBtn);
+
     const dafBtn = screen.getByRole('button', { name: /feedback auditivo alterado daf y faf/i });
     expect(dafBtn).toBeInTheDocument();
     fireEvent.click(dafBtn);

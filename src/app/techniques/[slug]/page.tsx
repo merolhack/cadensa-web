@@ -8,6 +8,7 @@ import {
 } from '@/lib/clinicalTechniques';
 import { TechniqueFeedbackButton } from '@/components/TechniqueFeedbackButton';
 import { Footer } from '@/components/Footer';
+import { Disclosure } from '@/components/ui';
 
 export const dynamic = 'force-static';
 
@@ -234,21 +235,17 @@ export default async function TechniquePage({ params }: PageProps) {
               <span>❓</span>
               <span>Preguntas Frecuentes sobre {technique.shortName}</span>
             </h2>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {technique.faqItems.map((faq) => (
-                <div key={faq.id} className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800/80 space-y-1.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xs sm:text-sm font-semibold text-zinc-100">
-                      {faq.question}
-                    </h3>
-                    {faq.badge && (
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">
-                        {faq.badge}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{faq.answer}</p>
-                </div>
+                <Disclosure
+                  key={faq.id}
+                  summary={faq.question}
+                  badge={faq.badge}
+                  icon="❓"
+                  className="bg-zinc-900/60 border-zinc-800/80"
+                >
+                  <p className="text-xs text-zinc-400 leading-relaxed pt-1">{faq.answer}</p>
+                </Disclosure>
               ))}
             </div>
           </section>

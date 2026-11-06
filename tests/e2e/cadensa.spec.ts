@@ -92,6 +92,12 @@ test.describe('Cadensa E2E Suite - Validación Clínica y Navegación Real', () 
   }) => {
     await page.goto('/');
 
+    // Abrir sección de laboratorio clínico si está colapsada
+    const labToggle = page.locator('button:has-text("Laboratorio y Herramientas Clínicas")').first();
+    if (await labToggle.isVisible()) {
+      await labToggle.click();
+    }
+
     // Abrir modal de Frases de Desafío desde el catálogo
     const openTrainerBtn = page.locator('button:has-text("Frases Desafío")').first();
     await openTrainerBtn.click();

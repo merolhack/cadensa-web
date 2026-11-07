@@ -1076,7 +1076,7 @@ def compose_video(
     loudnorm_filter = "loudnorm=I=-16:TP=-1.5:LRA=11"
     try:
         pass1_cmd = [
-            ffmpeg_bin, "-hide_banner", "-i", audio_to_mux,
+            ffmpeg_bin, "-y", "-nostdin", "-hide_banner", "-i", audio_to_mux,
             "-af", "loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json",
             "-f", "null", "-"
         ]
@@ -1099,7 +1099,7 @@ def compose_video(
 
     # Pasada 2 EBU R128: Multiplexación y normalización lineal
     cmd = [
-        ffmpeg_bin, "-y", "-hide_banner", "-loglevel", "error",
+        ffmpeg_bin, "-y", "-nostdin", "-hide_banner", "-loglevel", "error",
         "-i", temp_composed_video,
         "-i", audio_to_mux,
         "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "medium", "-crf", "23",
@@ -1120,7 +1120,7 @@ def compose_video(
         portada_webp = os.path.join(out_dir, f"{slug_clean}_portada.webp")
 
         cmd_thumb = [
-            ffmpeg_bin, "-y", "-hide_banner", "-loglevel", "error",
+            ffmpeg_bin, "-y", "-nostdin", "-hide_banner", "-loglevel", "error",
             "-ss", "00:00:01.000", "-i", output_path,
             "-vframes", "1", "-q:v", "2", portada_png
         ]
@@ -1146,7 +1146,7 @@ def measure_audio_ebur128(media_path: str) -> dict[str, float]:
     """
     ffmpeg_bin = FFMPEG_PATH if os.path.exists(FFMPEG_PATH) else "ffmpeg"
     cmd = [
-        ffmpeg_bin, "-hide_banner", "-i", media_path,
+        ffmpeg_bin, "-y", "-nostdin", "-hide_banner", "-i", media_path,
         "-af", "ebur128=peak=true",
         "-f", "null", "-"
     ]

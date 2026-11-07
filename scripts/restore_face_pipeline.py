@@ -123,7 +123,7 @@ def restore_and_upscale_video(
     print("   👉 Integrando pista de audio original con FFmpeg...")
 
     cmd_mux = [
-        ffmpeg_bin, "-y", "-hide_banner", "-loglevel", "error",
+        ffmpeg_bin, "-y", "-nostdin", "-hide_banner", "-loglevel", "error",
         "-i", temp_avi,
         "-i", input_video,
         "-map", "0:v:0",

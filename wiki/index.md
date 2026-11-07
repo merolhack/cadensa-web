@@ -1,7 +1,7 @@
 # Catálogo Maestro del LLM Wiki — Cadensa
 
 > **Índice de Contenidos y Navegación Rápida**  
-> Última actualización: 2026-11-03  
+> Última actualización: 2026-11-07  
 > Esquema de gobernanza: [SCHEMA.md](SCHEMA.md) | Bitácora de operaciones: [log.md](log.md)
 
 Este catálogo resume e indexa de forma modular todas las páginas del conocimiento persistente de Cadensa. Los agentes LLM deben consultar este índice como paso previo antes de explorar páginas individuales.
@@ -14,8 +14,11 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 |---|---|---|
 | [SCHEMA.md](SCHEMA.md) | Reglas de gobierno, las 3 capas del wiki y protocolos Ingest/Query/Lint para LLMs. | `governance` |
 | [log.md](log.md) | Registro cronológico append-only de modificaciones, ingestas y auditorías. | `log` |
+| [zero_hang_unattended_protocol.md](operations/zero_hang_unattended_protocol.md) | Protocolo Zero-Hang: prevención de bloqueos desatendidos, timeouts defensivos, desacople de stdin y watchdog. | `operations`, `reliability` |
 | [deployment_runbook.md](operations/deployment_runbook.md) | Runbook de despliegue en Cloudflare Pages, variables de entorno y estrategia CDN/R2. | `operations`, `deployment` |
 | [developer_handoff.md](operations/developer_handoff.md) | Guía de onboarding, mapa de repositorio, comandos de prueba y regeneración audiovisual. | `operations`, `handoff` |
+| [uat_protocol.md](operations/uat_protocol.md) | Protocolo de pruebas de aceptación de usuario (UAT) y escenarios clínicos fonoaudiológicos. | `operations`, `uat` |
+| [accessibility_and_monitoring.md](operations/accessibility_and_monitoring.md) | Estándares de accesibilidad WCAG 2.1 AA/AAA y telemetría de rendimiento Core Web Vitals. | `operations`, `accessibility` |
 
 ---
 

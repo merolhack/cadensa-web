@@ -65,6 +65,16 @@ Siempre que se actualice, modifique, complete o agregue cualquier tarea pendient
 2. **Coherencia con el LLM Wiki:** Las secciones de estado del proyecto y próximos lanzamientos de `/about` deben mantenerse en estricta sincronía con los documentos en `wiki/roadmap/` (`product_evolution.md`, `activity_plan.md`, `evolution_v2_plan.md`, `next_steps_plan.md`).
 3. **Validación en Suite de Pruebas:** Toda modificación en la página `/about` debe mantener el 100% de éxito en sus pruebas unitarias (`src/app/about/page.test.tsx`) y escenarios BDD (`features/about_page.feature`).
 
+### 8. Protocolo de Ejecución Desatendida Zero-Hang y Prevención de Bloqueos
+**REGLA MANDATORIA DE FIABILIDAD EN PROCESOS DESATENDIDOS:**
+Queda terminantemente PROHIBIDO lanzar tareas en segundo plano o procesos desatendidos que puedan requerir interacción por teclado, `sudo`, confirmaciones interactivas (`[y/N]`, `npx` prompts) o que carezcan de un límite estricto de tiempo (*timeout* defensivo).
+1. **Prohibición Absoluta de `sudo`:** Nunca invocar `sudo` en scripts, comandos o subprocesos de IA. En contenedores, utilizar `-u 0` dentro del contenedor si se requieren permisos elevados.
+2. **Timeouts Defensivos Obligatorios:** Todo comando en segundo plano susceptible de demorarse debe envolverse en `timeout --kill-after=10s <segundos> <comando>`.
+3. **Desacople de Entrada Estándar y Banderas No-Interactivas:** Cerrar siempre `stdin` (`< /dev/null`) y activar banderas no interactivas (`-y`, `--yes`, `-nostdin`, `DEBIAN_FRONTEND=noninteractive`, `GIT_TERMINAL_PROMPT=0`).
+4. **Heartbeat Watchdog y Checkpoints en Disco:** Tareas pesadas (>3 min, ej. generación audiovisual en ComfyUI/Wav2Lip o ingestas) deben emitir latidos periódicos y registrar puntos de control en `reports/.unattended_status.json` para permitir reanudación limpia ante interrupciones.
+5. **Circuit Breakers ante Servicios Externos:** Máximo 3 reintentos con retroceso exponencial (*exponential backoff* con jitter) ante fallos en APIs externas (Supabase, Google Search Console, ComfyUI local).
+Ver [`wiki/operations/zero_hang_unattended_protocol.md`](wiki/operations/zero_hang_unattended_protocol.md).
+
 ---
 
 ## 📌 Concepto Clínico y de Producto

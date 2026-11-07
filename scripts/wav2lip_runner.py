@@ -100,7 +100,7 @@ def run_wav2lip_inference(
     print("   👉 [Wav2Lip] Multiplexando video refinado con pista de audio vía FFmpeg...")
     ffmpeg_bin = FFMPEG_EXE if os.path.exists(FFMPEG_EXE) else "ffmpeg"
     cmd = [
-        ffmpeg_bin, "-y", "-hide_banner", "-loglevel", "error",
+        ffmpeg_bin, "-y", "-nostdin", "-hide_banner", "-loglevel", "error",
         "-i", temp_video,
         "-i", audio_path,
         "-c:v", "libx264", "-pix_fmt", "yuv420p",

@@ -101,7 +101,7 @@ def resample_wav_to_48k(input_wav_path: str, output_48k_path: str = None) -> str
 
     ffmpeg_bin = get_ffmpeg_bin()
     cmd = [
-        ffmpeg_bin, "-y", "-hide_banner", "-loglevel", "error",
+        ffmpeg_bin, "-y", "-nostdin", "-hide_banner", "-loglevel", "error",
         "-i", input_wav_path,
         "-af", "aresample=48000:resampler=soxr:precision=28",
         "-ar", "48000",
@@ -178,7 +178,7 @@ def synthesize_raw_tts(text: str, voice: str = "es-MX-JorgeNeural") -> np.ndarra
         subprocess.run(cmd_tts, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         cmd_ffmpeg = [
-            get_ffmpeg_bin(), "-y", "-hide_banner", "-loglevel", "error",
+            get_ffmpeg_bin(), "-y", "-nostdin", "-hide_banner", "-loglevel", "error",
             "-i", tmp_mp3,
             "-ar", str(SAMPLE_RATE),
             "-ac", "1",

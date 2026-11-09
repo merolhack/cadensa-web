@@ -1,39 +1,39 @@
 {
-  "updated_at": "2026-11-02T14:37:35.873Z",
+  "updated_at": "2026-11-09T14:59:18.552Z",
   "period": "Últimos 30 días",
   "target_url": "https://cadensa-web.pages.dev/",
   "summary": {
-    "weekly_active_users": 40,
-    "total_page_views": 145,
+    "weekly_active_users": 126,
+    "total_page_views": 258,
     "search_impressions": 0,
     "search_clicks": 0,
-    "avg_session_duration_sec": 299,
-    "bounce_rate": 62.2,
-    "engagement_rate": 37.8
+    "avg_session_duration_sec": 157,
+    "bounce_rate": 75.9,
+    "engagement_rate": 24.1
   },
   "sources": {
     "google_analytics": {
-      "active_users": 40,
-      "sessions": 82,
-      "page_views": 145,
-      "avg_session_duration_sec": 299,
-      "bounce_rate": 62.2,
-      "engagement_rate": 37.8,
+      "active_users": 126,
+      "sessions": 187,
+      "page_views": 258,
+      "avg_session_duration_sec": 157,
+      "bounce_rate": 75.9,
+      "engagement_rate": 24.1,
       "countries": [
         {
+          "country": "United States",
+          "users": 62,
+          "views": 66
+        },
+        {
           "country": "Mexico",
-          "users": 19,
-          "views": 91
+          "users": 43,
+          "views": 136
         },
         {
           "country": "Peru",
-          "users": 4,
-          "views": 34
-        },
-        {
-          "country": "United States",
-          "users": 3,
-          "views": 3
+          "users": 7,
+          "views": 39
         },
         {
           "country": "Argentina",
@@ -110,19 +110,19 @@
   "global_reach": {
     "top_countries": [
       {
+        "country": "United States",
+        "users": 62,
+        "views": 66
+      },
+      {
         "country": "Mexico",
-        "users": 19,
-        "views": 91
+        "users": 43,
+        "views": 136
       },
       {
         "country": "Peru",
-        "users": 4,
-        "views": 34
-      },
-      {
-        "country": "United States",
-        "users": 3,
-        "views": 3
+        "users": 7,
+        "views": 39
       },
       {
         "country": "Argentina",

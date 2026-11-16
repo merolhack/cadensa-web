@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-11-09T14:59:18.552Z",
+  "updated_at": "2026-11-16T14:35:08.241Z",
   "period": "Últimos 30 días",
   "target_url": "https://cadensa-web.pages.dev/",
   "summary": {
     "weekly_active_users": 126,
-    "total_page_views": 258,
+    "total_page_views": 281,
     "search_impressions": 0,
     "search_clicks": 0,
-    "avg_session_duration_sec": 157,
-    "bounce_rate": 75.9,
-    "engagement_rate": 24.1
+    "avg_session_duration_sec": 145,
+    "bounce_rate": 76.8,
+    "engagement_rate": 23.2
   },
   "sources": {
     "google_analytics": {
       "active_users": 126,
-      "sessions": 187,
-      "page_views": 258,
-      "avg_session_duration_sec": 157,
-      "bounce_rate": 75.9,
-      "engagement_rate": 24.1,
+      "sessions": 207,
+      "page_views": 281,
+      "avg_session_duration_sec": 145,
+      "bounce_rate": 76.8,
+      "engagement_rate": 23.2,
       "countries": [
         {
           "country": "United States",
@@ -28,12 +28,12 @@
         {
           "country": "Mexico",
           "users": 43,
-          "views": 136
+          "views": 153
         },
         {
           "country": "Peru",
           "users": 7,
-          "views": 39
+          "views": 45
         },
         {
           "country": "Argentina",
@@ -117,12 +117,12 @@
       {
         "country": "Mexico",
         "users": 43,
-        "views": 136
+        "views": 153
       },
       {
         "country": "Peru",
         "users": 7,
-        "views": 39
+        "views": 45
       },
       {
         "country": "Argentina",

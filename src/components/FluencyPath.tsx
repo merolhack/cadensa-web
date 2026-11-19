@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ClinicalTechnique, CLINICAL_TECHNIQUES, TechniqueId } from '@/lib/clinicalTechniques';
 
 export interface FluencyLevel {
@@ -98,25 +98,37 @@ export const FluencyPath: React.FC<FluencyPathProps> = ({
   onStartLesson,
   userXp,
 }) => {
-  const [unlockedLevel, setUnlockedLevel] = useState<number>(1);
-  const [selectedLevel, setSelectedLevel] = useState<FluencyLevel | null>(null);
-
-  useEffect(() => {
+  const [unlockedLevel, setUnlockedLevel] = useState<number>(() => {
     if (typeof window !== 'undefined') {
       try {
         const stored = localStorage.getItem('cadensa_fluency_level');
         if (stored) {
-          setUnlockedLevel(Math.max(1, parseInt(stored, 10)));
-        } else {
-          // Si no hay nivel guardado pero tiene XP acumulados, calcular nivel proporcional
+          return Math.max(1, parseInt(stored, 10));
+        }
+        return Math.min(7, Math.max(1, Math.floor(userXp / 60) + 1));
+      } catch {
+        return 1;
+      }
+    }
+    return 1;
+  });
+  const [selectedLevel, setSelectedLevel] = useState<FluencyLevel | null>(null);
+
+  const [prevUserXp, setPrevUserXp] = useState(userXp);
+  if (userXp !== prevUserXp) {
+    setPrevUserXp(userXp);
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('cadensa_fluency_level');
+        if (!stored) {
           const calculated = Math.min(7, Math.max(1, Math.floor(userXp / 60) + 1));
           setUnlockedLevel(calculated);
         }
       } catch {
-        setUnlockedLevel(1);
+        // no-op
       }
     }
-  }, [userXp]);
+  }
 
   const handleSelectNode = (level: FluencyLevel) => {
     setSelectedLevel(level);

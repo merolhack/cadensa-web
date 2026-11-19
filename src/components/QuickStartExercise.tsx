@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 interface QuickStartExerciseProps {
   isOpen: boolean;
@@ -39,15 +39,9 @@ export const QuickStartExercise: React.FC<QuickStartExerciseProps> = ({
   const [isPulsing, setIsPulsing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  const audioCtxRef = useRef<AudioContext | null>(null);
-
-  const notifyComplete = (xp: number, duration: number) => {
-    if (onComplete) onComplete(xp, duration);
-    if (onCompleteSession) onCompleteSession(xp, duration);
-  };
-
-  // Inicializar estado cada vez que se abre el modal
-  useEffect(() => {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setPhase('prep');
       setPrepSeconds(3);
@@ -55,7 +49,14 @@ export const QuickStartExercise: React.FC<QuickStartExerciseProps> = ({
       setActiveSyllableIndex(0);
       setIsPaused(false);
     }
-  }, [isOpen]);
+  }
+
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  const notifyComplete = useCallback((xp: number, duration: number) => {
+    if (onComplete) onComplete(xp, duration);
+    if (onCompleteSession) onCompleteSession(xp, duration);
+  }, [onComplete, onCompleteSession]);
 
   // Fase 1: Cuenta regresiva de preparación (3 segundos)
   useEffect(() => {
@@ -63,11 +64,15 @@ export const QuickStartExercise: React.FC<QuickStartExerciseProps> = ({
 
     if (prepSeconds > 0) {
       const timer = setTimeout(() => {
-        setPrepSeconds((prev) => prev - 1);
+        setPrepSeconds((prev) => {
+          if (prev <= 1) {
+            setPhase('active');
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
       return () => clearTimeout(timer);
-    } else {
-      setPhase('active');
     }
   }, [isOpen, phase, prepSeconds]);
 
@@ -77,14 +82,18 @@ export const QuickStartExercise: React.FC<QuickStartExerciseProps> = ({
 
     if (remainingSeconds > 0) {
       const timer = setTimeout(() => {
-        setRemainingSeconds((prev) => prev - 1);
+        setRemainingSeconds((prev) => {
+          if (prev <= 1) {
+            setPhase('finished');
+            notifyComplete(25, 60);
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
       return () => clearTimeout(timer);
-    } else {
-      setPhase('finished');
-      notifyComplete(25, 60);
     }
-  }, [isOpen, phase, remainingSeconds, isPaused]);
+  }, [isOpen, phase, remainingSeconds, isPaused, notifyComplete]);
 
   // Fase 2: Beat rítmico isocrónico (~85 BPM = ~705 ms)
   useEffect(() => {

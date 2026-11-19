@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { FluencyPath, FLUENCY_LEVELS } from './FluencyPath';
+import { FluencyPath } from './FluencyPath';
 
 describe('FluencyPath Component - Unit Tests', () => {
   it('debe renderizar el encabezado de la Ruta de Fluidez y los niveles iniciales', () => {

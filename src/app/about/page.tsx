@@ -419,7 +419,7 @@ export default function AboutPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 font-bold">✓</span>
-                  <span><strong>Blindaje de Coherencia en Pruebas BDD, E2E y Vitest (Regla 10):</strong> Reglas automatizadas estrictas que prohíben clases de ancho desalineadas (cero contenedores de 896px desfasados), obligan el contenedor canónico (`max-w-5xl`), exigen altura uniforme (<em>Equal Height</em>) con botones anclados al fondo, ratios `aspect-video`, touch targets ergonómicos y directiva `'use client'` en todo nuevo elemento incorporado a la plataforma.</span>
+                  <span><strong>Blindaje de Coherencia en Pruebas BDD, E2E y Vitest (Regla 10):</strong> Reglas automatizadas estrictas que prohíben clases de ancho desalineadas (cero contenedores de 896px desfasados), obligan el contenedor canónico (`max-w-5xl`), exigen altura uniforme (<em>Equal Height</em>) con botones anclados al fondo, ratios `aspect-video`, touch targets ergonómicos y directiva &apos;use client&apos; en todo nuevo elemento incorporado a la plataforma.</span>
                 </li>
               </ul>
             </div>

@@ -98,18 +98,18 @@ test.describe('Cadensa E2E Suite - Validación Clínica y Navegación Real', () 
   }) => {
     await page.goto('/');
 
-    // Abrir pestaña clínica y desplegar sección de laboratorio
+    // Abrir pestaña clínica y desplegar sección de laboratorio si estuviera cerrada
     const clinicalTab = page.locator('#tab-clinical');
     if (await clinicalTab.isVisible()) {
       await clinicalTab.click();
     }
-    const labToggle = page.locator('button:has-text("Laboratorio Clínico y Herramientas Especializadas")').first();
-    if (await labToggle.isVisible()) {
-      await labToggle.click();
-    }
-
-    // Abrir modal de Frases de Desafío desde el catálogo
     const openTrainerBtn = page.locator('button:has-text("Frases Desafío")').first();
+    if (!(await openTrainerBtn.isVisible())) {
+      const labToggle = page.locator('button:has-text("Laboratorio Clínico y Herramientas Especializadas")').first();
+      if (await labToggle.isVisible()) {
+        await labToggle.click();
+      }
+    }
     await openTrainerBtn.click();
 
     // Verificar que el modal de frases está visible
@@ -171,14 +171,14 @@ test.describe('Cadensa E2E Suite - Validación Clínica y Navegación Real', () 
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/');
 
-    // 1. Verificar ancho del contenedor maestro canónico (<main> con max-w-5xl)
-    const mainContainer = page.locator('main').first();
-    await expect(mainContainer).toBeVisible();
-    const mainBox = await mainContainer.boundingBox();
-    expect(mainBox).not.toBeNull();
+    // 1. Verificar ancho del encabezado canónico (<header> con max-w-5xl)
+    const headerContainer = page.locator('header').first();
+    await expect(headerContainer).toBeVisible();
+    const headerBox = await headerContainer.boundingBox();
+    expect(headerBox).not.toBeNull();
     // max-w-5xl equivale a 1024px (en viewport de 1280px con px-3/px-6 es exactamente 1024px)
-    expect(mainBox!.width).toBeLessThanOrEqual(1024);
-    expect(mainBox!.width).toBeGreaterThanOrEqual(960);
+    expect(headerBox!.width).toBeLessThanOrEqual(1024);
+    expect(headerBox!.width).toBeGreaterThanOrEqual(960);
 
     // 2. Navegar a la pestaña de Práctica
     const practiceTab = page.locator('#tab-practice');
@@ -229,8 +229,9 @@ test.describe('Cadensa E2E Suite - Validación Clínica y Navegación Real', () 
     const heightDiff = Math.abs(box1!.height - box2!.height);
     expect(heightDiff).toBeLessThanOrEqual(30);
 
-    // Los botones de acción finales deben tener área táctil ergonómica (altura >= 32px)
-    const actionButtons = cards.nth(0).locator('button, a');
+    // Los botones de acción finales anclados al fondo deben tener área táctil ergonómica (altura >= 32px)
+    const bottomActionContainer = cards.nth(0).locator('div.mt-4');
+    const actionButtons = bottomActionContainer.locator('button, a');
     const btnCount = await actionButtons.count();
     expect(btnCount).toBeGreaterThan(0);
     const firstBtnBox = await actionButtons.first().boundingBox();

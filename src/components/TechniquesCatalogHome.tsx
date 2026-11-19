@@ -90,7 +90,7 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
     : techniquesList.filter((tech) => tech.familyId === selectedFamilyFilter);
 
   return (
-    <div
+    <main
       className="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 bg-zinc-950 text-zinc-100 font-sans selection:bg-emerald-500 selection:text-zinc-950"
       suppressHydrationWarning
     >
@@ -779,6 +779,6 @@ export const TechniquesCatalogHome: React.FC<TechniquesCatalogHomeProps> = ({
 
       {/* 6. Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos SEO (max-w-5xl) */}
       <Footer />
-    </div>
+    </main>
   );
 };

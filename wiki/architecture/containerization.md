@@ -65,4 +65,9 @@ docker run -p 3000:80 cadensa-web:latest
 
 # O mediante Docker Compose
 docker compose up -d
+
+# Detención y limpieza obligatoria post-pruebas (Regla 9 AGENTS.md)
+docker compose down -v
+# O para detener cualquier contenedor del proyecto en ejecución:
+docker stop $(docker ps -q --filter "name=cadensa-web")
 ```

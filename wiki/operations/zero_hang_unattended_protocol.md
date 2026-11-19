@@ -45,6 +45,7 @@ Cadensa integra múltiples subsistemas susceptibles a bloqueos silenciosos si no
 | **Control de Versiones y Despliegue** | `git push`, CLI de GitHub (`gh run watch`), Cloudflare Pages | Git solicitando credenciales HTTPS o frase de paso SSH en `stdin`; `gh run watch` esperando un workflow encolado sin límite de tiempo. | Proceso congelado en terminal sin TTY. |
 | **Auditoría SEO y APIs de Google** | `scripts/submit_seo_changes.py`, `scripts/audit_seo_performance.py` | Tokens OAuth que disparan flujo interactivo de navegador; respuestas 429 de Google Search Console o Indexing API sin backoff. | Script detenido esperando que un humano abra una URL de autorización en el navegador. |
 | **Base de Datos y Telemetría** | `scripts/migrate_supabase.cjs`, `supabase/` | Conexión a PostgREST/Supabase interrumpida sin socket timeout; bloqueos en DDL. | Tarea en background suspendida indefinidamente. |
+| **Contenedores Docker y Supabase Local** | `docker-compose.yml`, stack local de Supabase (`supabase_*_cadensa-web`) | Contenedores dejados en ejecución tras pruebas o validaciones. | Desperdicio continuo de 1.8+ GB de memoria RAM y consumo residual de CPU en background durante horas. |
 | **Entorno WSL / Sistema Operativo** | Invocación de utilidades del sistema en Ubuntu WSL | Invocación de `sudo` cuando la caché de credenciales expiró. | Subproceso WSL congelado esperando contraseña en entrada estándar cerrada. |
 
 ---
@@ -135,6 +136,19 @@ Cadensa integra múltiples subsistemas susceptibles a bloqueos silenciosos si no
   * **Comprobación de Salud Previa (Pre-Flight Health Check):** Antes de lanzar un lote masivo contra ComfyUI o Supabase, verificar el endpoint base (ej. `GET http://127.0.0.1:8188/system_stats`). Si el servicio no responde en 5 segundos, abortar inmediatamente con mensaje explicativo en lugar de iniciar el procesamiento.
   * **Manejo de HTTP 429 (Too Many Requests):** Si la API de Google Search Console o Supabase responde con rate limit, detener peticiones y esperar el valor indicado en `Retry-After` (o mínimo 60 segundos) antes de intentar el siguiente recurso.
 
+### Principio 6: Limpieza Estricta de Contenedores Docker Post-Pruebas (Zero-Dangling Containers)
+* **Regla:** Queda terminantemente PROHIBIDO dejar contenedores Docker o stacks locales (`cadensa-web`, servicios de Supabase local) en ejecución en segundo plano tras concluir pruebas, comprobaciones o cuando no se utilicen activamente.
+* **Mandatos Operativos:**
+  1. **Apagado Inmediato:** Al concluir pruebas que requieran levantar servicios en Docker, se deben detener y remover inmediatamente:
+     ```bash
+     # Para docker compose:
+     docker compose down -v
+     # Para stack local de Supabase / Cadensa:
+     docker stop $(docker ps -q --filter "name=cadensa-web")
+     ```
+  2. **Verificación de Limpieza Pre-Cierre:** El agente o desarrollador debe auditar `docker ps` antes de ceder el turno o reportar finalización para garantizar que no existan contenedores zombi consumiendo recursos del host (1.8+ GB de RAM).
+  3. **Limpieza Defensiva en Scripts:** Todo script que inicie contenedores debe incluir bloques `trap` (Bash) o `try...finally` (Python/Node.js) para garantizar que los contenedores se apaguen aun si el script falla o se interrumpe.
+
 ---
 
 ## 4. Instrucciones Operativas para Agentes de IA en Modo Desatendido
@@ -164,6 +178,7 @@ Cuando el usuario deje al agente trabajando en una tarea autónoma de larga dura
 | Playwright cuelga la terminal | Test esperando selector indefinido o navegador pidiendo permisos | Configurar timeout de acción de 5000 ms y timeout global de 30s por test en Playwright. |
 | `git push` se detiene sin mensaje | Git solicitando credenciales HTTPS interactivas | Usar `git -c core.askPass=true push` o verificar configuración de credenciales SSH/OAuth. |
 | ComfyUI no responde al script de avatar | Servidor local apagado o WebSocket desconectado | Pre-flight check a `/system_stats` con timeout de 5 segundos antes de encolar. |
+| Contenedores Docker activos tras pruebas | Falta de teardown explícito en pipelines locales | Ejecutar `docker stop $(docker ps -q --filter "name=cadensa-web")` o `docker compose down -v`. |
 | Script en background ejecutándose por horas | Ausencia de timeout envolvente en el comando | Envolver con `timeout --kill-after=10s <Xs> <comando>`. |
 
 ---
@@ -177,4 +192,5 @@ Antes de dejar cualquier tarea corriendo sin supervisión humana:
 * [ ] ¿Se pasaron banderas no interactivas (`-y`, `--yes`, `-nostdin`, `CI=true`)?
 * [ ] ¿Escribe el script registros sin búfer en disco (`python -u`, logs rotacionales)?
 * [ ] ¿Cuenta la tarea de larga duración con checkpoints y archivo de estado (`reports/.unattended_status.json`) para reanudación ante fallos?
+* [ ] ¿Se verificó con `docker ps` que no queden contenedores en ejecución o huérfanos consumiendo memoria RAM/CPU al finalizar?
 

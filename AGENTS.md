@@ -75,6 +75,14 @@ Queda terminantemente PROHIBIDO lanzar tareas en segundo plano o procesos desate
 5. **Circuit Breakers ante Servicios Externos:** Máximo 3 reintentos con retroceso exponencial (*exponential backoff* con jitter) ante fallos en APIs externas (Supabase, Google Search Console, ComfyUI local).
 Ver [`wiki/operations/zero_hang_unattended_protocol.md`](wiki/operations/zero_hang_unattended_protocol.md).
 
+### 9. Limpieza Estricta y Obligatoria de Contenedores Docker (Zero-Dangling Containers)
+**REGLA MANDATORIA DE GESTIÓN Y LIMPIEZA DE CONTENEDORES:**
+Queda terminantemente PROHIBIDO dejar contenedores Docker (`cadensa-web`, stacks locales de Supabase, imágenes temporales o servicios auxiliares) en ejecución en segundo plano tras concluir pruebas locales, validaciones o cuando no se estén utilizando activamente:
+1. **Apagado Inmediato Post-Pruebas:** Siempre que se levante un contenedor Docker o stack compose para ejecutar pruebas (unitarias, BDD, E2E), migraciones o comprobaciones locales, el agente o desarrollador **DEBE detenerlo y removerlo inmediatamente al finalizar** la tarea (ej. `docker compose down -v`, `docker stop $(docker ps -q --filter "name=cadensa-web")`, o `supabase stop`).
+2. **Verificación Previa a Concluir Turno:** Antes de dar por finalizada cualquier actividad o entregar una respuesta, el agente debe verificar activamente el estado de los contenedores mediante `docker ps`. Si detecta contenedores huérfanos o en ejecución asociados al proyecto (`com.docker.compose.project=cadensa-web` o nombre `cadensa-web`), **DEBE apagarlos de inmediato** para evitar el desperdicio continuo de memoria RAM (1.8+ GB) y consumo residual de CPU en el sistema anfitrión.
+3. **Uso Defensivo en Scripts de Automatización:** Todo script o pipeline local que invoque Docker debe estructurarse con bloques de limpieza garantizada (`trap` en Bash o `try...finally` en Python/Node.js) para asegurar la detención forzosa de los contenedores incluso en caso de fallo, interrupción o timeout.
+4. **Prohibición de Contenedores Zombi o Huérfanos:** No se deben dejar contenedores en estado `Up` desatendidos cuando no haya una prueba o sesión interactiva en curso que los requiera explícitamente.
+
 ---
 
 ## 📌 Concepto Clínico y de Producto

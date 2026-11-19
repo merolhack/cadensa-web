@@ -45,5 +45,28 @@
     "health",
     "education",
     "lifestyle"
+  ],
+  "shortcuts": [
+    {
+      "name": "Práctica Rápida (60s)",
+      "short_name": "Rápida 60s",
+      "description": "Inicia una micro-sesión fonoaudiológica guiada de 60 segundos",
+      "url": "/?quick=60s",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Reto Diario",
+      "short_name": "Reto Diario",
+      "description": "Completa tu desafío de ritmo de hoy y mantén tu racha activa",
+      "url": "/?quick=challenge",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cadensa Kids",
+      "short_name": "Kids",
+      "description": "Entrenamiento de ritmo y fluidez lúdico para niños",
+      "url": "/?quick=kids",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
   ]
 }

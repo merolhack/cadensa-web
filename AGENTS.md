@@ -83,6 +83,30 @@ Queda terminantemente PROHIBIDO dejar contenedores Docker (`cadensa-web`, stacks
 3. **Uso Defensivo en Scripts de Automatización:** Todo script o pipeline local que invoque Docker debe estructurarse con bloques de limpieza garantizada (`trap` en Bash o `try...finally` en Python/Node.js) para asegurar la detención forzosa de los contenedores incluso en caso de fallo, interrupción o timeout.
 4. **Prohibición de Contenedores Zombi o Huérfanos:** No se deben dejar contenedores en estado `Up` desatendidos cuando no haya una prueba o sesión interactiva en curso que los requiera explícitamente.
 
+### 10. Regla Estricta de Coherencia Visual, Arquitectura de Rejilla (Bootstrap Grid) y Accesibilidad en Nuevos Elementos
+**REGLA MANDATORIA DE DISEÑO Y CONSISTENCIA GEOMÉTRICA:**
+Siempre que se agreguen, modifiquen o amplíen componentes, tarjetas, vistas o elementos interactivos en la aplicación, **DEBEN cumplir obligatoriamente con los estándares canónicos de diseño, rejilla y accesibilidad ya establecidos**:
+1. **Contenedor Maestro Canónico Unificado (`max-w-5xl = 1024px`):**
+   Toda vista principal, pantalla completa, sección focal o pie de página debe respetar el ancho maestro `w-full max-w-5xl mx-auto`. Queda ESTRICTAMENTE PROHIBIDO introducir anchos arbitrarios desalineados (como `max-w-4xl`, `max-w-3xl`) que provoquen saltos visuales (*Cumulative Layout Shift - CLS > 0*) al alternar vistas. Modales y componentes de enfoque específico deben respetar su estándar correspondiente (`max-w-2xl` o `max-w-xl`).
+2. **Columnas y Tarjetas de Altura Uniforme (*Equal Height Cards*):**
+   Toda rejilla multi-columna (CSS Grid) debe implementar el patrón simétrico:
+   - Contenedor de rejilla: `grid items-stretch gap-5` (o `gap-4`).
+   - Tarjeta: `h-full flex flex-col justify-between`.
+   - Zona de información: `flex-1 flex flex-col`.
+   - Botonera/acciones finales ancladas al fondo: `mt-auto pt-3 border-t border-zinc-800/80 w-full flex items-center justify-between gap-2`.
+   - **Prohibido:** Dejar botones flotando a diferentes alturas debido a títulos o textos descriptivos de longitud variable (*dangling buttons*).
+3. **Relación de Aspecto Fija (*Fixed Aspect Ratio*):**
+   Miniaturas y videos deben fijar `aspect-video` (16:9) con `object-cover`. Avatares, insignias y orbes deben fijar `aspect-square` (1:1).
+4. **Accesibilidad Obligatoria WCAG 2.1 AA:**
+   Todo nuevo control o botón debe tener un área táctil mínima (touch target ≥ 44×44 px o padding ergonómico), nombre accesible (`aria-label` o texto visible), contraste mínimo 4.5:1, y estados semánticos correctos (`aria-pressed` para alternancias fuera de tablist). Cero violaciones permitidas en auditorías con `axe-core`.
+5. **Directiva Next.js Client-Side (`'use client'`):**
+   Todo componente interactivo nuevo en `src/components/` debe incluir `'use client'` en su primera línea.
+6. **Verificación Automatizada Mandatoria en Pruebas:**
+   Toda nueva funcionalidad o elemento agregado debe ser cubierto y validado por:
+   - Pruebas arquitectónicas en Vitest (`src/tests/design_system_consistency.test.ts`).
+   - Escenarios BDD en Cucumber (`features/design_system_and_layout_consistency.feature`).
+   - Pruebas E2E en Playwright (`tests/e2e/cadensa.spec.ts`).
+
 ---
 
 ## 📌 Concepto Clínico y de Producto

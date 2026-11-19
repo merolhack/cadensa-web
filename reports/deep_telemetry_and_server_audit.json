@@ -1,0 +1,1044 @@
+{
+  "timestamp": "2026-11-19T14:59:16.097Z",
+  "domain": "https://cadensa-web.pages.dev/",
+  "google_analytics_4": {
+    "overview": null,
+    "top_pages": [
+      {
+        "path": "/",
+        "title": "Cadensa — Encuentra el ritmo de tu voz",
+        "views": 248,
+        "users": 116,
+        "avg_duration_sec": 136
+      },
+      {
+        "path": "/login",
+        "title": "Cadensa — Encuentra el ritmo de tu voz",
+        "views": 9,
+        "users": 9,
+        "avg_duration_sec": 0
+      },
+      {
+        "path": "/about",
+        "title": "Acerca de Cadensa — Propósito, Futuros Pasos y Autor",
+        "views": 8,
+        "users": 4,
+        "avg_duration_sec": 63
+      },
+      {
+        "path": "/admin",
+        "title": "Cadensa — Encuentra el ritmo de tu voz",
+        "views": 7,
+        "users": 2,
+        "avg_duration_sec": 254
+      },
+      {
+        "path": "/stats",
+        "title": "Estadísticas de Uso e Impacto Global — Cadensa",
+        "views": 7,
+        "users": 3,
+        "avg_duration_sec": 180
+      },
+      {
+        "path": "/register",
+        "title": "Cadensa — Encuentra el ritmo de tu voz",
+        "views": 6,
+        "users": 6,
+        "avg_duration_sec": 0
+      },
+      {
+        "path": "/terms",
+        "title": "Términos de Uso y Aviso Clínico Fonoaudiológico — Cadensa",
+        "views": 2,
+        "users": 2,
+        "avg_duration_sec": 10
+      },
+      {
+        "path": "/privacy",
+        "title": "Política de Privacidad y Protección de Datos — Cadensa",
+        "views": 1,
+        "users": 1,
+        "avg_duration_sec": 0
+      },
+      {
+        "path": "/🐛",
+        "title": "404: This page could not be found.",
+        "views": 1,
+        "users": 1,
+        "avg_duration_sec": 0
+      },
+      {
+        "path": "/🐛",
+        "title": "Cadensa — Encuentra el ritmo de tu voz",
+        "views": 0,
+        "users": 1,
+        "avg_duration_sec": 6
+      }
+    ],
+    "devices": [
+      {
+        "device": "desktop",
+        "users": 108,
+        "sessions": 137
+      },
+      {
+        "device": "mobile",
+        "users": 21,
+        "sessions": 79
+      }
+    ],
+    "events": [
+      {
+        "event": "page_view",
+        "count": 289,
+        "users": 128
+      },
+      {
+        "event": "session_start",
+        "count": 212,
+        "users": 127
+      },
+      {
+        "event": "first_visit",
+        "count": 127,
+        "users": 127
+      },
+      {
+        "event": "user_engagement",
+        "count": 58,
+        "users": 32
+      },
+      {
+        "event": "scroll",
+        "count": 51,
+        "users": 22
+      },
+      {
+        "event": "technique_select",
+        "count": 20,
+        "users": 13
+      },
+      {
+        "event": "form_start",
+        "count": 13,
+        "users": 8
+      },
+      {
+        "event": "metronome_start",
+        "count": 10,
+        "users": 6
+      },
+      {
+        "event": "click",
+        "count": 8,
+        "users": 5
+      },
+      {
+        "event": "metronome_stop",
+        "count": 7,
+        "users": 4
+      },
+      {
+        "event": "routine_5min_start",
+        "count": 2,
+        "users": 1
+      },
+      {
+        "event": "simulator_scenario_start",
+        "count": 2,
+        "users": 2
+      }
+    ],
+    "errors": null
+  },
+  "google_search_console": {
+    "accessible_sites": [
+      {
+        "siteUrl": "https://cadensa-web.pages.dev/",
+        "permissionLevel": "siteRestrictedUser"
+      }
+    ],
+    "queries": [],
+    "pages": [],
+    "errors": null
+  },
+  "google_adsense": {
+    "accounts": [],
+    "alerts": [],
+    "sites": [],
+    "errors": null
+  },
+  "bing_webmaster_tools": {
+    "user_sites": [
+      {
+        "__type": "Site:#Microsoft.Bing.Webmaster.Api",
+        "AuthenticationCode": "856757614FFC2C5582FBCB81B1B4E4CA",
+        "DnsVerificationCode": "d9afedf6e6cbb91e6f959a1ed62556eb.tice-leninmeza.blogspot.com",
+        "IsVerified": true,
+        "Url": "http://tice-leninmeza.blogspot.com/"
+      },
+      {
+        "__type": "Site:#Microsoft.Bing.Webmaster.Api",
+        "AuthenticationCode": "856757614FFC2C5582FBCB81B1B4E4CA",
+        "DnsVerificationCode": "976eb1461e0583ca6391dc3702f95dd3.mapromat.com",
+        "IsVerified": true,
+        "Url": "http://www.mapromat.com/"
+      },
+      {
+        "__type": "Site:#Microsoft.Bing.Webmaster.Api",
+        "AuthenticationCode": "856757614FFC2C5582FBCB81B1B4E4CA",
+        "DnsVerificationCode": "c890c84777d7b889d14363845079bdb6.cadensa-web.pages.dev",
+        "IsVerified": true,
+        "Url": "https://cadensa-web.pages.dev/"
+      },
+      {
+        "__type": "Site:#Microsoft.Bing.Webmaster.Api",
+        "AuthenticationCode": "856757614FFC2C5582FBCB81B1B4E4CA",
+        "DnsVerificationCode": "a22857315393390cd70c806dbf4998c9.dqro.mx",
+        "IsVerified": true,
+        "Url": "https://dqro.mx/"
+      },
+      {
+        "__type": "Site:#Microsoft.Bing.Webmaster.Api",
+        "AuthenticationCode": "856757614FFC2C5582FBCB81B1B4E4CA",
+        "DnsVerificationCode": "8b375bcc2f048a0d0700a92ac5b3be3b.freelancemexico.com.mx",
+        "IsVerified": true,
+        "Url": "https://freelancemexico.com.mx/"
+      },
+      {
+        "__type": "Site:#Microsoft.Bing.Webmaster.Api",
+        "AuthenticationCode": "856757614FFC2C5582FBCB81B1B4E4CA",
+        "DnsVerificationCode": "b8eaba1f19ee170370409ec1d31d319f.mach-playbook.github.io",
+        "IsVerified": true,
+        "Url": "https://mach-playbook.github.io/"
+      },
+      {
+        "__type": "Site:#Microsoft.Bing.Webmaster.Api",
+        "AuthenticationCode": "856757614FFC2C5582FBCB81B1B4E4CA",
+        "DnsVerificationCode": "506769df0fa7d92a6edf923df829fc6e.merolhack.github.io",
+        "IsVerified": true,
+        "Url": "https://merolhack.github.io/"
+      },
+      {
+        "__type": "Site:#Microsoft.Bing.Webmaster.Api",
+        "AuthenticationCode": "856757614FFC2C5582FBCB81B1B4E4CA",
+        "DnsVerificationCode": "1c96ba32878f9f86e8ea972ee7361a66.servicio-pineda.com",
+        "IsVerified": true,
+        "Url": "https://servicio-pineda.com/"
+      }
+    ],
+    "crawl_stats": [
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 1,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793145600000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 1,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793232000000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 1,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 1,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 1,
+        "CrawlErrors": 1,
+        "Date": "/Date(1793318400000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 9,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 1,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793404800000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 9,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 15,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793491200000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 9,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793577600000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 9,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793664000000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793750400000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793836800000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 25,
+        "CrawlErrors": 0,
+        "Date": "/Date(1793923200000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 6,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794009600000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 1,
+        "Date": "/Date(1794096000000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 2,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794182400000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794268800000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794355200000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794441600000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794528000000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794614400000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794700800000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794787200000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794873600000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      },
+      {
+        "__type": "CrawlStats:#Microsoft.Bing.Webmaster.Api",
+        "AllOtherCodes": 0,
+        "BlockedByRobotsTxt": 0,
+        "Code2xx": 16,
+        "Code301": 0,
+        "Code302": 0,
+        "Code4xx": 0,
+        "Code5xx": 0,
+        "ConnectionTimeout": 0,
+        "ContainsMalware": 0,
+        "CrawledPages": 0,
+        "CrawlErrors": 0,
+        "Date": "/Date(1794960000000)/",
+        "DnsFailures": 0,
+        "InIndex": 0,
+        "InLinks": 0
+      }
+    ],
+    "query_stats": [],
+    "rank_and_traffic": [
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1792972800000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793059200000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793145600000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793232000000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793318400000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793404800000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793491200000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793577600000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793664000000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793750400000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793836800000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1793923200000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794009600000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794096000000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794182400000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794268800000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794355200000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794441600000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794528000000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794614400000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794700800000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794787200000)/",
+        "Impressions": 0
+      },
+      {
+        "__type": "RankAndTrafficStats:#Microsoft.Bing.Webmaster.Api",
+        "Clicks": 0,
+        "Date": "/Date(1794873600000)/",
+        "Impressions": 0
+      }
+    ],
+    "errors": null
+  },
+  "cloudflare_pages_server": {
+    "project": {
+      "id": "c5edab4a-ed3b-4582-af5d-a157cc959796",
+      "name": "cadensa-web",
+      "subdomain": "cadensa-web.pages.dev",
+      "domains": [
+        "cadensa-web.pages.dev"
+      ],
+      "build_config": {
+        "web_analytics_tag": null,
+        "web_analytics_token": null
+      },
+      "deployment_configs": {
+        "preview": {
+          "env_vars": null,
+          "fail_open": true,
+          "always_use_latest_compatibility_date": false,
+          "compatibility_date": "2026-10-23",
+          "compatibility_flags": [],
+          "build_image_major_version": 3,
+          "usage_model": "standard"
+        },
+        "production": {
+          "env_vars": null,
+          "fail_open": true,
+          "always_use_latest_compatibility_date": false,
+          "compatibility_date": "2026-10-23",
+          "compatibility_flags": [],
+          "build_image_major_version": 3,
+          "usage_model": "standard"
+        }
+      },
+      "latest_deployment": {
+        "id": "14c6dcd6-4dd2-4a66-98b1-a0ee9fead860",
+        "short_id": "14c6dcd6",
+        "project_id": "c5edab4a-ed3b-4582-af5d-a157cc959796",
+        "project_name": "cadensa-web",
+        "environment": "production",
+        "url": "https://14c6dcd6.cadensa-web.pages.dev",
+        "created_on": "2026-11-07T15:26:49.929899Z",
+        "modified_on": "2026-11-07T15:26:51.424442Z",
+        "latest_stage": {
+          "name": "deploy",
+          "started_on": null,
+          "ended_on": "2026-11-07T15:26:51.424442Z",
+          "status": "success"
+        },
+        "deployment_trigger": {
+          "type": "ad_hoc",
+          "metadata": {
+            "branch": "main",
+            "commit_hash": "3a9be2f6b1a1ec3ea2c53237ca96e29c524c165b",
+            "commit_message": "feat(ops): implementar protocolo zero-hang para tareas desatendidas y blindaje de scripts",
+            "commit_dirty": true
+          }
+        },
+        "stages": [
+          {
+            "name": "queued",
+            "started_on": "2026-11-07T15:26:49.929899Z",
+            "ended_on": null,
+            "status": "active"
+          },
+          {
+            "name": "initialize",
+            "started_on": null,
+            "ended_on": null,
+            "status": "idle"
+          },
+          {
+            "name": "clone_repo",
+            "started_on": null,
+            "ended_on": null,
+            "status": "idle"
+          },
+          {
+            "name": "build",
+            "started_on": null,
+            "ended_on": null,
+            "status": "idle"
+          },
+          {
+            "name": "deploy",
+            "started_on": null,
+            "ended_on": "2026-11-07T15:26:51.424442Z",
+            "status": "success"
+          }
+        ],
+        "build_config": {
+          "build_command": null,
+          "destination_dir": null,
+          "build_caching": null,
+          "root_dir": null,
+          "web_analytics_tag": null,
+          "web_analytics_token": null
+        },
+        "env_vars": {},
+        "compatibility_date": "2026-10-23",
+        "compatibility_flags": [],
+        "build_image_major_version": 3,
+        "usage_model": null,
+        "aliases": null,
+        "is_skipped": false,
+        "production_branch": "main",
+        "uses_functions": false
+      },
+      "canonical_deployment": {
+        "id": "14c6dcd6-4dd2-4a66-98b1-a0ee9fead860",
+        "short_id": "14c6dcd6",
+        "project_id": "c5edab4a-ed3b-4582-af5d-a157cc959796",
+        "project_name": "cadensa-web",
+        "environment": "production",
+        "url": "https://14c6dcd6.cadensa-web.pages.dev",
+        "created_on": "2026-11-07T15:26:49.929899Z",
+        "modified_on": "2026-11-07T15:26:51.424442Z",
+        "latest_stage": {
+          "name": "deploy",
+          "started_on": null,
+          "ended_on": "2026-11-07T15:26:51.424442Z",
+          "status": "success"
+        },
+        "deployment_trigger": {
+          "type": "ad_hoc",
+          "metadata": {
+            "branch": "main",
+            "commit_hash": "3a9be2f6b1a1ec3ea2c53237ca96e29c524c165b",
+            "commit_message": "feat(ops): implementar protocolo zero-hang para tareas desatendidas y blindaje de scripts",
+            "commit_dirty": true
+          }
+        },
+        "stages": [
+          {
+            "name": "queued",
+            "started_on": "2026-11-07T15:26:49.929899Z",
+            "ended_on": null,
+            "status": "active"
+          },
+          {
+            "name": "initialize",
+            "started_on": null,
+            "ended_on": null,
+            "status": "idle"
+          },
+          {
+            "name": "clone_repo",
+            "started_on": null,
+            "ended_on": null,
+            "status": "idle"
+          },
+          {
+            "name": "build",
+            "started_on": null,
+            "ended_on": null,
+            "status": "idle"
+          },
+          {
+            "name": "deploy",
+            "started_on": null,
+            "ended_on": "2026-11-07T15:26:51.424442Z",
+            "status": "success"
+          }
+        ],
+        "build_config": {
+          "build_command": null,
+          "destination_dir": null,
+          "build_caching": null,
+          "root_dir": null,
+          "web_analytics_tag": null,
+          "web_analytics_token": null
+        },
+        "env_vars": {},
+        "compatibility_date": "2026-10-23",
+        "compatibility_flags": [],
+        "build_image_major_version": 3,
+        "usage_model": null,
+        "aliases": null,
+        "is_skipped": false,
+        "production_branch": "main",
+        "uses_functions": false
+      },
+      "created_on": "2026-10-23T21:05:59.118971Z",
+      "production_branch": "main",
+      "production_script_name": "pages-worker--22230568-production",
+      "preview_script_name": "pages-worker--22230568-preview",
+      "uses_functions": false,
+      "framework": "",
+      "framework_version": ""
+    },
+    "deployments": [
+      {
+        "id": "14c6dcd6-4dd2-4a66-98b1-a0ee9fead860",
+        "short_id": "14c6dcd6",
+        "environment": "production",
+        "created_on": "2026-11-07T15:26:49.929899Z",
+        "latest_stage": "deploy",
+        "latest_stage_status": "success",
+        "url": "https://14c6dcd6.cadensa-web.pages.dev",
+        "deployment_trigger": {
+          "type": "ad_hoc",
+          "branch": "main",
+          "commit_hash": "3a9be2f6b1a1ec3ea2c53237ca96e29c524c165b",
+          "commit_message": "feat(ops): implementar protocolo zero-hang para tareas desatendidas y blindaje de scripts"
+        }
+      },
+      {
+        "id": "49a2f19b-c971-4911-8578-51893c5474c8",
+        "short_id": "49a2f19b",
+        "environment": "production",
+        "created_on": "2026-11-06T20:48:35.5616Z",
+        "latest_stage": "deploy",
+        "latest_stage_status": "success",
+        "url": "https://49a2f19b.cadensa-web.pages.dev",
+        "deployment_trigger": {
+          "type": "ad_hoc",
+          "branch": "main",
+          "commit_hash": "5f30902f1c6524f2fab674da2a745de7402e20ca",
+          "commit_message": "test(e2e): abrir panel colapsable de laboratorio antes de seleccionar frases desafio"
+        }
+      },
+      {
+        "id": "7d280596-dac7-4c0f-a126-ad1823099f30",
+        "short_id": "7d280596",
+        "environment": "production",
+        "created_on": "2026-11-05T16:52:58.335657Z",
+        "latest_stage": "deploy",
+        "latest_stage_status": "success",
+        "url": "https://7d280596.cadensa-web.pages.dev",
+        "deployment_trigger": {
+          "type": "ad_hoc",
+          "branch": "main",
+          "commit_hash": "16d03515ba4bbe3c41d2737fe224fe9bcf9521e9",
+          "commit_message": "fix(e2e): compatibilidad de permisos de microfono cross-browser para Firefox y WebKit en Playwright"
+        }
+      },
+      {
+        "id": "eff82acb-1c0c-4995-99a4-e8d2805dcf1c",
+        "short_id": "eff82acb",
+        "environment": "production",
+        "created_on": "2026-11-05T15:02:24.836736Z",
+        "latest_stage": "deploy",
+        "latest_stage_status": "success",
+        "url": "https://eff82acb.cadensa-web.pages.dev",
+        "deployment_trigger": {
+          "type": "ad_hoc",
+          "branch": "main",
+          "commit_hash": "46d1a306cc49074b88ee1ef9d04818f6a7a9c992",
+          "commit_message": "fix(trainer): resolver regla react-hooks/set-state-in-effect en CustomPhraseTrainer"
+        }
+      },
+      {
+        "id": "b6ca5461-b735-4420-80ff-004c15428d23",
+        "short_id": "b6ca5461",
+        "environment": "production",
+        "created_on": "2026-11-05T14:10:31.309003Z",
+        "latest_stage": "deploy",
+        "latest_stage_status": "success",
+        "url": "https://b6ca5461.cadensa-web.pages.dev",
+        "deployment_trigger": {
+          "type": "ad_hoc",
+          "branch": "main",
+          "commit_hash": "cf1060aaa1c51bc5d401cd371dc9dca0eea7abc4",
+          "commit_message": "feat(growth): script de auditoria de rendimiento SEO y protocolo UAT clinico"
+        }
+      }
+    ],
+    "latest_deployment_logs": [
+      {
+        "ts": "2026-11-07T15:26:51.424442Z",
+        "line": "Success: Your site was deployed!"
+      }
+    ],
+    "errors": null
+  }
+}

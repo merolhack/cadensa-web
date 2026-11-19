@@ -98,3 +98,18 @@ Then('las herramientas de auto-escucha y validación fonética se presentan en s
   );
 });
 
+Then('se visualiza la barra de navegación con las cuatro pestañas {string}, {string}, {string} y {string}', function (tab1: string, tab2: string, tab3: string, tab4: string) {
+  assert.ok(homeHtml.includes(tab1), `Falta la pestaña: ${tab1}`);
+  assert.ok(homeHtml.includes(tab2), `Falta la pestaña: ${tab2}`);
+  assert.ok(homeHtml.includes(tab3), `Falta la pestaña: ${tab3}`);
+  assert.ok(homeHtml.includes(tab4), `Falta la pestaña: ${tab4}`);
+});
+
+Then('se presenta el árbol de progreso de la Ruta de Fluidez con sus niveles secuenciales', function () {
+  assert.ok(
+    homeHtml.includes('Ruta de Fluidez Verbal') || homeHtml.includes('El Primer Compás'),
+    'No se encuentra el árbol de niveles de la Ruta de Fluidez'
+  );
+});
+
+

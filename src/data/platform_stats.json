@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-11-16T14:35:08.241Z",
+  "updated_at": "2026-11-19T14:57:24.594Z",
   "period": "Últimos 30 días",
   "target_url": "https://cadensa-web.pages.dev/",
   "summary": {
-    "weekly_active_users": 126,
-    "total_page_views": 281,
+    "weekly_active_users": 128,
+    "total_page_views": 289,
     "search_impressions": 0,
     "search_clicks": 0,
-    "avg_session_duration_sec": 145,
-    "bounce_rate": 76.8,
-    "engagement_rate": 23.2
+    "avg_session_duration_sec": 140,
+    "bounce_rate": 77.2,
+    "engagement_rate": 22.8
   },
   "sources": {
     "google_analytics": {
-      "active_users": 126,
-      "sessions": 207,
-      "page_views": 281,
-      "avg_session_duration_sec": 145,
-      "bounce_rate": 76.8,
-      "engagement_rate": 23.2,
+      "active_users": 128,
+      "sessions": 215,
+      "page_views": 289,
+      "avg_session_duration_sec": 140,
+      "bounce_rate": 77.2,
+      "engagement_rate": 22.8,
       "countries": [
         {
           "country": "United States",
@@ -28,7 +28,7 @@
         {
           "country": "Mexico",
           "users": 43,
-          "views": 153
+          "views": 159
         },
         {
           "country": "Peru",
@@ -51,6 +51,16 @@
           "views": 2
         },
         {
+          "country": "Germany",
+          "users": 2,
+          "views": 2
+        },
+        {
+          "country": "Spain",
+          "users": 2,
+          "views": 2
+        },
+        {
           "country": "Sweden",
           "users": 2,
           "views": 2
@@ -61,22 +71,12 @@
           "views": 1
         },
         {
-          "country": "Germany",
-          "users": 1,
-          "views": 1
-        },
-        {
           "country": "India",
           "users": 1,
           "views": 1
         },
         {
           "country": "Ireland",
-          "users": 1,
-          "views": 1
-        },
-        {
-          "country": "Spain",
           "users": 1,
           "views": 1
         },
@@ -117,7 +117,7 @@
       {
         "country": "Mexico",
         "users": 43,
-        "views": 153
+        "views": 159
       },
       {
         "country": "Peru",
@@ -140,6 +140,16 @@
         "views": 2
       },
       {
+        "country": "Germany",
+        "users": 2,
+        "views": 2
+      },
+      {
+        "country": "Spain",
+        "users": 2,
+        "views": 2
+      },
+      {
         "country": "Sweden",
         "users": 2,
         "views": 2
@@ -150,22 +160,12 @@
         "views": 1
       },
       {
-        "country": "Germany",
-        "users": 1,
-        "views": 1
-      },
-      {
         "country": "India",
         "users": 1,
         "views": 1
       },
       {
         "country": "Ireland",
-        "users": 1,
-        "views": 1
-      },
-      {
-        "country": "Spain",
         "users": 1,
         "views": 1
       },

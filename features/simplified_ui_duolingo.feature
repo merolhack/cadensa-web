@@ -21,3 +21,9 @@ Característica: Simplificación de Interfaz Tipo Duolingo y Componentes Ergonó
     Y se dispone de interruptores Toggle para el sonido acústico, vibración háptica y reto de silencio
     Y las herramientas de auto-escucha y validación fonética se presentan en su contenedor ergonómico
 
+  Escenario: Barra de navegación de cuatro pestañas y Ruta de Fluidez estilo Duolingo
+    Dado que el usuario accede a la página de inicio de Cadensa con diseño simplificado
+    Entonces se visualiza la barra de navegación con las cuatro pestañas "Ruta", "Práctica", "Logros" y "Clínico"
+    Y se presenta el árbol de progreso de la Ruta de Fluidez con sus niveles secuenciales
+
+

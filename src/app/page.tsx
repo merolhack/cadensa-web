@@ -41,6 +41,8 @@ import { PhoneticRecognitionValidator } from '@/components/PhoneticRecognitionVa
 import { LiveAudioVUMeter } from '@/components/LiveAudioVUMeter';
 import { ClinicalReportExporter } from '@/components/ClinicalReportExporter';
 import { WelcomeTour } from '@/components/WelcomeTour';
+import { QuickStartExercise } from '@/components/QuickStartExercise';
+import { DailyChallengeModal } from '@/components/DailyChallengeModal';
 import { setupAudioContextUnlock } from '@/lib/audioUnlock';
 import { initGlobalErrorTracking } from '@/lib/errorTracker';
 import { Toggle, Disclosure, Collapsible } from '@/components/ui';
@@ -122,6 +124,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
   const [xpPoints, setXpPoints] = useState<number>(125);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isQuickStartOpen, setIsQuickStartOpen] = useState(false);
+  const [isDailyChallengeOpen, setIsDailyChallengeOpen] = useState(false);
   const [sessionSeconds, setSessionSeconds] = useState(0);
   const [lastAccuracy, setLastAccuracy] = useState<AccuracyResult | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
@@ -171,6 +175,19 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
                 targetPhonemes: [],
               }))
             );
+          }
+        }
+
+        // Detección de atajos PWA / Shortcuts mediante query params
+        if (typeof window !== 'undefined') {
+          const params = new URLSearchParams(window.location.search);
+          const quickParam = params.get('quick');
+          if (quickParam === '60s') {
+            setIsQuickStartOpen(true);
+          } else if (quickParam === 'challenge') {
+            setIsDailyChallengeOpen(true);
+          } else if (quickParam === 'kids') {
+            setIsKidsOpen(true);
           }
         }
       } catch {
@@ -562,6 +579,25 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onOpenAcousticAi={() => setIsAcousticAiOpen(true)}
           onOpenAvatar={() => handleOpenVideoModal(activeTechnique)}
           onOpenCustomPhrases={() => setIsCustomPhraseOpen(true)}
+          onOpenQuickStart={() => setIsQuickStartOpen(true)}
+          onOpenDailyChallenge={() => setIsDailyChallengeOpen(true)}
+          onStartFluencyLevel={(level, tech) => {
+            handleSelectTechniqueFromHome(tech);
+            setBpm(level.bpm);
+            const levelExercise = {
+              id: `level-${level.id}`,
+              category: 'fonetica_basica' as ClinicalCategory,
+              difficulty: 'personalizado',
+              phrase: level.phrase,
+              bpm_recommended: level.bpm,
+              created_at: new Date().toISOString(),
+              clinicalObjective: level.title,
+              targetPhonemes: [],
+            };
+            setCustomExercises((prev) => [levelExercise, ...prev]);
+            setPhraseIndex(0);
+            setActiveSyllableIndex(0);
+          }}
           streakDays={streakDays}
           totalMinutes={totalMinutes}
           xpPoints={xpPoints}
@@ -783,6 +819,48 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
           onClose={() => setIsCertificatesOpen(false)}
         />
 
+        {/* Modal de Práctica Rápida (60s) */}
+        <QuickStartExercise
+          isOpen={isQuickStartOpen}
+          onClose={() => setIsQuickStartOpen(false)}
+          onComplete={(xpEarned) => {
+            const newXp = xpPoints + xpEarned;
+            const newTotalMin = totalMinutes + 1;
+            setXpPoints(newXp);
+            setTotalMinutes(newTotalMin);
+            if (typeof window !== 'undefined') {
+              try {
+                localStorage.setItem('cadensa_xp_points', newXp.toString());
+                localStorage.setItem('cadensa_total_minutes', newTotalMin.toString());
+              } catch {
+                // Ignorar excepciones de localStorage
+              }
+            }
+          }}
+          onGoToFullPractice={() => {
+            setIsQuickStartOpen(false);
+            const stsTech = CLINICAL_TECHNIQUES['sts'];
+            if (stsTech) {
+              handleSelectTechniqueFromHome(stsTech);
+            } else {
+              setCurrentView('practice');
+            }
+          }}
+        />
+
+        {/* Modal de Reto Diario y Gamificación Fonoaudiológica */}
+        <DailyChallengeModal
+          isOpen={isDailyChallengeOpen}
+          onClose={() => setIsDailyChallengeOpen(false)}
+          streakDays={streakDays}
+          totalMinutes={totalMinutes}
+          xpPoints={xpPoints}
+          onStartDailyChallenge={() => {
+            setIsDailyChallengeOpen(false);
+            setIsQuickStartOpen(true);
+          }}
+        />
+
         {/* Tour de Bienvenida y Onboarding para Primerizos (FTUE) */}
         <WelcomeTour />
       </>
@@ -882,8 +960,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         </div>
       </nav>
 
-      {/* Header Compacto Centrado (max-w-4xl) */}
-      <header className="max-w-4xl w-full text-center space-y-1.5 pt-1 sm:pt-2">
+      {/* Header Compacto Centrado (max-w-5xl) */}
+      <header className="max-w-5xl w-full text-center space-y-1.5 pt-1 sm:pt-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] text-zinc-400">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           Prueba de Concepto - Infraestructura Base
@@ -920,8 +998,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         )}
       </header>
 
-      {/* Tarjeta de Práctica Rítmica Ergonómica Homogénea (max-w-4xl) */}
-      <section className="max-w-4xl w-full my-2 sm:my-3 p-4 sm:p-7 bg-zinc-900/40 border border-zinc-800/80 rounded-3xl backdrop-blur-md shadow-2xl space-y-4">
+      {/* Tarjeta de Práctica Rítmica Ergonómica Homogénea (max-w-5xl) */}
+      <section className="max-w-5xl w-full my-2 sm:my-3 p-4 sm:p-7 bg-zinc-900/40 border border-zinc-800/80 rounded-3xl backdrop-blur-md shadow-2xl space-y-4">
         {/* Selector de Categorías Clínicas con conteos */}
         <div className="flex items-center justify-center gap-1.5 flex-wrap">
           {[
@@ -1263,8 +1341,8 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         </div>
       </section>
 
-      {/* Tarjetas Clínicas de Base Científica con Divulgación (Disclosure) */}
-      <section className="max-w-4xl w-full my-2">
+      {/* Tarjetas Clínicas de Base Científica con Divulgación (Disclosure) (max-w-5xl) */}
+      <section className="max-w-5xl w-full my-2">
         <Disclosure
           summary="💡 Base Neurobiológica y Respaldo Clínico AMTTM"
           badge="Evidencia A"
@@ -1302,9 +1380,9 @@ export default function Home({ initialView = 'home' }: { initialView?: 'home' | 
         onSelectTechnique={handleSelectTechnique}
       />
 
-      {/* Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos (max-w-4xl) */}
+      {/* Footer Homogéneo Global con Banner AMTTM y Enlaces Fonoaudiológicos (max-w-5xl) */}
       <Footer
-        containerClassName="w-full max-w-4xl"
+        containerClassName="w-full max-w-5xl"
         onOpenFeedback={() => {
           setFeedbackCategory('other');
           setFeedbackTechniqueId(null);

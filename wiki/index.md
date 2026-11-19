@@ -1,7 +1,7 @@
 # Catálogo Maestro del LLM Wiki — Cadensa
 
 > **Índice de Contenidos y Navegación Rápida**  
-> Última actualización: 2026-11-07  
+> Última actualización: 2026-11-19  
 > Esquema de gobernanza: [SCHEMA.md](SCHEMA.md) | Bitácora de operaciones: [log.md](log.md)
 
 Este catálogo resume e indexa de forma modular todas las páginas del conocimiento persistente de Cadensa. Los agentes LLM deben consultar este índice como paso previo antes de explorar páginas individuales.
@@ -19,6 +19,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [developer_handoff.md](operations/developer_handoff.md) | Guía de onboarding, mapa de repositorio, comandos de prueba y regeneración audiovisual. | `operations`, `handoff` |
 | [uat_protocol.md](operations/uat_protocol.md) | Protocolo de pruebas de aceptación de usuario (UAT) y escenarios clínicos fonoaudiológicos. | `operations`, `uat` |
 | [accessibility_and_monitoring.md](operations/accessibility_and_monitoring.md) | Estándares de accesibilidad WCAG 2.1 AA/AAA y telemetría de rendimiento Core Web Vitals. | `operations`, `accessibility` |
+| [community_outreach_and_campaigns.md](operations/community_outreach_and_campaigns.md) | Estrategia de difusión comunitaria, historial de campañas de prueba, copys para Facebook/WhatsApp y prompts para Nano Banana. | `operations`, `community`, `outreach` |
 
 ---
 

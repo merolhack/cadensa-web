@@ -375,6 +375,14 @@ export default function AboutPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Práctica Rápida en 1 Toque (60s), Retos Diarios de Fluidez y Atajos PWA:</strong> Micro-sesión fonoaudiológica guiada de 60 segundos con preparación diafragmática (3s) y Habla Rítmica Silábica (STS) a 85 BPM, orbe de pulso isocrónico y vibración háptica, asignación instantánea de +25 XP, modal interactivo de Retos Diarios con insignias clínicas (Primer Pulso, Hábito en Marcha, Constancia de Acero) y accesos directos en el menú de la aplicación instalada (PWA shortcuts en Android/iOS/Desktop) para erradicar la fricción de entrada y potenciar la retención en dispositivos móviles.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Rediseño de Experiencia Estilo Duolingo y Ruta de Fluidez en 4 Pestañas:</strong> Reestructuración de la interfaz en cuatro áreas intuitivas (Ruta, Práctica, Logros y Modo Clínico) para erradicar la sobrecarga cognitiva en personas con tartamudez. Camino de Fluidez interactivo (Fluency Path) con nodos en zigzag (Niveles 1 al 7), micro-lecciones de 2 minutos con tempo adaptativo (75 a 90 BPM), estrellas de logro, cofre de XP y botones 3D de alta respuesta táctil, aislando el laboratorio especializado de 9 módulos en el Modo Clínico para uso de fonoaudiólogos e investigadores sin saturar la pantalla principal.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Automatización de Notificación SEO Post-Despliegue (Google Search Console, Indexing API &amp; Bing):</strong> Script automatizado (`submit_seo_changes.py`) integrado en el pipeline de CI/CD para re-enviar el sitemap.xml a Google Search Console, notificar las 7 técnicas fonoaudiológicas como URL_UPDATED a Google Indexing API, registrar el feed en Bing Webmaster Tools API y despachar actualizaciones masivas vía protocolo IndexNow inmediatamente tras cada despliegue exitoso.</span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -393,6 +401,26 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Suite E2E Playwright Multi-Navegador y Autenticación de Pacientes en Supabase (/login y /register):</strong> Validación continua automatizada en navegadores reales (Chromium, Firefox y WebKit headless) en CI/CD cubriendo carga de técnicas, video avatar, silabación fonética y registro del Service Worker; y arquitectura de autenticación Zero Trust con Supabase Auth (contraseña, Google OAuth, Magic Link) y sincronización de frases de desafío con RLS por usuario.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Protocolo de Fiabilidad Zero-Hang y Blindaje Desatendido (Regla 8):</strong> Prevención estricta de bloqueos silenciosos en scripts de audio/video neuronal (FFmpeg con `-y -nostdin`), desacople forzado de entrada estándar (`&lt; /dev/null`) y timeouts defensivos en procesos de automatización de IA.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Política de Cero Contenedores Huérfanos en Docker (Regla 9):</strong> Limpieza obligatoria post-pruebas locales y desatendidas, liberando de forma inmediata 1.8+ GB de memoria RAM y consumo residual de CPU en Docker Desktop.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Auditoría Profunda Multi-Plataforma y Extracción de Telemetría Real (GA4, GSC, AdSense, Bing, Cloudflare):</strong> Diagnóstico en vivo de tráfico orgánico (+300% de usuarios activos acumulados: 128 usuarios, 289 vistas), distribución geográfica (EE.UU., México, Perú), telemetría de eventos clínicos y logs de despliegue en Cloudflare Pages.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Homogeneización Canónica de Grid y Ancho Bootstrap (Equal Height Cards &amp; max-w-5xl):</strong> Estandarización geométrica unificada en todas las vistas (Home, Consola de Práctica, FAQ y Footer) con un contenedor maestro de 1024px (`max-w-5xl`), alineación de altura simétrica (<em>Equal Height</em>) en rejillas multi-columna con `h-full flex flex-col justify-between`, fijación inferior de botoneras con `mt-auto`, relación de aspecto `aspect-video` y eliminación absoluta de saltos de diseño (CLS = 0).</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Blindaje de Coherencia en Pruebas BDD, E2E y Vitest (Regla 10):</strong> Reglas automatizadas estrictas que prohíben clases de ancho desalineadas (cero contenedores de 896px desfasados), obligan el contenedor canónico (`max-w-5xl`), exigen altura uniforme (<em>Equal Height</em>) con botones anclados al fondo, ratios `aspect-video`, touch targets ergonómicos y directiva `'use client'` en todo nuevo elemento incorporado a la plataforma.</span>
+                </li>
               </ul>
             </div>
 
@@ -408,6 +436,10 @@ export default function AboutPage() {
                 </span>
               </div>
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">→</span>
+                  <span><strong>Estrategia de Dominio Personalizado TLD y Activación de AdSense:</strong> Configuración y migración de DNS en Cloudflare para superar las barreras de indexación orgánica en Google/Bing y habilitar la aprobación formal de monetización en Google AdSense.</span>
+                </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
                   <span><strong>Mes 5: Desensibilización Fóbica en Realidad Virtual WebXR (Escenarios 3D):</strong> Entornos inmersivos en el navegador para exposición gradual ante entrevistas laborales con panel evaluador virtual, presentaciones en auditorios interactivos y situaciones cotidianas.</span>

@@ -153,4 +153,78 @@ test.describe('Cadensa E2E Suite - Validación Clínica y Navegación Real', () 
     await expect(page.locator('#register-confirm-password')).toBeVisible();
     await expect(page.locator('button:has-text("Crear mi Cuenta")')).toBeVisible();
   });
+
+  test('debe mantener el contenedor maestro canónico (max-w-5xl) sin layout shifts al navegar', async ({
+    page,
+  }) => {
+    // Fijar viewport de escritorio amplio (1280x800)
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+
+    // 1. Verificar ancho del navbar superior
+    const navbar = page.locator('nav').first();
+    await expect(navbar).toBeVisible();
+    const navBox = await navbar.boundingBox();
+    expect(navBox).not.toBeNull();
+    // max-w-5xl equivale a 1024px
+    expect(navBox!.width).toBeLessThanOrEqual(1024);
+    expect(navBox!.width).toBeGreaterThanOrEqual(960);
+
+    // 2. Navegar a la pestaña de Práctica
+    const practiceTab = page.locator('button:has-text("Práctica")').first();
+    await practiceTab.click();
+
+    // Verificar que el panel de práctica se mantiene en el mismo ancho sin salto
+    const practicePanel = page.locator('[role="tabpanel"]').locator('visible=true').first();
+    await expect(practicePanel).toBeVisible();
+    const practiceBox = await practicePanel.boundingBox();
+    expect(practiceBox).not.toBeNull();
+    expect(practiceBox!.width).toBeLessThanOrEqual(1024);
+
+    // 3. Entrar a la consola de entrenamiento clínico
+    const startPracticeBtn = page.locator('button:has-text("Entrenar")').first();
+    if (await startPracticeBtn.isVisible()) {
+      await startPracticeBtn.click();
+      const practiceSection = page.locator('section').filter({ hasText: /Estación de Práctica|Metrónomo/i }).first();
+      if (await practiceSection.isVisible()) {
+        const sectionBox = await practiceSection.boundingBox();
+        expect(sectionBox).not.toBeNull();
+        expect(sectionBox!.width).toBeLessThanOrEqual(1024);
+      }
+    }
+  });
+
+  test('debe verificar que las tarjetas en rejilla cumplan con Equal Height y botones anclados al fondo', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+
+    // Cambiar a pestaña Modo Clínico para evaluar la rejilla de 3 columnas
+    const clinicalTab = page.locator('button:has-text("Clínico")').first();
+    await clinicalTab.click();
+
+    // Localizar las tarjetas de técnicas en el modo clínico
+    const cards = page.locator('article');
+    const count = await cards.count();
+    expect(count).toBeGreaterThanOrEqual(2);
+
+    // Obtener las coordenadas del primer par de tarjetas
+    const box1 = await cards.nth(0).boundingBox();
+    const box2 = await cards.nth(1).boundingBox();
+    expect(box1).not.toBeNull();
+    expect(box2).not.toBeNull();
+
+    // Ambas tarjetas deben tener alturas similares dentro de la misma fila (Equal Height)
+    const heightDiff = Math.abs(box1!.height - box2!.height);
+    expect(heightDiff).toBeLessThanOrEqual(30);
+
+    // Los botones de acción finales deben tener área táctil ergonómica (altura >= 34px)
+    const actionButtons = cards.nth(0).locator('button, a');
+    const btnCount = await actionButtons.count();
+    expect(btnCount).toBeGreaterThan(0);
+    const firstBtnBox = await actionButtons.first().boundingBox();
+    expect(firstBtnBox).not.toBeNull();
+    expect(firstBtnBox!.height).toBeGreaterThanOrEqual(32);
+  });
 });

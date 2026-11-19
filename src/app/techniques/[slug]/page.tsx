@@ -105,7 +105,7 @@ export default async function TechniquePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="w-full max-w-4xl space-y-8">
+      <div className="w-full max-w-5xl space-y-8">
         {/* Encabezado y Navegación Superior */}
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-900 pb-4">
           <div className="flex items-center gap-3">

@@ -37,6 +37,7 @@ El repositorio utiliza una base de conocimiento persistente en `wiki/` basada en
   - **Esquema de Gobierno (`wiki/SCHEMA.md`):** Reglas operativas Ingest, Query y Lint.
 - **Navegación:** Consulta siempre [`wiki/index.md`](wiki/index.md) como primer paso antes de resolver dudas.
 - **Bitácora:** Todo cambio de arquitectura o adición de capacidades debe registrarse cronológicamente en [`wiki/log.md`](wiki/log.md).
+- **Sincronización con Gemini Notebook (`notebooklm-mcp`):** El cuaderno oficial del proyecto es `Cadensa: Fluidez y Terapia del Habla` (`015dcad0-c2a3-4512-97eb-59ac4293d8c0` / Library ID `cadensa-fluidez-y-terapia-del`). Tras cambios relevantes en `wiki/` o `AGENTS.md`, sincroniza mediante `npm run wiki:sync-notebook` (o `npm run wiki:sync-notebook:if-changed`). **Regla estricta:** NUNCA invocar `add_source` sin `"type": "text"` para contenido Markdown/texto. Ver [`wiki/operations/gemini_notebook_integration.md`](wiki/operations/gemini_notebook_integration.md).
 
 ### 4. Cobertura Obligatoria de Pruebas: Unitarias y BDD
 **TODO desarrollo de código, algoritmo o componente debe incluir de manera estricta:**

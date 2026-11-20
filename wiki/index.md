@@ -20,6 +20,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [uat_protocol.md](operations/uat_protocol.md) | Protocolo de pruebas de aceptación de usuario (UAT) y escenarios clínicos fonoaudiológicos. | `operations`, `uat` |
 | [accessibility_and_monitoring.md](operations/accessibility_and_monitoring.md) | Estándares de accesibilidad WCAG 2.1 AA/AAA y telemetría de rendimiento Core Web Vitals. | `operations`, `accessibility` |
 | [community_outreach_and_campaigns.md](operations/community_outreach_and_campaigns.md) | Estrategia de difusión comunitaria, historial de campañas de prueba, copys para Facebook/WhatsApp y prompts para Nano Banana. | `operations`, `community`, `outreach` |
+| [gemini_notebook_integration.md](operations/gemini_notebook_integration.md) | Integración bidireccional con Gemini Notebook (`015dcad0-c2a3-4512-97eb-59ac4293d8c0`), sincronización automática de LLM Wiki y purga RPC. | `operations`, `notebooklm`, `mcp`, `sync` |
 
 ---
 

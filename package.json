@@ -16,7 +16,10 @@
     "db:migrate": "node scripts/migrate_supabase.cjs",
     "metrics:update": "node scripts/fetch_platform_metrics.cjs",
     "security:audit": "node scripts/security_audit.cjs && npm audit",
-    "supabase:gen-types": "npx supabase gen types typescript --local > src/types/supabase.ts"
+    "supabase:gen-types": "npx supabase gen types typescript --local > src/types/supabase.ts",
+    "wiki:sync-notebook": "node scripts/sync-wiki-to-notebook.mjs",
+    "wiki:sync-notebook:if-changed": "node scripts/sync-wiki-to-notebook.mjs --if-changed",
+    "notebook:purge": "node scripts/purge-failed-notebook-sources.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.2",

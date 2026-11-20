@@ -116,6 +116,12 @@ Periódicamente o a petición del usuario:
 3. Identificar términos o componentes mencionados repetidamente que carezcan de su propia página de entidad.
 4. Registrar el resultado del lint en `wiki/log.md`.
 
+### Operación 4: Publish / Sync (Publicación Obligatoria en Gemini Notebook — Límite ≤ 300 Fuentes)
+Después de toda ingesta, actualización de roadmap o modificación sustancial en `wiki/` o `AGENTS.md`:
+1. Compilar y publicar el compendio maestro `CADENSA-LLM-WIKI-KARPATHY-MASTER.md` en el Gemini Notebook oficial (`015dcad0-c2a3-4512-97eb-59ac4293d8c0`) vía `npm run wiki:sync-notebook` (o `npm run wiki:sync-notebook:if-changed`).
+2. Verificar la cuota estricta del cuaderno (**máximo 300 fuentes**, umbral preventivo **≥ 270**): siempre reemplazar el snapshot previo de la Wiki y purgar fuentes fallidas, duplicadas o sin valor (`npm run notebook:purge`) si se acerca al límite.
+3. Nunca omitir `"type": "text"` (o `"type": "file"`) al invocar `add_source`. Ver [wiki/operations/gemini_notebook_integration.md](operations/gemini_notebook_integration.md).
+
 ---
 
 ## 6. Formato de la Bitácora (`log.md`)

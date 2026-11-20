@@ -28,6 +28,32 @@ export const NOTEBOOK_URL = `https://notebook.google.com/notebook/${NOTEBOOK_UUI
 export const NOTEBOOK_ID = 'cadensa-fluidez-y-terapia-del';
 export const MASTER_SOURCE_TITLE = 'CADENSA-LLM-WIKI-KARPATHY-MASTER.md';
 export const LEGACY_SOURCE_TITLES = ['CADENSA_MASTER_SUMMARY.md'];
+export const MAX_NOTEBOOK_SOURCES = 300;
+export const WARN_NOTEBOOK_SOURCES = 270;
+
+export function validateSourceQuota(currentCount, pendingRemovals = 0, additions = 1) {
+  const projectedPeak = currentCount + additions;
+  const projectedFinal = currentCount - pendingRemovals + additions;
+  if (projectedFinal > MAX_NOTEBOOK_SOURCES || projectedPeak > MAX_NOTEBOOK_SOURCES) {
+    return {
+      ok: false,
+      warning: true,
+      projectedPeak,
+      projectedFinal,
+      reason: `Cuota máxima de Gemini Notebook excedida (${projectedPeak}/${MAX_NOTEBOOK_SOURCES}). Purga fuentes duplicadas o sin valor antes de sincronizar.`,
+    };
+  }
+  return {
+    ok: true,
+    warning: projectedFinal >= WARN_NOTEBOOK_SOURCES,
+    projectedPeak,
+    projectedFinal,
+    reason:
+      projectedFinal >= WARN_NOTEBOOK_SOURCES
+        ? `Advertencia preventiva: ${projectedFinal}/${MAX_NOTEBOOK_SOURCES} fuentes (umbral >= ${WARN_NOTEBOOK_SOURCES}).`
+        : null,
+  };
+}
 
 export function collectWikiFiles(rootDir = ROOT_DIR) {
   const wikiDir = path.join(rootDir, 'wiki');
@@ -259,6 +285,29 @@ async function main() {
             s.title === MASTER_SOURCE_TITLE ||
             LEGACY_SOURCE_TITLES.includes(s.title))
       );
+
+      // Si el cuaderno está al límite (300), eliminar snapshots previos primero para respetar la cuota
+      let quota = validateSourceQuota(sources.length, oldWikiSources.length, 1);
+      if (!quota.ok && oldWikiSources.length > 0 && sources.length - oldWikiSources.length + 1 <= MAX_NOTEBOOK_SOURCES) {
+        for (const oldSrc of oldWikiSources) {
+          console.log(`🧹 Pre-removing previous Wiki snapshot to preserve <= ${MAX_NOTEBOOK_SOURCES} quota: ${oldSrc.title} (${oldSrc.id})...`);
+          await client.callTool('delete_source', {
+            notebook_id: NOTEBOOK_ID,
+            ...(sessionId ? { session_id: sessionId } : {}),
+            source: oldSrc.id,
+            confirm: true,
+          });
+        }
+        oldWikiSources.length = 0;
+        quota = validateSourceQuota(sources.length - 1, 0, 1);
+      }
+
+      if (!quota.ok) {
+        throw new Error(quota.reason);
+      }
+      if (quota.warning && quota.reason) {
+        console.warn(`⚠️ ${quota.reason}`);
+      }
 
       console.log(`📤 Uploading ${MASTER_SOURCE_TITLE} to Gemini Notebook (${NOTEBOOK_UUID})...`);
       // REGLA ESTRICTA: SIEMPRE especificar type: 'text' para evitar tokenización accidental en URLs

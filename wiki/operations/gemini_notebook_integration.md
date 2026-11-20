@@ -58,13 +58,19 @@ Al subir la nueva versión de `CADENSA-LLM-WIKI-KARPATHY-MASTER.md`, el script e
 
 ---
 
-## 3. Reglas de Seguridad y Prevención de Contaminación
+## 3. Reglas de Seguridad, Cuota Máxima (≤ 300 Fuentes) y Prevención de Contaminación
 
-1. **Regla de Tipo Estricto (`type: "text"`):**
+1. **Política de Ingesta y Publicación Obligatoria (Regla 11 de `AGENTS.md`):**
+   Toda decisión técnica, hallazgo clínico, auditoría o actualización de ROADMAP debe ingestarse primero de manera modular en `wiki/` (`wiki/index.md` + `wiki/log.md`) y publicarse inmediatamente en este Gemini Notebook mediante `npm run wiki:sync-notebook`.
+2. **Límite Estricto de 300 Fuentes (`MAX_NOTEBOOK_SOURCES = 300`):**
+   - El cuaderno no debe superar jamás el límite máximo de **300 fuentes**.
+   - El script `scripts/sync-wiki-to-notebook.mjs` evalúa `validateSourceQuota(currentCount, pendingRemovals)` antes de subir: emite advertencia preventiva al alcanzar **≥ 270 fuentes** y bloquea la publicación si el conteo neto proyectado supera **300 fuentes**.
+   - Siempre que el cuaderno supere las 270 fuentes, se debe auditar y purgar fuentes fallidas (`npm run notebook:purge`), duplicadas o fuera de dominio antes de añadir nuevas fuentes.
+3. **Regla de Tipo Estricto (`type: "text"`):**
    Queda estrictamente **PROHIBIDO** invocar la herramienta MCP `add_source` omitiendo el parámetro `"type": "text"` al subir texto o Markdown. La omisión de `type` provoca que `@arlinamid/notebooklm-mcp` divida el texto por espacios en blanco (`split(/\s+/)`) y envíe cada palabra como una URL individual a Google, contaminando el cuaderno con cientos de fuentes en estado `failed`.
-2. **Centralización vía Compilador:**
-   Toda sincronización de documentación del repositorio debe canalizarse a través de `scripts/sync-wiki-to-notebook.mjs` o invocando `add_source` con `"type": "text"` explícito.
-3. **Saneamiento Rápido vía RPC `tGMBJ`:**
+4. **Centralización vía Compilador:**
+   Toda sincronización de documentación del repositorio debe canalizarse a través de `scripts/sync-wiki-to-notebook.mjs` o invocando `add_source` con `"type": "text"` o `"type": "file"` explícito.
+5. **Saneamiento Rápido vía RPC `tGMBJ`:**
    Ante cualquier fuente corrupta o en estado `failed`, ejecutar `npm run notebook:purge` (`scripts/purge-failed-notebook-sources.mjs`), que despacha eliminaciones atómicas por lotes de 40 fuentes.
 
 ---

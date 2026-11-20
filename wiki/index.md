@@ -113,6 +113,7 @@ Este catálogo resume e indexa de forma modular todas las páginas del conocimie
 | [product_evolution.md](roadmap/product_evolution.md) | Ruta de evolución técnica del PoC actual hacia el MVP interactivo (Web Audio, silabador, rachas). | `roadmap`, `product`, `mvp`, `audio` |
 | [platform_telemetry_and_seo_plan.md](roadmap/platform_telemetry_and_seo_plan.md) | Auditoría de métricas y errores en GA4, Search Console, AdSense y Bing Webmaster Tools, con plan de remediación y nuevas funcionalidades. | `roadmap`, `analytics`, `seo`, `adsense`, `bing` |
 | [strategic_roadmap_2026_2027.md](roadmap/strategic_roadmap_2026_2027.md) | Plan estratégico y hoja de ruta mensual 2026-2027: Agente Avatar Fonoaudiológico, NLP dialectal, WebXR, telepráctica y FHIR R4. | `roadmap`, `strategic`, `virtual-slp`, `avatar`, `2026-2027` |
+| [gemini_notebook_prioritized_roadmap.md](roadmap/gemini_notebook_prioritized_roadmap.md) | Hoja de ruta priorizada (P0–P3) sintetizada con Gemini Notebook: Core Loop móvil ético, dominio TLD, ACT/CBT, WebXR, Modo Dúo WebRTC, Lidcombe/RESTART-DCM, SMART on FHIR y Capacitor. | `roadmap`, `gemini-notebook`, `p0-p3`, `clinical` |
 
 ---
 

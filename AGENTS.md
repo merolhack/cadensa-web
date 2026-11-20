@@ -108,6 +108,20 @@ Siempre que se agreguen, modifiquen o amplíen componentes, tarjetas, vistas o e
    - Escenarios BDD en Cucumber (`features/design_system_and_layout_consistency.feature`).
    - Pruebas E2E en Playwright (`tests/e2e/cadensa.spec.ts`).
 
+### 11. Regla Estricta de Ingesta Modular en LLM Wiki y Publicación en Gemini Notebook (Límite ≤ 300 Fuentes)
+**REGLA MANDATORIA DE GESTIÓN DEL CONOCIMIENTO Y SINCRONIZACIÓN CON GEMINI NOTEBOOK:**
+Siempre que se genere, descubra, reciba o modifique información relevante del proyecto (decisiones arquitectónicas, auditorías, hallazgos clínicos, consultas estratégicas, planes o cambios de ROADMAP/TODO):
+1. **Ingesta Modular Obligatoria en LLM Wiki (`wiki/`):**
+   Toda información relevante **DEBE ingestarse de forma modular** en la categoría correspondiente de `wiki/` (`architecture/`, `concepts/`, `entities/`, `operations/`, `roadmap/`), respetando el frontmatter YAML de `wiki/SCHEMA.md`, actualizando el catálogo [`wiki/index.md`](wiki/index.md) y registrando la operación en [`wiki/log.md`](wiki/log.md). Prohibido dejar conocimiento valioso solo en el historial efímero del chat.
+2. **Publicación Obligatoria en Gemini Notebook (`015dcad0-c2a3-4512-97eb-59ac4293d8c0`):**
+   Tras cualquier cambio o ingesta en `wiki/` o `AGENTS.md`, el agente o desarrollador **DEBE publicar los cambios en el Gemini Notebook oficial** (`Cadensa: Fluidez y Terapia del Habla` / `cadensa-fluidez-y-terapia-del`) compilando el compendio maestro `CADENSA-LLM-WIKI-KARPATHY-MASTER.md` mediante `npm run wiki:sync-notebook` (o `npm run wiki:sync-notebook:if-changed`) y eliminando la versión anterior del compendio para mantener una única fuente maestra viva.
+3. **Cuidado Estricto del Límite Máximo de 300 Fuentes (`MAX_NOTEBOOK_SOURCES = 300`):**
+   - El cuaderno de Gemini Notebook tiene un **límite máximo estricto de 300 fuentes**.
+   - Antes de publicar o agregar cualquier fuente nueva, **DEBE auditarse el conteo actual de fuentes**.
+   - Si el conteo alcanza el umbral de alerta (**≥ 270 fuentes**) o se aproxima a **300**, es obligatorio ejecutar una limpieza de fuentes fallidas (`npm run notebook:purge`), duplicadas o de bajo valor antes de subir nuevas fuentes. Queda **PROHIBIDO** superar las 300 fuentes o acumular snapshots duplicados de la Wiki.
+4. **Prohibición de Contaminación por Omisión de `type: "text"`:**
+   Nunca invocar `add_source` sin `"type": "text"` (o `"type": "file"` para archivos `.md`) al subir documentación, evitando la tokenización accidental en cientos de URLs fallidas. Ver [`wiki/operations/gemini_notebook_integration.md`](wiki/operations/gemini_notebook_integration.md).
+
 ---
 
 ## 📌 Concepto Clínico y de Producto

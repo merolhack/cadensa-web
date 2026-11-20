@@ -421,6 +421,10 @@ export default function AboutPage() {
                   <span className="text-emerald-400 font-bold">✓</span>
                   <span><strong>Blindaje de Coherencia en Pruebas BDD, E2E y Vitest (Regla 10):</strong> Reglas automatizadas estrictas que prohíben clases de ancho desalineadas (cero contenedores de 896px desfasados), obligan el contenedor canónico (`max-w-5xl`), exigen altura uniforme (<em>Equal Height</em>) con botones anclados al fondo, ratios `aspect-video`, touch targets ergonómicos y directiva &apos;use client&apos; en todo nuevo elemento incorporado a la plataforma.</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Integración Bidireccional con Gemini Notebook y Regla 11 (Límite ≤ 300 Fuentes):</strong> Sincronización automatizada de la LLM Wiki local de 3 capas (`CADENSA-LLM-WIKI-KARPATHY-MASTER.md`) con el cuaderno clínico oficial en NotebookLM, saneamiento de 94 fuentes redundantes/bloqueadas vía RPC batch (`tGMBJ`) y control programático estricto de cuota máxima (≤ 300 fuentes).</span>
+                </li>
               </ul>
             </div>
 
@@ -438,11 +442,19 @@ export default function AboutPage() {
               <ul className="space-y-3 text-xs sm:text-sm text-zinc-300">
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Estrategia de Dominio Personalizado TLD y Activación de AdSense:</strong> Configuración y migración de DNS en Cloudflare para superar las barreras de indexación orgánica en Google/Bing y habilitar la aprobación formal de monetización en Google AdSense.</span>
+                  <span><strong>P0 — Core Loop Móvil sin Penalización Clínica y Recordatorios Locales (Fogg + Octalysis Ético):</strong> Consolidación de Práctica Rápida (60s), Retos Diarios y Web Push local premiando constancia y técnica sin penalizar bloqueos ni disfluencias.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>
-                  <span><strong>Mes 5: Desensibilización Fóbica en Realidad Virtual WebXR (Escenarios 3D):</strong> Entornos inmersivos en el navegador para exposición gradual ante entrevistas laborales con panel evaluador virtual, presentaciones en auditorios interactivos y situaciones cotidianas.</span>
+                  <span><strong>P0 — Estrategia de Dominio Personalizado TLD y Activación de AdSense:</strong> Configuración y migración de DNS en Cloudflare para superar las barreras de indexación orgánica en Google/Bing y habilitar la aprobación formal de monetización en Google AdSense.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">→</span>
+                  <span><strong>P1 — Módulo de Autorregistro Emocional y Defusión Cognitiva (ACT / CBT):</strong> Micro-escala post-sesión de 1 toque (Nivel de Tensión Percibida 1–5 y registro de situación temida) para acompañar la desensibilización sistemática y reducir la evitación comunicativa.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">→</span>
+                  <span><strong>Mes 5: Desensibilización Fóbica en Realidad Virtual WebXR (Escenarios 3D):</strong> Entornos inmersivos en el navegador para exposición gradual ante llamada telefónica simulada, pedido en cafetería con presión de tiempo, entrevistas laborales y presentaciones en aula.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-cyan-400 font-bold">→</span>

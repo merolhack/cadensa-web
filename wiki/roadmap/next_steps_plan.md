@@ -108,9 +108,13 @@
 
 ## 2. Próximos Lanzamientos en la Hoja de Ruta Activa
 
-1. **Modelos Acústicos On-Device con WebGPU y ONNX Runtime**:
-   - Detección precisa de bloqueos tónicos, prolongaciones y repeticiones involuntarias mediante micro-redes neuronales convolucionales ejecutadas localmente en GPU del cliente.
-2. **Entornos de Exposición Social WebXR**:
-   - Simulaciones de realidad virtual e inmersiva ligera en el navegador (entrevistas de trabajo, presentaciones en público, llamadas telefónicas) con biofeedback de ritmo.
-3. **Mapeo Fonético Transversal Multilingüe**:
-   - Soporte fonoaudiológico especializado para variaciones fonéticas en lenguas romances y acentos hispanohablantes regionales.
+> Ver detalle completo por horizontes P0–P3 en [`gemini_notebook_prioritized_roadmap.md`](gemini_notebook_prioritized_roadmap.md).
+
+1. **P0 — Core Loop Móvil sin Penalización Clínica y Migración a Dominio TLD Personalizado:**
+   - Consolidar Práctica Rápida (60s) y Retos Diarios bajo Fogg Behavior Model y Octalysis ético (sin penalizar disfluencias), Web Push local y migración DNS en Cloudflare a dominio TLD propio para desbloquear SEO YMYL y AdSense.
+2. **P1 — Evolución Avatar 3D Fisiológico (ARKit/FACS), NLP Fonético por Dialecto y Módulo Emocional ACT/CBT:**
+   - Sincronización en tiempo real de visemas con `AudioWorklet`, progresión fonética personalizada por fonemas diana y micro-escala subjetiva post-sesión (Tensión 1–5 + situación temida).
+3. **P2 — Entornos de Exposición Social WebXR, Modo Dúo WebRTC E2EE y Cadensa Kids (Lidcombe / RESTART-DCM):**
+   - Simulaciones inmersivas en navegador (llamada telefónica, pedido en cafetería, entrevista laboral), salas clínicas P2P con formantes F1/F2 y DDK compartidos, e interfaz parental de contingencias verbales positivas.
+4. **P3 — SMART on FHIR + Piloto Institucional (AMTTM/INR/IMSS), Capacitor Nativo Offline-First y Expansión Multilingüe:**
+   - Conector hospitalario OAuth 2.0 / SMART on FHIR, empaquetado iOS/Android 100% offline y soporte fonético para Portugués e Inglés.

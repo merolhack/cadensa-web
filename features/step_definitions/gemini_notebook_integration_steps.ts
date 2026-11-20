@@ -5,6 +5,8 @@ import path from 'node:path';
 import {
   buildMasterWikiBundle,
   NOTEBOOK_UUID,
+  MAX_NOTEBOOK_SOURCES,
+  validateSourceQuota,
 } from '../../scripts/sync-wiki-to-notebook.mjs';
 
 const rootDir = process.cwd();
@@ -56,6 +58,14 @@ Then('debe declarar explícitamente el parámetro de tipo texto estricto', funct
     syncScriptContent.includes("type: 'text'"),
     "El script debe incluir explícitamente type: 'text' en add_source"
   );
+});
+
+Then('debe bloquear la publicación si se excede el límite máximo de {int} fuentes', function (limit: number) {
+  assert.strictEqual(MAX_NOTEBOOK_SOURCES, limit);
+  const blocked = validateSourceQuota(limit, 0, 1);
+  assert.strictEqual(blocked.ok, false, `Debe bloquear al exceder ${limit} fuentes`);
+  const allowed = validateSourceQuota(208, 1, 1);
+  assert.strictEqual(allowed.ok, true, 'Debe permitir la sincronización dentro de cuota');
 });
 
 Then('{string} debe exponer el comando {string}', function (pkgFile: string, scriptName: string) {
